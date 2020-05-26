@@ -55,7 +55,7 @@ public class OauthResourceConfig extends ResourceServerConfigurerAdapter impleme
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-        resources.resourceId("gnsc-server")
+        resources.resourceId("cmccr-server")
                 .tokenStore(tokenStore)
                 .tokenServices(tokenService)
                 .stateless(true);

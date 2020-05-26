@@ -6,7 +6,7 @@
 
     <groupId>com.lqkj</groupId>
     <artifactId>CM-S0530</artifactId>
-    <version>4.0.0.0.${timestamp}T</version>
+    <version>4.0.0.0.${timestamp}</version>
     <name>S0530</name>
     <description>可视化迎新</description>
 
