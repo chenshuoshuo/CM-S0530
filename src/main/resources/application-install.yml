@@ -2,7 +2,7 @@ admin:
   #授权码
   code: 6992005
 server:
-  port: 8088
+  port: 12111
   servlet:
     context-path: /CM-S0530
   error:
