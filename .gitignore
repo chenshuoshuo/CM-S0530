@@ -29,4 +29,5 @@
 ./log/
 ./upload/
 ./tmp/
-./config/application.yml
+/config/*.yml
+/config
