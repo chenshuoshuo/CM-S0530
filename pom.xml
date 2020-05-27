@@ -41,14 +41,16 @@
             <id>aliyun</id>
             <url>https://maven.aliyun.com/repository/public</url>
         </repository>
+
         <repository>
             <id>spring-milestones</id>
             <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
+            <url>https://repo.spring.io/libs-milestone</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+
     </repositories>
 
     <dependencies>
@@ -236,6 +238,13 @@
             <artifactId>jcache</artifactId>
         </dependency>
         <!--cookie过滤器 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+            <version>2.1.4.RELEASE</version>
+        </dependency>
+
+
         <!--定时器-->
 <!--        <dependency>-->
 <!--            <groupId>org.springframework.boot</groupId>-->

@@ -1,28 +1,19 @@
 package com.lqkj.web.gnsc.modules.user.controller;
 
-import com.google.zxing.WriterException;
 import com.lqkj.web.gnsc.message.MessageBean;
+import com.lqkj.web.gnsc.modules.handler.WebSocketPushHandler;
 import com.lqkj.web.gnsc.modules.user.domain.User;
 import com.lqkj.web.gnsc.modules.user.service.CcrUserService;
 import com.lqkj.web.gnsc.utils.PwdCheckUtil;
-import io.swagger.annotations.*;
-import org.apache.commons.lang.StringUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.async.WebAsyncTask;
-import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.nio.file.attribute.UserPrincipalNotFoundException;
-import java.util.ArrayList;
 
 @Api(tags = "用户管理")
 @RestController
@@ -31,6 +22,8 @@ public class CcrUserController {
 
     @Autowired
     CcrUserService ccrUserService;
+    @Autowired
+    WebSocketPushHandler webSocketPushHandler;
 
 
     @ApiOperation("注册用户")
@@ -75,5 +68,12 @@ public class CcrUserController {
             return MessageBean.error("沒有该用戶");
         }
         return MessageBean.ok((User) userDetails);
+    }
+
+    @ApiOperation("根据用户名查询用户信息")
+    @PostMapping("/user/push/msg")
+    public MessageBean<User> msg(@RequestParam(name = "msg",required = true) String msg,@RequestParam(name = "uid", required = true) String uid) throws Exception {
+        Boolean pushStatus = webSocketPushHandler.pushMsg(uid, msg);
+        return pushStatus?MessageBean.ok():MessageBean.error("推送失败");
     }
 }

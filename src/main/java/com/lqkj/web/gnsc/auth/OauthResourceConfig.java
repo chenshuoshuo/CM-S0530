@@ -68,7 +68,9 @@ public class OauthResourceConfig extends ResourceServerConfigurerAdapter impleme
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/user/register")
+                .antMatchers(
+                        "/user/register",
+                        "/socket/**")
                 .permitAll()
                 .antMatchers(
                         "/jwk/v1/keys") // CMGIS推送更新变更的接口
@@ -76,7 +78,7 @@ public class OauthResourceConfig extends ResourceServerConfigurerAdapter impleme
                 .antMatchers(HttpMethod.OPTIONS) // 允许OPTIONS跨域验证请求通过
                 .permitAll()
                 .antMatchers(
-                        "/user/name/**"
+                        "/user/**"
                 )
                 .authenticated()
                 .and()
