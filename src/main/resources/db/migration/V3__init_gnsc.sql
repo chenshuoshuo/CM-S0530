@@ -606,6 +606,7 @@ comment on column gns.gns_manage_log.rule is
 /*==============================================================*/
 CREATE TABLE IF NOT EXISTS gns.gns_manage_resource (
    authority_id         SERIAL               not null,
+   parent_id            INT4                 null,
    content              VARCHAR(255)         null,
    name                 VARCHAR(255)         null,
    route                VARCHAR(255)         null,
@@ -622,6 +623,9 @@ CREATE TABLE IF NOT EXISTS gns.gns_manage_resource (
 
 comment on table gns.gns_manage_resource is
 '管理资源信息：gns_manage_resource';
+
+comment on column gns.gns_manage_resource.parent_id is
+'父级ID：parent_id';
 
 comment on column gns.gns_manage_resource.authority_id is
 '资源ID：authority_id';
@@ -715,6 +719,7 @@ CREATE TABLE IF NOT EXISTS gns.gns_manage_user (
    school_id            INT4                 null,
    open_id              VARCHAR(255)         null,
    user_code            VARCHAR(255)         null,
+   pass_word            VARCHAR(255)         null,
    cas_ticket           VARCHAR(255)         null,
    user_group           VARCHAR(255)         null,
    is_admin             BOOL                 null,
@@ -739,6 +744,9 @@ comment on column gns.gns_manage_user.open_id is
 
 comment on column gns.gns_manage_user.user_code is
 '用户账号：user_code';
+
+comment on column gns.gns_manage_user.pass_word is
+'密码：pass_word';
 
 comment on column gns.gns_manage_user.cas_ticket is
 '认证ticket：cas_ticket';
@@ -2913,3 +2921,7 @@ INSERT INTO portal.map_point_type(type_code, parent_code, type_name, display_lev
 INSERT INTO portal.map_point_type(type_code, parent_code, type_name, display_level, click, search, description, raster_icon, vector_icon, display, order_id, memo) VALUES (227, 112, '校区标注', 18, 't', 't', NULL, '/upload/mapPointType/init/228.png', '/upload/mapPointType/init/228.png', 't', NULL, NULL) on conflict(type_code) do nothing;
 INSERT INTO portal.map_point_type(type_code, parent_code, type_name, display_level, click, search, description, raster_icon, vector_icon, display, order_id, memo) VALUES (230, 104, '足球场', 18, 't', 't', NULL, '/upload/mapPointType/init/231_3d.png', '/upload/mapPointType/init/231.png', 't', NULL, NULL) on conflict(type_code) do nothing;
 INSERT INTO portal.map_point_type(type_code, parent_code, type_name, display_level, click, search, description, raster_icon, vector_icon, display, order_id, memo) VALUES (300, 113, '一卡通', 18, 't', 't', NULL, '/upload/mapPointType/init/230_3d.png', '/upload/mapPointType/init/230.png', 't', NULL, NULL) on conflict(type_code) do nothing;
+
+
+
+

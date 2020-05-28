@@ -67,7 +67,7 @@ spring:
       username: postgres
       password: lqkj007
       auto-commit: true
-      pool-name: ccr
+      pool-name: gns
       minimum-idle: 4
       maximum-pool-size: 8
       idle-timeout: 60000
