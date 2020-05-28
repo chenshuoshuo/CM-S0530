@@ -69,7 +69,8 @@ public class OauthResourceConfig extends ResourceServerConfigurerAdapter impleme
                 .and()
                 .authorizeRequests()
                 .antMatchers(
-                        "/user/register",
+                        "/center/user/register",
+                        "/center/cas/*",
                         "/socket/**")
                 .permitAll()
                 .antMatchers(
@@ -78,7 +79,7 @@ public class OauthResourceConfig extends ResourceServerConfigurerAdapter impleme
                 .antMatchers(HttpMethod.OPTIONS) // 允许OPTIONS跨域验证请求通过
                 .permitAll()
                 .antMatchers(
-                        "/user/**"
+                        "/center/user/**"
                 )
                 .authenticated()
                 .and()

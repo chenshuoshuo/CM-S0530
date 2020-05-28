@@ -1,9 +1,9 @@
-package com.lqkj.web.gnsc.modules.user.domain;
+package com.lqkj.web.gnsc.modules.manager.domain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.models.auth.In;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -18,18 +18,18 @@ import java.util.*;
 //@Cacheable
 @ApiModel(value = "用户")
 @Entity
-@Table(name = "ccr_user", indexes = {
-        @Index(name = "user_code_index", unique = true, columnList = "user_code"),
-        @Index(name = "open_id_index", unique = true, columnList = "open_id"),
-        @Index(name = "cas_ticket_index", unique = true, columnList = "cas_ticket")
-})
-public class User implements Serializable, UserDetails {
+@Table(name = "gns_manage_user",schema = "gns")
+public class GnsManageUser implements Serializable, UserDetails {
 
     @ApiModelProperty(value = "账号id")
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
+
+    @ApiModelProperty(value = "学校ID")
+    @Column(name = "school_id")
+    private Integer schoolId;
 
     @NotBlank(message = "用户Code不能为空")
     @ApiModelProperty(value = "用户Code")
@@ -52,15 +52,18 @@ public class User implements Serializable, UserDetails {
     @Column(name = "cas_ticket")
     private String casTicket;
 
-    @ApiModelProperty(value = "用户权限")
-    @Column(name = "user_auth")
-    @Enumerated(EnumType.STRING)
-    private UserAuthority userAuthority;
+    @ApiModelProperty(value = "用户角色")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "gns_manage_user_role",schema = "gns",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "rule_id", referencedColumnName = "rule_id")
+    )
+    private Set<GnsManageRole> rules;
 
     @ApiModelProperty(value = "用户群体")
     @Column(name = "user_group")
     @Enumerated(EnumType.STRING)
-    private CcrUserGroupType userGroup;
+    private UserGroupType userGroup;
 
     @ApiModelProperty(value = "更新时间")
     @Column(name = "update_time")
@@ -78,12 +81,20 @@ public class User implements Serializable, UserDetails {
     @ApiModelProperty("头像保存路径")
     private String headUrl;
 
-    public CcrUserGroupType getUserGroup() {
+    public UserGroupType getUserGroup() {
         return userGroup;
     }
 
-    public void setUserGroup(CcrUserGroupType userGroup) {
+    public void setUserGroup(UserGroupType userGroup) {
         this.userGroup = userGroup;
+    }
+
+    public Set<GnsManageRole> getRules() {
+        return rules;
+    }
+
+    public void setRules(Set<GnsManageRole> rules) {
+        this.rules = rules;
     }
 
     public Long getUserId() {
@@ -166,18 +177,28 @@ public class User implements Serializable, UserDetails {
         this.userName = userName;
     }
 
-    public UserAuthority getUserAuthority() {
-        return userAuthority;
+    public Integer getSchoolId() {
+        return schoolId;
     }
 
-    public void setUserAuthority(UserAuthority userAuthority) {
-        this.userAuthority = userAuthority;
+    public void setSchoolId(Integer schoolId) {
+        this.schoolId = schoolId;
     }
 
     @Override
-    public Collection<UserAuthority> getAuthorities() {
-        Set<UserAuthority> authorities = new HashSet<>();
-        authorities.add(this.getUserAuthority());
+    public Collection<GnsManageResource> getAuthorities() {
+        Set<GnsManageResource> authorities = new HashSet<>();
+
+        if (rules==null) {
+            return authorities;
+        }
+
+        for (GnsManageRole rule : this.rules) {
+            for (GnsManageResource authority : rule.getResources()) {
+                if (authority.getEnabled()) authorities.add(authority);
+            }
+        }
+
         return authorities;
     }
 
@@ -215,15 +236,7 @@ public class User implements Serializable, UserDetails {
         return true;
     }
 
-    public enum CcrUserGroupType {
+    public enum UserGroupType {
         student, teacher, staff, guest, teacher_staff
-    }
-
-    public enum UserAuthority implements Serializable, GrantedAuthority{
-        admin, superAdmin;
-        @Override
-        public String getAuthority() {
-            return this.name();
-        }
     }
 }

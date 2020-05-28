@@ -1,6 +1,7 @@
 package com.lqkj.web.gnsc.auth;
 
-import com.lqkj.web.gnsc.modules.user.domain.User;
+import com.lqkj.web.gnsc.modules.manager.domain.GnsManageRole;
+import com.lqkj.web.gnsc.modules.manager.domain.GnsManageUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -22,10 +23,12 @@ public class UserRulesAccessTokenConverter extends DefaultAccessTokenConverter {
         if (userAuthentication!=null) {
             Object principal = userAuthentication.getPrincipal();
 
-            if (principal instanceof User) {
-                User user = (User) principal;
-                Set<String> rules = new HashSet<>();
-                rules.add(user.getUserAuthority().name());
+            if (principal instanceof GnsManageUser) {
+                GnsManageUser user = (GnsManageUser) principal;
+
+                Set<String> rules = user.getRules().stream()
+                        .map(GnsManageRole::getContent)
+                        .collect(Collectors.toSet());
                 response.put("rules", rules);
             }
         }

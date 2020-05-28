@@ -1,4 +1,4 @@
-CREATE TABLE public.spring_session (
+CREATE TABLE IF NOT EXISTS public.spring_session (
     primary_id character(36) NOT NULL,
     session_id character(36) NOT NULL,
     creation_time bigint NOT NULL,
@@ -15,7 +15,7 @@ ALTER TABLE public.spring_session OWNER TO postgres;
 -- Name: spring_session_attributes; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public.spring_session_attributes (
+CREATE TABLE IF NOT EXISTS public.spring_session_attributes (
     session_primary_id character(36) NOT NULL,
     attribute_name character varying(200) NOT NULL,
     attribute_bytes bytea NOT NULL

@@ -1,6 +1,7 @@
 package com.lqkj.web.gnsc.auth;
 
-import com.lqkj.web.gnsc.modules.user.service.CcrUserService;
+import com.lqkj.web.gnsc.modules.manager.domain.GnsManageRole;
+import com.lqkj.web.gnsc.modules.manager.service.GnsManageUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -53,7 +54,7 @@ import java.util.concurrent.TimeUnit;
 public class OauthAuthorizationConfig extends WebSecurityConfigurerAdapter  implements AuthorizationServerConfigurer {
 
     @Autowired
-    CcrUserService userService;
+    GnsManageUserService userService;
 
     @Autowired
     DataSource dataSource;
