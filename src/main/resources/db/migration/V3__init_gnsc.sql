@@ -769,23 +769,6 @@ comment on column gns.gns_manage_user.user_name is
 comment on column gns.gns_manage_user.update_time is
 '更新时间：update_time';
 
-/*==============================================================*/
-/* Table: gns_manage_user_resource                              */
-/*==============================================================*/
-CREATE TABLE IF NOT EXISTS gns.gns_manage_user_resource (
-   user_id              INT4                 not null,
-   authority_id         INT4                 not null,
-   constraint PK_GNS_MANAGE_USER_RESOURCE primary key (user_id, authority_id)
-);
-
-comment on table gns.gns_manage_user_resource is
-'管理用户-资源关联表：gns_manage_user_resource';
-
-comment on column gns.gns_manage_user_resource.user_id is
-'用户ID：user_id';
-
-comment on column gns.gns_manage_user_resource.authority_id is
-'资源ID：authority_id';
 
 /*==============================================================*/
 /* Table: gns_manage_user_role                                  */
@@ -1476,16 +1459,6 @@ alter table gns.gns_manage_role_resource
 alter table gns.gns_manage_user
    add constraint FK_GNS_MANAGE_USER_REF_SCHOOL foreign key (school_id)
       references gns.gns_school (school_id)
-      on delete cascade on update cascade;
-
-alter table gns.gns_manage_user_resource
-   add constraint FK_GNS_MANAGE_MURR_REF_RESOURCE foreign key (authority_id)
-      references gns.gns_manage_resource (authority_id)
-      on delete cascade on update cascade;
-
-alter table gns.gns_manage_user_resource
-   add constraint FK_GNS_MANAGE_MURR_REF_USER foreign key (user_id)
-      references gns.gns_manage_user (user_id)
       on delete cascade on update cascade;
 
 alter table gns.gns_manage_user_role
