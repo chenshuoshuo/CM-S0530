@@ -58,5 +58,5 @@ INSERT INTO gns.gns_manage_role (school_id, content, name, update_time) VALUES (
 
 INSERT INTO gns.gns_manage_role_resource select 1,generate_series(1,44);
 
-INSERT INTO gns.gns_manage_user (user_code,update_time,user_group,is_admin,user_name,pass_word) VALUES ('admin', now(),'teacher_staff',TRUE,'超级管理员','$2a$10$O2bQZl0KboJZbaRpefc2/.Qm1o1aEkd7W64VdiEHXUQawZE7R.u66');
+INSERT INTO gns.gns_manage_user (user_code,update_time,user_group,is_admin,user_name,pass_word) VALUES ('admin', now(),'teacher_staff',TRUE,'超级管理员','$2a$10$MEEryW4dlAdHlaycV8WoqOS6XhWR697iChdoE8OT1txPSLhQ88hRm');
 INSERT INTO gns.gns_manage_user_role VALUES ((select last_value from gns.gns_manage_user_user_id_seq),1);
