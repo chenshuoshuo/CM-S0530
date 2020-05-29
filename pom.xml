@@ -38,6 +38,10 @@
 
     <repositories>
         <repository>
+            <id>osgeo</id>
+            <url>http://download.osgeo.org/webdav/geotools/</url>
+        </repository>
+        <repository>
             <id>aliyun</id>
             <url>https://maven.aliyun.com/repository/public</url>
         </repository>
@@ -244,6 +248,17 @@
             <version>2.1.4.RELEASE</version>
         </dependency>
 
+        <!--空间数据-->
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-geojson</artifactId>
+            <version>${geotools.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-epsg-hsql</artifactId>
+            <version>${geotools.version}</version>
+        </dependency>
 
         <!--定时器-->
 <!--        <dependency>-->

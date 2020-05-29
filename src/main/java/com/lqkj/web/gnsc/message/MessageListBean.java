@@ -56,4 +56,16 @@ public class MessageListBean<T> extends MessageBaseBean implements Serializable 
         messageListBean.setData(data);
         return messageListBean;
     }
+
+    /**
+     * 创建一个失败消息的内容
+     * @return 消息
+     */
+    public static <T> MessageListBean<T> error(String message) {
+        MessageListBean<T> messageListBean = new MessageListBean<>();
+        messageListBean.setStatus(false);
+        messageListBean.setCode(-1);
+        messageListBean.setMessage(message);
+        return messageListBean;
+    }
 }

@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS gns.gns_academy (
    school_id            INT4                 null,
    academy_name         VARCHAR(255)         null,
    location             geometry             null,
-   update_time          TEXT                 null,
+   update_time          TIMESTAMP                 null,
    order_id             INT4                 null,
    memo                 VARCHAR(255)         null,
    constraint PK_GNS_ACADEMY primary key (academy_code)
@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS gns.gns_achievement (
    not_achieved_icon    VARCHAR(1024)        null,
    brief                VARCHAR(100)         null,
    condition            VARCHAR(100)         null,
-   update_time          TEXT                 null,
+   update_time          TIMESTAMP                 null,
    order_id             INT4                 null,
    memo                 VARCHAR(255)         null,
    constraint PK_GNS_ACHIEVEMENT primary key (achievement_id, school_id)
@@ -168,6 +168,7 @@ comment on column gns.gns_achievement_reach.reach_time is
 /*==============================================================*/
 CREATE TABLE IF NOT EXISTS gns.gns_application (
    application_id       SERIAL               not null,
+   parent_id            INT4                 NULL,
    school_id            INT4                 null,
    application_name     VARCHAR(50)          null,
    en_name              VARCHAR(50)          null,
@@ -176,7 +177,7 @@ CREATE TABLE IF NOT EXISTS gns.gns_application (
    qr_code              VARCHAR(1024)        null,
    open_url             VARCHAR(1024)        null,
    preset               BOOLEAN              null,
-   update_time          TEXT                 null,
+   update_time          TIMESTAMP                 null,
    order_id             INT4                 null,
    memo                 VARCHAR(255)         null,
    constraint PK_GNS_APPLICATION primary key (application_id)
@@ -187,6 +188,9 @@ comment on table gns.gns_application is
 
 comment on column gns.gns_application.application_id is
 '应用ID：application_id';
+
+comment on column gns.gns_application.parent_id is
+'父应用ID：parent_id';
 
 comment on column gns.gns_application.school_id is
 '学校ID：school_id';
@@ -307,7 +311,7 @@ CREATE TABLE IF NOT EXISTS gns.gns_club (
    club_logo            VARCHAR(1024)        null,
    location             geometry             null,
    description          TEXT                 null,
-   update_time          TEXT                 null,
+   update_time          TIMESTAMP                 null,
    order_id             INT4                 null,
    memo                 VARCHAR(255)         null,
    constraint PK_GNS_CLUB primary key (club_id)
@@ -426,7 +430,7 @@ CREATE TABLE IF NOT EXISTS gns.gns_guide (
    content              TEXT                 null,
    lng_lat              geometry             null,
    raster_lng_lat       geometry             null,
-   update_time          TEXT                 null,
+   update_time          TIMESTAMP                 null,
    order_id             INT4                 null,
    memo                 VARCHAR(255)         null,
    constraint PK_GNS_GUIDE primary key (guide_id)
@@ -473,7 +477,7 @@ CREATE TABLE IF NOT EXISTS gns.gns_helper (
    type_code            INT4                 not null,
    title                VARCHAR(50)          null,
    contact              VARCHAR(50)          null,
-   update_time          TEXT                 null,
+   update_time          TIMESTAMP                 null,
    order_id             INT4                 null,
    memo                 VARCHAR(255)         null,
    constraint PK_GNS_HELPER primary key (helper_id)
@@ -874,7 +878,7 @@ CREATE TABLE IF NOT EXISTS gns.gns_reception_place (
    title                VARCHAR(50)          null,
    content              TEXT                 null,
    lng_lat              geometry             null,
-   update_time          TEXT                 null,
+   update_time          TIMESTAMP                 null,
    order_id             INT4                 null,
    memo                 VARCHAR(255)         null,
    constraint PK_GNS_RECEPTION_PLACE primary key (place_id)
@@ -948,7 +952,7 @@ CREATE TABLE IF NOT EXISTS gns.gns_registering_notice (
    school_id            INT4                 null,
    title                VARCHAR(50)          null,
    content              TEXT                 null,
-   update_time          TEXT                 null,
+   update_time          TIMESTAMP                 null,
    order_id             INT4                 null,
    memo                 VARCHAR(255)         null,
    constraint PK_GNS_REGISTERING_NOTICE primary key (notice_id)
@@ -1217,7 +1221,7 @@ CREATE TABLE IF NOT EXISTS gns.gns_tour_route (
    route_name           VARCHAR(50)          null,
    point_count          INT4                 null,
    mileage              VARCHAR(20)          null,
-   update_time          TEXT                 null,
+   update_time          TIMESTAMP                 null,
    order_id             INT4                 null,
    memo                 VARCHAR(255)         null,
    constraint PK_GNS_TOUR_ROUTE primary key (route_id)
@@ -1379,6 +1383,11 @@ alter table gns.gns_achievement_reach
 alter table gns.gns_application
    add constraint FK_GNS_APPLICATION_REF_SCHOOL foreign key (school_id)
       references gns.gns_school (school_id)
+      on delete cascade on update cascade;
+
+alter table gns.gns_application
+   add constraint FK_GNS_APP_REF_APP foreign key (parent_id)
+      references gns.gns_application (application_id)
       on delete cascade on update cascade;
 
 alter table gns.gns_application_use
@@ -1587,8 +1596,8 @@ comment on column portal.map_building_type.order_id is
   '排序：order_id';
 
 comment on column portal.map_building_type.memo is
-  '备注：memo';	
-  
+  '备注：memo';
+
 /*==============================================================*/
 /* Table: portal.map_bt_extends_define                                 */
 /*==============================================================*/
@@ -1633,8 +1642,8 @@ comment on column portal.map_bt_extends_define.orderid is
   '排序：orderid';
 
 comment on column portal.map_bt_extends_define.memo is
-  '备注：memo';  
-  
+  '备注：memo';
+
 /*==============================================================*/
 /* Table: portal.map_building                                          */
 /*==============================================================*/
@@ -1756,8 +1765,8 @@ comment on column portal.map_building_img.order_id is
   '排序：order_id';
 
 comment on column portal.map_building_img.memo is
-  '备注：memo';  
- 
+  '备注：memo';
+
 /*==============================================================*/
 /* Table: portal.map_room_type                                         */
 /*==============================================================*/
@@ -1799,7 +1808,7 @@ comment on column portal.map_room_type.order_id is
 
 comment on column portal.map_room_type.memo is
   '备注：memo';
- 
+
 /*==============================================================*/
 /* Table: portal.map_rt_extends_define                                 */
 /*==============================================================*/
@@ -1845,7 +1854,7 @@ comment on column portal.map_rt_extends_define.orderid is
 
 comment on column portal.map_rt_extends_define.memo is
   '备注：memo';
-  
+
 /*==============================================================*/
 /* Table: portal.map_room                                              */
 /*==============================================================*/
@@ -1950,7 +1959,7 @@ comment on column portal.map_room_extends.type_code is
 
 comment on column portal.map_room_extends.extends_value is
   '属性值：extends_value';
-  
+
 /*==============================================================*/
 /* Table: portal.map_room_img                                          */
 /*==============================================================*/
@@ -2041,8 +2050,8 @@ COMMENT ON COLUMN portal.map_point_type.vector_icon IS
 '二维图标：vector_icon';
 
 COMMENT ON COLUMN portal.map_point_type.display IS
-'是否显示：display';  
-  
+'是否显示：display';
+
 /*==============================================================*/
 /* Table: portal.map_pt_extends_define                                 */
 /*==============================================================*/
@@ -2157,7 +2166,7 @@ COMMENT on column portal.map_point.syn_status is
 '是否已同步：syn_status';
 
 COMMENT on column portal.map_point.delete is
-'是否已删除：delete';  
+'是否已删除：delete';
 
 /*==============================================================*/
 /* Table: portal.map_point_extends                                     */
@@ -2184,7 +2193,7 @@ comment on column portal.map_point_extends.point_code is
 
 comment on column portal.map_point_extends.extends_value is
   '属性值：extends_value';
-  
+
 /*==============================================================*/
 /* Table: portal.map_point_img                                         */
 /*==============================================================*/
@@ -2218,7 +2227,7 @@ comment on column portal.map_point_img.order_id is
 
 comment on column portal.map_point_img.memo is
   '备注：memo';
-  
+
 /*==============================================================*/
 /* Table: portal.map_others_polygon_type                               */
 /*==============================================================*/
@@ -2260,7 +2269,7 @@ comment on column portal.map_others_polygon_type.order_id is
 
 comment on column portal.map_others_polygon_type.memo is
   '备注：memo';
-  
+
 /*==============================================================*/
 /* Table: portal.map_opt_extends_define                                */
 /*==============================================================*/
@@ -2306,7 +2315,7 @@ comment on column portal.map_opt_extends_define.orderid is
 
 comment on column portal.map_opt_extends_define.memo is
   '备注：memo';
-  
+
 /*==============================================================*/
 /* Table: portal.map_others_polygon                                    */
 /*==============================================================*/
@@ -2441,7 +2450,7 @@ add column if not exists lng_lat geometry;
 
 COMMENT ON COLUMN portal.map_room.lng_lat IS
 '二维坐标：lng_lat';
- 
+
 alter table portal.map_building
 	add column if not exists lng_lat geometry,
 	add column if not exists raster_lng_lat geometry;
@@ -2450,7 +2459,7 @@ COMMENT ON COLUMN portal.map_building.lng_lat IS
 '二维坐标：lng_lat';
 
 COMMENT ON COLUMN portal.map_building.raster_lng_lat IS
-'三维坐标：raster_lng_lat';  
+'三维坐标：raster_lng_lat';
 
 ALTER TABLE portal.map_point_type
   drop column if exists font_color,
@@ -2480,13 +2489,13 @@ alter table portal.map_building_type
   add constraint FK_MAP_BT_REF_BT foreign key (parent_code)
     references portal.map_building_type (type_code)
     on delete cascade on update cascade;
-	
+
 alter table portal.map_building_extends
   drop constraint if exists FK_MAP_BE_REF_BTED,
   add constraint FK_MAP_BE_REF_BTED foreign key (column_id, type_code)
     references portal.map_bt_extends_define (column_id, type_code)
     on delete cascade on update cascade;
-	  
+
 alter table portal.map_building_extends
   drop constraint if exists FK_MAP_BE_REF_BUILDING,
   add constraint FK_MAP_BE_REF_BUILDING foreign key (building_code)
@@ -2498,7 +2507,7 @@ alter table portal.map_building_img
   add constraint FK_MAP_BI_REF_BUILDING foreign key (building_code)
     references portal.map_building (building_code)
     on delete cascade on update cascade;
-	
+
 alter table portal.map_room
   drop constraint if exists FK_MAP_ROOM_REF_RT,
   add constraint FK_MAP_ROOM_REF_RT foreign key (type_code)
@@ -2516,13 +2525,13 @@ alter table portal.map_rt_extends_define
   add constraint FK_MAP_RTED_REF_RT foreign key (type_code)
     references portal.map_room_type (type_code)
     on delete cascade on update cascade;
-	
+
 alter table portal.map_room_extends
   drop constraint if exists FK_MAP_RE_REF_RTED,
   add constraint FK_MAP_RE_REF_RTED foreign key (column_id, type_code)
     references portal.map_rt_extends_define (column_id, type_code)
     on delete cascade on update cascade;
-	
+
 alter table portal.map_room_extends
   drop constraint if exists FK_MAP_RE_REF_ROOM,
   add constraint FK_MAP_RE_REF_ROOM foreign key (room_code)
@@ -2540,7 +2549,7 @@ alter table portal.map_point
   add constraint FK_MAP_POINT_REF_PT foreign key (type_code)
     references portal.map_point_type (type_code)
     on delete cascade on update cascade;
-	
+
 alter table portal.map_point_type
   drop constraint if exists FK_MAP_PT_REF_PT,
   add constraint FK_MAP_PT_REF_PT foreign key (parent_code)
@@ -2558,7 +2567,7 @@ alter table portal.map_point_extends
   add constraint FK_MAP_PE_REF_PTED foreign key (column_id, type_code)
     references portal.map_pt_extends_define (column_id, type_code)
     on delete cascade on update cascade;
-	
+
 alter table portal.map_point_extends
   drop constraint if exists FK_MAP_PE_REF_POINT,
   add constraint FK_MAP_PE_REF_POINT foreign key (point_code)
@@ -2570,31 +2579,31 @@ alter table portal.map_point_img
   add constraint FK_MAP_PI_REF_POINT foreign key (point_code)
     references portal.map_point (point_code)
     on delete cascade on update cascade;
-	
+
 alter table portal.map_opt_extends_define
   drop constraint if exists FK_MAP_OPTED_REF_OPT,
   add constraint FK_MAP_OPTED_REF_OPT foreign key (type_code)
     references portal.map_others_polygon_type (type_code)
     on delete cascade on update cascade;
-	
+
 alter table portal.map_others_polygon
   drop constraint if exists FK_MAP_OP_REF_OPT,
   add constraint FK_MAP_OP_REF_OPT foreign key (type_code)
     references portal.map_others_polygon_type (type_code)
     on delete cascade on update cascade;
-	
+
 alter table portal.map_others_polygon_type
   drop constraint if exists FK_MAP_OPT_REF_OPT,
   add constraint FK_MAP_OPT_REF_OPT foreign key (parent_code)
     references portal.map_others_polygon_type (type_code)
     on delete cascade on update cascade;
-	
+
 alter table portal.map_others_polygon_extends
   drop constraint if exists FK_MAP_OPE_REF_OPED,
   add constraint FK_MAP_OPE_REF_OPED foreign key (column_id, type_code)
     references portal.map_opt_extends_define (column_id, type_code)
     on delete cascade on update cascade;
-	
+
 alter table portal.map_others_polygon_extends
   drop constraint if exists FK_MAP_OPE_REF_OP,
   add constraint FK_MAP_OPE_REF_OP foreign key (polygon_code)
@@ -2606,7 +2615,7 @@ alter table portal.map_others_polygon_img
   add constraint FK_MAP_OPI_REF_OP foreign key (polygon_code)
     references portal.map_others_polygon (polygon_code)
     on delete cascade on update cascade;
-	  
+
 --大楼、房间、面图元、点标注追加迎新相关参数
 
 ALTER TABLE portal.map_building
