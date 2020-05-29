@@ -46,7 +46,6 @@ public class SchoolInfoController {
      */
     @ApiOperation("获取学校信息分页")
     @GetMapping("/pageQuery")
-    @ResponseBody
     public MessageBean pageQuery(
                             @ApiParam(name="schoolId",value="学校ID",required=false) @RequestParam(name = "schoolId", required = false) Integer schoolId,
                             @ApiParam(name="schoolName",value="学校名称",required=false) @RequestParam(name = "schoolName", required = false) String schoolName,
@@ -61,7 +60,7 @@ public class SchoolInfoController {
      * @return
      */
     @ApiOperation("添加学校信息")
-    @PutMapping("/add")
+    @PostMapping("/add")
     public MessageBean add(
             @ApiParam(name="schoolInfo",value="学校信息对象",required=true) @RequestBody GnsSchool schoolInfo,
             @ApiParam(name="ids",value="校区，多个以','分隔",required=true) @RequestParam(name = "ids", required = true) String ids){
@@ -88,7 +87,6 @@ public class SchoolInfoController {
      */
     @ApiOperation("获取默认学校信息")
     @GetMapping("/default")
-    @ResponseBody
     public MessageBean loadDefaultSchoolInfo(){
         return MessageBean.ok(schoolInfoService.getDefaultSchool());
     }
@@ -99,7 +97,7 @@ public class SchoolInfoController {
      * @return
      */
     @ApiOperation("更新学校信息")
-    @PutMapping("/update")
+    @PostMapping("/update")
     public MessageBean update(@ApiParam(name = "schoolInfo", value = "学校信息对象", required = true) @RequestBody GnsSchool schoolInfo){
 
         return MessageBean.ok(schoolInfoService.update(schoolInfo));

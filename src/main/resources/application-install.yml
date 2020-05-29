@@ -53,6 +53,7 @@ spring:
     open-in-view: true
     properties:
       hibernate:
+        dialect: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
         temp:
           use_jdbc_metadata_defaults: false
         cache:

@@ -1,6 +1,11 @@
 package com.lqkj.web.gnsc.modules.gns.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.lqkj.web.gnsc.utils.JacksonGeometryDeserializer;
+import com.lqkj.web.gnsc.utils.JacksonGeometrySerializer;
 import com.vividsolutions.jts.geom.Geometry;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -12,14 +17,18 @@ import java.util.Objects;
  * @Version 2.2.2.0
  **/
 @Entity
-@Table(name = "gns_guide", schema = "gns", catalog = "CM-S0530")
+@Table(name = "gns_guide", schema = "gns")
 public class GnsGuide {
     private Integer guideId;
     private Integer studnetTypeCode;
     private Integer campusCode;
     private String title;
     private String content;
+    @JsonSerialize(using = JacksonGeometrySerializer.class)
+    @JsonDeserialize(using = JacksonGeometryDeserializer.class)
     private Geometry lngLat;
+    @JsonSerialize(using = JacksonGeometrySerializer.class)
+    @JsonDeserialize(using = JacksonGeometryDeserializer.class)
     private Geometry rasterLngLat;
     private Timestamp updateTime;
     private Integer orderId;
@@ -27,6 +36,7 @@ public class GnsGuide {
 
     @Id
     @Column(name = "guide_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getGuideId() {
         return guideId;
     }
@@ -97,6 +107,7 @@ public class GnsGuide {
 
     @Basic
     @Column(name = "update_time", nullable = true, length = -1)
+    @UpdateTimestamp
     public Timestamp getUpdateTime() {
         return updateTime;
     }

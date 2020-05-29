@@ -79,7 +79,7 @@ public class GnsApplicationController {
         return MessageBean.ok(applicationService.update(application));
     }
 
-    @PutMapping("/updateOpen")
+    @PostMapping("/updateOpen")
     @ApiOperation("开启/关闭应用")
     public MessageBean updateOpen(@RequestParam(name = "appId") Integer appId,
                                   @RequestParam(name = "open") Boolean open){

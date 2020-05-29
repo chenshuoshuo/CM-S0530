@@ -9,7 +9,7 @@ import java.util.Objects;
  * @Version 2.2.2.0
  **/
 @Entity
-@Table(name = "gns_reception_type", schema = "gns", catalog = "CM-S0530")
+@Table(name = "gns_reception_type", schema = "gns")
 public class GnsReceptionType {
     private Integer typeCode;
     private Integer schoolId;

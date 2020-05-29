@@ -10,23 +10,25 @@ import java.util.Objects;
  * @Version 2.2.2.0
  **/
 @Entity
-@Table(name = "gns_student_type", schema = "gns", catalog = "CM-S0530")
+@Table(name = "gns_student_type", schema = "gns")
 public class GnsStudentType {
     private Integer studnetTypeCode;
     private Integer schoolId;
     private String typeName;
     private Date startDate;
     private Date endDate;
+    private Boolean defaultType;
     private Integer orderId;
     private String memo;
 
     @Id
     @Column(name = "studnet_type_code", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getStudnetTypeCode() {
         return studnetTypeCode;
     }
 
-    public void setStudnetTypeCode(int studnetTypeCode) {
+    public void setStudnetTypeCode(Integer studnetTypeCode) {
         this.studnetTypeCode = studnetTypeCode;
     }
 
@@ -88,6 +90,16 @@ public class GnsStudentType {
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    @Basic
+    @Column(name = "\"default\"")
+    public Boolean getDefaultType() {
+        return defaultType;
+    }
+
+    public void setDefaultType(Boolean defaultType) {
+        this.defaultType = defaultType;
     }
 
     @Override

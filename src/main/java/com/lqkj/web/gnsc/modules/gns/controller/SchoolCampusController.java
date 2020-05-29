@@ -73,7 +73,7 @@ public class SchoolCampusController {
      * @return
      */
     @ApiOperation("绑定校区")
-    @PutMapping("/blindCampus")
+    @PostMapping("/blindCampus")
     public MessageBean blindSchool(
             @ApiParam(name = "schoolId", value = "学校ID", required = true)@RequestParam(name="schoolId") Integer schoolId,
             @ApiParam(name="ids",value="选择校区ID,多个以逗号分隔",required=true) @RequestParam(name = "ids") String ids){

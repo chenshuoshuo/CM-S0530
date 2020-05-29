@@ -1,6 +1,11 @@
 package com.lqkj.web.gnsc.modules.gns.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.lqkj.web.gnsc.utils.JacksonGeometryDeserializer;
+import com.lqkj.web.gnsc.utils.JacksonGeometrySerializer;
 import com.vividsolutions.jts.geom.Geometry;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -19,6 +24,8 @@ public class GnsReceptionPlace {
     private Integer campusCode;
     private String title;
     private String content;
+    @JsonSerialize(using = JacksonGeometrySerializer.class)
+    @JsonDeserialize(using = JacksonGeometryDeserializer.class)
     private Geometry lngLat;
     private Timestamp updateTime;
     private Integer orderId;
@@ -26,6 +33,7 @@ public class GnsReceptionPlace {
 
     @Id
     @Column(name = "place_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getPlaceId() {
         return placeId;
     }
@@ -86,6 +94,7 @@ public class GnsReceptionPlace {
 
     @Basic
     @Column(name = "update_time", nullable = true, length = -1)
+    @UpdateTimestamp
     public Timestamp getUpdateTime() {
         return updateTime;
     }

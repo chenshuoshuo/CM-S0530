@@ -32,7 +32,7 @@ public class GnsStoreController {
     @Autowired
     private GnsStoreService storeService;
 
-    @PutMapping( APIVersion.V1 + "/put")
+    @PostMapping( APIVersion.V1 + "/put")
     @ApiOperation("保存产品配置")
     public MessageBean put(@ApiParam(name="schoolId",value="校区ID,地理信息中cmips,cmgis,token保存时不需要填写学校ID",required=false) @RequestParam(name = "schoolId",required = false) Integer schoolId,
                                  @RequestParam(name = "storeName") String storeName,
