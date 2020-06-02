@@ -22,6 +22,7 @@ public class GnsRegisteringNotice {
 
     @Id
     @Column(name = "notice_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getNoticeId() {
         return noticeId;
     }

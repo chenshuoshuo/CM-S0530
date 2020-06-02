@@ -25,15 +25,13 @@ public class ReceptionPlaceController {
     /**
      * H5获取迎新接待点列表
      * @param typeCode
-     * @param campusCode
      * @return
      */
     @ApiOperation("H5获取迎新接待点列表")
-    @GetMapping("/list/{typeCode}/{campusCode}")
-    public MessageListBean queryList(@ApiParam(name="typeCode",value="分类ID",required=true) @PathVariable("typeCode") Integer typeCode,
-                                     @ApiParam(name="campusCode",value="校区ID",required=true) @PathVariable("campusCode") Integer campusCode){
+    @GetMapping("/list")
+    public MessageListBean queryList(@ApiParam(name = "typeCode",value = "接待点分类ID")@RequestParam("typeCode") Integer typeCode){
 
-        return MessageListBean.ok(receptionPlaceService.queryList(typeCode,campusCode));
+        return MessageListBean.ok(receptionPlaceService.queryList(typeCode));
     }
 
     /**
@@ -44,9 +42,9 @@ public class ReceptionPlaceController {
      */
     @ApiOperation("获取迎新接待点列表分页")
     @GetMapping("/pageQuery")
-    public MessageBean pageQuery(@ApiParam(name="typeCode",value="校内（1），校外（2），全部（0）",required=false) @RequestParam(name = "typeCode", required = false, defaultValue = "0") Integer typeCode,
+    public MessageBean pageQuery(@ApiParam(name="typeCode",value="接待点分类ID，全部（0）",required=false) @RequestParam(name = "typeCode", required = false, defaultValue = "0") Integer typeCode,
                                  @ApiParam(name="title",value="接待点名称",required=false) @RequestParam(name = "title", required = false, defaultValue = "") String title,
-                                 @ApiParam(name="campusCode",value="校区ID，全部（0）",required=false) @RequestParam(name = "campusCode", required = false, defaultValue = "0") Integer campusCode,
+                                 @ApiParam(name="campusCode",value="校区区域组ID，全部（0）",required=false) @RequestParam(name = "campusCode", required = false, defaultValue = "0") Integer campusCode,
                                  @ApiParam(name="page",value="页码",required=true) @RequestParam("page") Integer page,
                                  @ApiParam(name="pageSize",value="每页数据条数",required=true) @RequestParam("pageSize") Integer pageSize){
 
@@ -71,8 +69,8 @@ public class ReceptionPlaceController {
      * @return
      */
     @ApiOperation("根据ID获取迎新接待点")
-    @GetMapping("/detail/{replaceId}")
-    public MessageBean get(@ApiParam(name="replaceId",value="迎新接待点ID",required=true) @PathVariable(name = "replaceId", required = true) Integer replaceId){
+    @GetMapping("/detail")
+    public MessageBean get(@ApiParam(name="replaceId",value="迎新接待点ID",required=true) @RequestParam(name = "replaceId", required = true) Integer replaceId){
 
         return MessageBean.ok(receptionPlaceService.get(replaceId));
     }

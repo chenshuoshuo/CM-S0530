@@ -1,5 +1,9 @@
 package com.lqkj.web.gnsc.modules.gns.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.lqkj.web.gnsc.utils.JacksonGeometryDeserializer;
+import com.lqkj.web.gnsc.utils.JacksonGeometrySerializer;
 import com.vividsolutions.jts.geom.Geometry;
 
 import javax.persistence.*;
@@ -12,20 +16,24 @@ import java.util.Objects;
  * @Version 2.2.2.0
  **/
 @Entity
-@Table(name = "gns_club", schema = "gns", catalog = "CM-S0530")
+@Table(name = "gns_club", schema = "gns")
 public class GnsClub {
     private Integer clubId;
     private Integer campusCode;
     private String clubName;
     private String clubLogo;
+    @JsonSerialize(using = JacksonGeometrySerializer.class)
+    @JsonDeserialize(using = JacksonGeometryDeserializer.class)
     private Geometry location;
     private String description;
+    private Integer click;
     private Timestamp updateTime;
     private Integer orderId;
     private String memo;
 
     @Id
     @Column(name = "club_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getClubId() {
         return clubId;
     }
@@ -112,6 +120,16 @@ public class GnsClub {
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    @Basic
+    @Column(name = "click")
+    public Integer getClick() {
+        return click;
+    }
+
+    public void setClick(Integer click) {
+        this.click = click;
     }
 
     @Override

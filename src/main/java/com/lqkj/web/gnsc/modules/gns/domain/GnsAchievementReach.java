@@ -13,7 +13,7 @@ import java.util.UUID;
  * @Version 2.2.2.0
  **/
 @Entity
-@Table(name = "gns_achievement_reach", schema = "gns", catalog = "CM-S0530")
+@Table(name = "gns_achievement_reach", schema = "gns")
 public class GnsAchievementReach {
     private Integer id;
     private UUID userId;

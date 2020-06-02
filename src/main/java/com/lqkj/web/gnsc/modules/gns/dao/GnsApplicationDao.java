@@ -14,7 +14,7 @@ import java.util.Map;
 @Repository
 public interface GnsApplicationDao extends JpaRepository<GnsApplication, Integer> {
     @Query(nativeQuery = true,
-            value = "SELECT app.en_name enName,app.application_name applicationName,app.logo,app.qr_code qrCode from gns.gns_application as app " +
+            value = "SELECT app.en_name enName,app.application_name applicationName,app.logo,app.qr_code qrCode,app.clicked_logo clickLogo from gns.gns_application as app " +
                     "where app.application_open = true and app.school_id = :schoolId and app.parent_id is null order by app.order_id asc")
     List<Map<String,Object>> appList(Integer schoolId);
 
@@ -28,7 +28,7 @@ public interface GnsApplicationDao extends JpaRepository<GnsApplication, Integer
      * 根据父级ID获取
      */
     @Query(nativeQuery = true,
-            value = "SELECT app.en_name enName,app.application_name applicationName,app.logo,app.qr_code qrCode from gns.gns_application as app " +
+            value = "SELECT app.en_name enName,app.application_name applicationName,app.logo,app.clicked_logo clickLogo,app.qr_code qrCode from gns.gns_application as app " +
                     "where app.application_open = true and app.school_id = :schoolId and app.parent_id = :parentId order by app.order_id asc")
     List<Map<String,Object>> findAllByParentId(Integer parentId,Integer schoolId);
 

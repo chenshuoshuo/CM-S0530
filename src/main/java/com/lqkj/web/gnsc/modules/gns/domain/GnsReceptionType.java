@@ -1,6 +1,7 @@
 package com.lqkj.web.gnsc.modules.gns.domain;
 
 import javax.persistence.*;
+import javax.xml.ws.FaultAction;
 import java.util.Objects;
 
 /**
@@ -19,6 +20,7 @@ public class GnsReceptionType {
 
     @Id
     @Column(name = "type_code", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getTypeCode() {
         return typeCode;
     }

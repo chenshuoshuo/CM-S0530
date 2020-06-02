@@ -11,7 +11,7 @@ import java.util.UUID;
  * @Version 2.2.2.0
  **/
 @Entity
-@Table(name = "gns_group_photo", schema = "gns", catalog = "CM-S0530")
+@Table(name = "gns_group_photo", schema = "gns")
 public class GnsGroupPhoto {
     private Integer signId;
     private UUID userId;

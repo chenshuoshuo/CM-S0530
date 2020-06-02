@@ -26,14 +26,15 @@ public class StudentTypeController {
 
     /**
      * 获取迎新接待点列表
-     * @param schoolId
+     * @param campusCode
      * @return
      */
     @ApiOperation("h5获取学生类型列表")
-    @GetMapping("/list/{schoolId}")
-    public MessageBean loadStudentTypeWithGuide(@ApiParam(name="schoolId",value="学校id",required=true) @PathVariable("schoolId") Integer schoolId){
+    @GetMapping("/list")
+    public MessageBean loadStudentTypeWithGuide(@ApiParam(name="schoolId",value="学校ID",required=true) @RequestParam("schoolId") Integer schoolId,
+                                                @ApiParam(name="campusCode",value="校区区域组ID",required=true) @RequestParam("campusCode") Integer campusCode){
 
-        return MessageBean.ok(studentTypeService.loadStudentTypeWithGuide(schoolId));
+        return MessageBean.ok(studentTypeService.loadStudentTypeWithGuide(schoolId,campusCode));
     }
 
     /**
@@ -42,8 +43,8 @@ public class StudentTypeController {
      * @return
      */
     @ApiOperation("后台获取学生类型列表")
-    @GetMapping("/getAll/{schoolId}")
-    public MessageBean loadEnrollment(@ApiParam(name="schoolId",value="学校id",required=true) @PathVariable("schoolId") Integer schoolId){
+    @GetMapping("/getAll")
+    public MessageBean loadEnrollment(@ApiParam(name="schoolId",value="学校id",required=true) @RequestParam("schoolId") Integer schoolId){
 
         return MessageBean.ok(studentTypeService.getAll(schoolId));
     }

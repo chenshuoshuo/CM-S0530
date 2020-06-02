@@ -108,11 +108,11 @@ public class SchoolCampusService {
      * @param schoolId
      * @return
      */
-    public GnsSchool loadWithSchool(Integer schoolId){
+    public List<GnsCampusInfo> loadWithSchool(Integer schoolId){
         GnsSchool school = schoolInfoDao.findBySchoolId(schoolId);
         List<GnsCampusInfo> campusInfo = schoolCampusDao.findBySchoolId(schoolId);
         school.setCampusInfoList(campusInfo);
-        return school;
+        return campusInfo;
     }
 
     /**

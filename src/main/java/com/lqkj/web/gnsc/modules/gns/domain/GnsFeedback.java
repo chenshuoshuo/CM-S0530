@@ -11,7 +11,7 @@ import java.util.UUID;
  * @Version 2.2.2.0
  **/
 @Entity
-@Table(name = "gns_feedback", schema = "gns", catalog = "CM-S0530")
+@Table(name = "gns_feedback", schema = "gns")
 public class GnsFeedback {
     private Integer feedbackId;
     private UUID userId;

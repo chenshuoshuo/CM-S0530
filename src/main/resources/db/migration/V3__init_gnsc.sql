@@ -174,6 +174,7 @@ CREATE TABLE IF NOT EXISTS gns.gns_application (
    en_name              VARCHAR(50)          null,
    application_open     BOOL                 null,
    logo                 VARCHAR(1024)        null,
+   clicked_logo         VARCHAR(1024)        null,
    qr_code              VARCHAR(1024)        null,
    open_url             VARCHAR(1024)        null,
    preset               BOOLEAN              null,
@@ -206,6 +207,9 @@ comment on column gns.gns_application.application_open is
 
 comment on column gns.gns_application.logo is
 '应用图标：logo';
+
+comment on column gns_application.clicked_logo is
+'应用点击图标：clicked_logo';
 
 comment on column gns.gns_application.qr_code is
 '应用二维码图片：qr_code';
@@ -311,6 +315,7 @@ CREATE TABLE IF NOT EXISTS gns.gns_club (
    club_logo            VARCHAR(1024)        null,
    location             geometry             null,
    description          TEXT                 null,
+   click                INT4                 null,
    update_time          TIMESTAMP                 null,
    order_id             INT4                 null,
    memo                 VARCHAR(255)         null,
@@ -337,6 +342,9 @@ comment on column gns.gns_club.location is
 
 comment on column gns.gns_club.description is
 '社团介绍：description';
+
+comment on column gns.gns_club.click is
+'点击次数：click';
 
 comment on column gns.gns_club.update_time is
 '更新时间：update_time';

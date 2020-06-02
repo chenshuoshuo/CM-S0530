@@ -6,6 +6,7 @@ import com.lqkj.web.gnsc.modules.gns.dao.ReceptionPlaceVODao;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsReceptionPlace;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsRegisteringNotice;
 import com.lqkj.web.gnsc.modules.gns.domain.vo.GnsGuideVO;
+import com.lqkj.web.gnsc.modules.gns.domain.vo.GnsReceptionPlaceVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,7 +30,7 @@ public class ReceptionPlaceService {
      * @param campusCode
      * @return
      */
-    public Page<GnsGuideVO> page(Integer campusCode, Integer typeCode, String title, Integer page, Integer pageSize){
+    public Page<GnsReceptionPlaceVO> page(Integer campusCode, Integer typeCode, String title, Integer page, Integer pageSize){
         Pageable pageable = PageRequest.of(page,pageSize);
         return receptionPlaceVODao.page(campusCode,typeCode, title, pageable);
     }
@@ -37,11 +38,10 @@ public class ReceptionPlaceService {
     /**
      * H5获取接待点列表
      * @param typeCode
-     * @param campusCode
      * @return
      */
-    public List<Map<String,Object>> queryList(Integer typeCode, Integer campusCode){
-        return receptionPlaceDao.queryList(typeCode, campusCode);
+    public List<GnsReceptionPlace> queryList(Integer typeCode){
+        return receptionPlaceDao.queryList(typeCode);
     }
 
     public GnsReceptionPlace checkIsExistWithCampusId(String title, Integer campusCode){

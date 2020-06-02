@@ -9,7 +9,7 @@ import java.util.Objects;
  * @Version 2.2.2.0
  **/
 @Entity
-@Table(name = "gns_helper_type", schema = "gns", catalog = "CM-S0530")
+@Table(name = "gns_helper_type", schema = "gns")
 public class GnsHelperType {
     private Integer typeCode;
     private Integer schoolId;
@@ -19,6 +19,7 @@ public class GnsHelperType {
 
     @Id
     @Column(name = "type_code", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getTypeCode() {
         return typeCode;
     }

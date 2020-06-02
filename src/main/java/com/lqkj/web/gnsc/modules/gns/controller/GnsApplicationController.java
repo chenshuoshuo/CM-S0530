@@ -25,9 +25,9 @@ public class GnsApplicationController {
     /**
      * 移动端查询应用列表
      */
-    @GetMapping("/getParentAppList/{schoolId}")
+    @GetMapping("/getParentAppList")
     @ApiOperation("前端查询一级应用列表")
-    public MessageListBean appList(@PathVariable Integer schoolId){
+    public MessageListBean appList(@RequestParam(name = "schoolId") Integer schoolId){
        return MessageListBean.ok(applicationService.getParentAppList(schoolId));
     }
 
@@ -53,9 +53,9 @@ public class GnsApplicationController {
 
     }
 
-    @GetMapping("/get/{appId}")
+    @GetMapping("/get")
     @ApiOperation("根据主键获取")
-    public MessageBean get(@PathVariable(name = "appId") Integer appId){
+    public MessageBean get(@RequestParam(name = "appId") Integer appId){
         return MessageBean.ok(applicationService.get(appId));
     }
 
@@ -86,9 +86,9 @@ public class GnsApplicationController {
         return MessageBean.ok(applicationService.updateOpen(appId,open));
     }
 
-    @DeleteMapping("/delete/{appId}")
+    @DeleteMapping("/delete")
     @ApiOperation("删除应用")
-    public MessageBean delete(@PathVariable(name = "appId") Integer appId){
+    public MessageBean delete(@RequestParam(name = "appId") Integer appId){
         GnsApplication application = applicationService.get(appId);
         if (application.getPreset()) {
             return MessageBean.error("预设模块无法删除");

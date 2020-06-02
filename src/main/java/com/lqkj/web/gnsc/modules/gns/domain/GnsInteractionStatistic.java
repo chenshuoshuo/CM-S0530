@@ -9,7 +9,7 @@ import java.util.Objects;
  * @Version 2.2.2.0
  **/
 @Entity
-@Table(name = "gns_interaction_statistic", schema = "gns", catalog = "CM-S0530")
+@Table(name = "gns_interaction_statistic", schema = "gns")
 public class GnsInteractionStatistic {
     private Integer statisticId;
     private Integer schoolId;

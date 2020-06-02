@@ -67,8 +67,6 @@ public class GnsReceptionPlaceVO {
         this.content = content;
     }
 
-
-
     @Basic
     @Column(name = "update_time", nullable = true, length = -1)
     public Timestamp getUpdateTime() {

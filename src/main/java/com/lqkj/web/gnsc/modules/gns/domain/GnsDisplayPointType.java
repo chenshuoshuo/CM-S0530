@@ -9,7 +9,7 @@ import java.util.Objects;
  * @Version 2.2.2.0
  **/
 @Entity
-@Table(name = "gns_display_point_type", schema = "gns", catalog = "CM-S0530")
+@Table(name = "gns_display_point_type", schema = "gns")
 @IdClass(GnsDisplayPointTypePK.class)
 public class GnsDisplayPointType {
     private Integer pointTypeCode;

@@ -13,7 +13,7 @@ import java.util.UUID;
  * @Version 2.2.2.0
  **/
 @Entity
-@Table(name = "gns_map_use", schema = "gns", catalog = "CM-S0530")
+@Table(name = "gns_map_use", schema = "gns")
 public class GnsMapUse {
     private UUID recordId;
     private UUID gnsUserId;

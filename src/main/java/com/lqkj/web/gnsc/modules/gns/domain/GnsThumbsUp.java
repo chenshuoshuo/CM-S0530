@@ -13,7 +13,7 @@ import java.util.UUID;
  * @Version 2.2.2.0
  **/
 @Entity
-@Table(name = "gns_thumbs_up", schema = "gns", catalog = "CM-S0530")
+@Table(name = "gns_thumbs_up", schema = "gns")
 public class GnsThumbsUp {
     private Integer signId;
     private UUID userId;

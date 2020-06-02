@@ -10,7 +10,7 @@ import java.util.Objects;
  * @Version 2.2.2.0
  **/
 @Entity
-@Table(name = "gns_sign", schema = "gns", catalog = "CM-S0530")
+@Table(name = "gns_sign", schema = "gns")
 public class GnsSign {
     private Integer signId;
     private String userId;

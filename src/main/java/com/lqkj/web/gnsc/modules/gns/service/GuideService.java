@@ -61,7 +61,7 @@ public class GuideService {
     public GnsGuide add(GnsGuide guide){
         //增加自动排序
         Integer maxOrder = guideDao.getMaxOrder(guide.getCampusCode());
-        if (maxOrder !=null && guide.getOrderId() < maxOrder) {
+        if (maxOrder !=null && guide.getOrderId() != null && guide.getOrderId() < maxOrder) {
             guideDao.autoOrder(guide.getOrderId(),guide.getCampusCode());
         }else {
             if (maxOrder == null) {

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/registeringNotice")
-@Api(value="报到须知controller",tags={"报到须知接口"})
+@Api(value="报到须知controller",tags={"迎新报到须知接口"})
 public class RegisteringNoticeController {
 
     @Autowired
@@ -30,8 +30,8 @@ public class RegisteringNoticeController {
      * @return
      */
     @ApiOperation("h5获取报到须知列表")
-    @GetMapping("/list/{schoolId}")
-    public MessageListBean loadEnrollment(@ApiParam(name="schoolId",value="学校id",required=true) @PathVariable("schoolId") Integer schoolId){
+    @GetMapping("/list")
+    public MessageListBean loadEnrollment(@ApiParam(name="schoolId",value="学校id",required=true) @RequestParam("schoolId") Integer schoolId){
 
         return MessageListBean.ok(registeringNoticeService.queryList(schoolId));
     }
@@ -42,8 +42,8 @@ public class RegisteringNoticeController {
      * @return
      */
     @ApiOperation("获取报到须知详情")
-    @GetMapping("/detail/{noticeId}")
-    public MessageBean loadEnrollmentDetail(@ApiParam(name="noticeId",value="报到须知信息id",required=true) @PathVariable("noticeId") Integer noticeId){
+    @GetMapping("/detail")
+    public MessageBean loadEnrollmentDetail(@ApiParam(name="noticeId",value="报到须知信息id",required=true) @RequestParam("noticeId") Integer noticeId){
 
         return MessageBean.ok(registeringNoticeService.get(noticeId));
     }

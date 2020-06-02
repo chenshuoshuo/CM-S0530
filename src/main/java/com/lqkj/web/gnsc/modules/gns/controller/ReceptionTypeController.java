@@ -19,7 +19,7 @@ import java.util.List;
  */
 
 @RestController
-@Api(value = "接待点分类controller", tags = "接待点分类接口")
+@Api(value = "接待点分类controller", tags = "迎新接待点分类接口")
 @RequestMapping("/receptionType")
 public class ReceptionTypeController {
     @Autowired
@@ -30,9 +30,9 @@ public class ReceptionTypeController {
      * @param schoolId
      * @return
      */
-    @ApiOperation("获取迎新接待点分类列表")
-    @GetMapping("/list/{schoolId}")
-    public MessageBean loadStudentTypeWithGuide(@ApiParam(name="schoolId",value="学校id",required=true) @PathVariable("schoolId") Integer schoolId){
+    @ApiOperation("h5/后台获取迎新接待点分类列表")
+    @GetMapping("/list")
+    public MessageBean loadStudentTypeWithGuide(@ApiParam(name="schoolId",value="学校id",required=true) @RequestParam("schoolId") Integer schoolId){
 
         return MessageBean.ok(receptionTypeService.getAll(schoolId));
     }
@@ -43,7 +43,7 @@ public class ReceptionTypeController {
      */
     @ApiOperation("保存迎新接待点分类")
     @PostMapping("/save")
-    public MessageListBean add(@ApiParam(name="receptionTypeList",value="学生类型列表",required=true) @RequestBody List<GnsReceptionType> receptionTypeList){
+    public MessageListBean add(@ApiParam(name="receptionTypeList",value="接待点分类",required=true) @RequestBody List<GnsReceptionType> receptionTypeList){
         return MessageListBean.ok(receptionTypeService.saveAll(receptionTypeList));
     }
 

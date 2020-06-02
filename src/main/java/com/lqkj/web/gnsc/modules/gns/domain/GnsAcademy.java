@@ -12,7 +12,7 @@ import java.util.Objects;
  * @Version 2.2.2.0
  **/
 @Entity
-@Table(name = "gns_academy", schema = "gns", catalog = "CM-S0530")
+@Table(name = "gns_academy", schema = "gns")
 public class GnsAcademy {
     private Integer academyCode;
     private Integer schoolId;

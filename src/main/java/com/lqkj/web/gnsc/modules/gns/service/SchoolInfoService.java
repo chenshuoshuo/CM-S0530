@@ -63,56 +63,56 @@ public class SchoolInfoService {
             GnsApplication application = new GnsApplication();
 
             application = new GnsApplication(null, null, s.getSchoolId(), "迎新引导", "gns_enrollment",
-                    true, null, null, null, true, 1, null);
+                    true, null, null,null, null, true, 1, null);
             GnsApplication enrollment = applicationDao.save(application);
             //二级应用
             application = new GnsApplication(null, enrollment.getApplicationId(), s.getSchoolId(), "去学校", "go_school",
-                    true, null, null, null, true, 1, null);
+                    true, null, null, null, null,true, 1, null);
             applicationDao.save(application);
 
             application = new GnsApplication(null, enrollment.getApplicationId(), s.getSchoolId(), "报道须知", "register_notice",
-                    true, null, null, null, true, 2, null);
+                    true, null, null, null,null, true, 2, null);
             applicationDao.save(application);
 
             application = new GnsApplication(null, enrollment.getApplicationId(), s.getSchoolId(), "更多应用", "more_application",
-                    true, null, null, null, true, 3, null);
+                    true, null, null,null, null, true, 3, null);
             GnsApplication moreApplication = applicationDao.save(application);
             //三级应用
             application = new GnsApplication(null, moreApplication.getApplicationId(), s.getSchoolId(), "迎新接待", "reception_place",
-                    true, null, null, null, false, 1, null);
+                    true, null, null, null,null, false, 1, null);
             applicationDao.save(application);
 
             application = new GnsApplication(null, moreApplication.getApplicationId(), s.getSchoolId(), "迎新助手", "gns_helper",
-                    true, null, null, null, false, 2, null);
+                    true, null, null, null,null, false, 2, null);
             GnsApplication helper = applicationDao.save(application);
             //四级应用
             application = new GnsApplication(null, helper.getApplicationId(), s.getSchoolId(), "迎新通讯录", "contact",
-                    true, null, null, null, false, 1, null);
+                    true, null, null, null,null, false, 1, null);
             applicationDao.save(application);
 
             application = new GnsApplication(null, helper.getApplicationId(), s.getSchoolId(), "宿舍导航", "dorm_navigation",
-                    true, null, null, null, false, 2, null);
+                    true, null, null, null,null, false, 2, null);
             applicationDao.save(application);
 
             application = new GnsApplication(null, moreApplication.getApplicationId(), s.getSchoolId(), "校园社团", "campus_club",
-                    true, null, null, null, false, 3, null);
+                    true, null, null,null, null, false, 3, null);
             applicationDao.save(application);
 
             application = new GnsApplication(null, moreApplication.getApplicationId(), s.getSchoolId(), "迎新高校联盟", "school_league",
-                    true, null, null, null, false, 4, null);
+                    true, null, null,null, null, false, 4, null);
             applicationDao.save(application);
 
 
             application = new GnsApplication(null, null, s.getSchoolId(), "云游校园", "campus_cutural",
-                    true, null, null, null, true, 2, null);
+                    true, null, null, null,null, true, 2, null);
             applicationDao.save(application);
 
             application = new GnsApplication(null, null, s.getSchoolId(), "校园VR", "campus_roman",
-                    true, null, null, null, true, 3, null);
+                    true, null, null, null,null, true, 3, null);
             applicationDao.save(application);
 
             application = new GnsApplication(null, null, s.getSchoolId(), "个人中心", "personal_center",
-                    true, null, null, null, true, 4, null);
+                    true, null, null,null, null, true, 4, null);
             applicationDao.save(application);
 
             return MessageBean.ok(s);

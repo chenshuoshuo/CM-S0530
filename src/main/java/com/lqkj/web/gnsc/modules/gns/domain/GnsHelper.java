@@ -1,5 +1,7 @@
 package com.lqkj.web.gnsc.modules.gns.domain;
 
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
@@ -10,7 +12,7 @@ import java.util.Objects;
  * @Version 2.2.2.0
  **/
 @Entity
-@Table(name = "gns_helper", schema = "gns", catalog = "CM-S0530")
+@Table(name = "gns_helper", schema = "gns")
 public class GnsHelper {
     private Integer helperId;
     private Integer typeCode;
@@ -22,6 +24,7 @@ public class GnsHelper {
 
     @Id
     @Column(name = "helper_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getHelperId() {
         return helperId;
     }
@@ -62,6 +65,7 @@ public class GnsHelper {
 
     @Basic
     @Column(name = "update_time", nullable = true, length = -1)
+    @UpdateTimestamp
     public Timestamp getUpdateTime() {
         return updateTime;
     }

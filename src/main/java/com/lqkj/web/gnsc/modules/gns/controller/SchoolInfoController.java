@@ -75,8 +75,8 @@ public class SchoolInfoController {
      * @return
      */
     @ApiOperation("根据ID获取学校信息")
-    @GetMapping("/{schoolId}")
-    public MessageBean loadSchoolInfo(@ApiParam(name = "schoolId", value = "学校ID", required = true) @PathVariable("schoolId") Integer schoolId){
+    @GetMapping("/get")
+    public MessageBean loadSchoolInfo(@ApiParam(name = "schoolId", value = "学校ID", required = true) @RequestParam("schoolId") Integer schoolId){
 
         return MessageBean.ok(schoolInfoService.get(schoolId));
     }

@@ -21,6 +21,7 @@ public class GnsApplication {
     private String enName;
     private Boolean applicationOpen;
     private String logo;
+    private String clickedLogo;
     private String qrCode;
     private String openUrl;
     private Boolean preset;
@@ -32,7 +33,7 @@ public class GnsApplication {
     }
 
     public GnsApplication(Integer applicationId,Integer parentId, Integer schoolId, String applicationName, String enName, Boolean applicationOpen,
-                          String logo, String qrCode, String openUrl, Boolean preset, Integer orderId, String memo) {
+                          String logo,String clickedLogo, String qrCode, String openUrl, Boolean preset, Integer orderId, String memo) {
         this.applicationId = applicationId;
         this.parentId = parentId;
         this.schoolId = schoolId;
@@ -40,6 +41,7 @@ public class GnsApplication {
         this.enName = enName;
         this.applicationOpen = applicationOpen;
         this.logo = logo;
+        this.clickedLogo = clickedLogo;
         this.qrCode = qrCode;
         this.openUrl = openUrl;
         this.preset = preset;
@@ -116,6 +118,16 @@ public class GnsApplication {
 
     public void setLogo(String logo) {
         this.logo = logo;
+    }
+
+    @Basic
+    @Column(name = "clicked_logo", nullable = true, length = 1024)
+    public String getClickedLogo() {
+        return clickedLogo;
+    }
+
+    public void setClickedLogo(String clickedLogo) {
+        this.clickedLogo = clickedLogo;
     }
 
     @Basic

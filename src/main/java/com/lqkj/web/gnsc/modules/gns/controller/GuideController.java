@@ -45,10 +45,9 @@ public class GuideController {
     private GuideService guideService;
 
     @ApiOperation("H5获取迎新引导列表")
-    @GetMapping("/list/{campusCode}/{typeCode}")
-    public MessageListBean loadListWithCampusStudentType(
-            @ApiParam(name = "campusCode", value = "校区ID，全部（0）",required = true,defaultValue = "0") @PathVariable(name = "campusCode") Integer campusCode,
-            @ApiParam(name = "typeCode", value = "学生类型，全部（0）", required = true,defaultValue = "0") @PathVariable(name = "typeCode") Integer typeCode){
+    @GetMapping("/list")
+    public MessageListBean loadListWithCampusStudentType( @ApiParam(name = "campusCode",value = "校区区域组ID")@RequestParam(name = "campusCode") Integer campusCode,
+                                                          @ApiParam(name = "typeCode",value = "学生类型ID")@RequestParam(name = "typeCode") Integer typeCode){
 
         return MessageListBean.ok(guideService.queryAll(campusCode,typeCode));
 
@@ -59,8 +58,8 @@ public class GuideController {
      * @return
      */
     @ApiOperation("根据主键获取")
-    @GetMapping("/detail/{guideId}")
-    public MessageBean loadGuideDetail(@ApiParam(name="guideId",value="迎新引导信息ID",required=true) @PathVariable("guideId") Integer guideId){
+    @GetMapping("/detail")
+    public MessageBean loadGuideDetail(@ApiParam(name="guideId",value="迎新引导信息ID",required=true) @RequestParam("guideId") Integer guideId){
         return MessageBean.ok(guideService.get(guideId));
     }
 
@@ -76,7 +75,7 @@ public class GuideController {
     @ApiOperation("迎新引导信息分页")
     @GetMapping("/page")
     public MessageBean pageQuery(
-                             @ApiParam(name = "campusCode", value = "校区ID，全部（0）", required = true) @RequestParam(name = "campusCode", required = false, defaultValue = "0") Integer campusCode,
+                             @ApiParam(name = "campusCode", value = "校区区域组ID，全部（0）", required = true) @RequestParam(name = "campusCode", required = false, defaultValue = "0") Integer campusCode,
                              @ApiParam(name="typeCode",value="学生类型，全部（0）",required=true) @RequestParam(name = "typeCode", required = false, defaultValue = "0") Integer typeCode,
                              @ApiParam(name="title",value="标题",required=false) @RequestParam(name = "title", required = false) String title,
                              @ApiParam(name="page",value="页码",required=true) @RequestParam(name = "page", required = true) Integer page,

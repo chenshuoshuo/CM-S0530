@@ -9,7 +9,7 @@ import java.util.Objects;
  * @Version 2.2.2.0
  **/
 @Entity
-@Table(name = "gns_tour_route", schema = "gns", catalog = "CM-S0530")
+@Table(name = "gns_tour_route", schema = "gns")
 public class GnsTourRoute {
     private Integer campusCode;
     private Integer routeId;

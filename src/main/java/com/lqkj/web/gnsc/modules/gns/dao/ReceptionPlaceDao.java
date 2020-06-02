@@ -14,12 +14,11 @@ public interface ReceptionPlaceDao extends JpaRepository<GnsReceptionPlace,Integ
     /**
      * h5迎新接待点列表查询
      * @param typeCode 校内校外
-     * @param campusCode 校区ID
      * @return
      */
     @Query(nativeQuery = true,
-        value = "select * from gns.gns_reception_place where type_code = :typeCode and campus_code = :campusCode")
-    List<Map<String,Object>> queryList(Integer typeCode, Integer campusCode);
+        value = "select * from gns.gns_reception_place where type_code = :typeCode")
+    List<GnsReceptionPlace> queryList(Integer typeCode);
 
 
     /**

@@ -35,8 +35,8 @@ public class SchoolCampusController {
      * @return
      */
     @ApiOperation("获取校区列表")
-    @GetMapping("/list/{schoolId}")
-    public MessageBean loadEnrollment(@ApiParam(name = "schoolId", value = "学校ID", required = true)@PathVariable("schoolId") Integer schoolId){
+    @GetMapping("/list")
+    public MessageBean loadEnrollment(@ApiParam(name = "schoolId", value = "学校ID", required = true)@RequestParam("schoolId") Integer schoolId){
 
             return MessageBean.ok(schoolCampusService.loadWithSchool(schoolId));
     }
