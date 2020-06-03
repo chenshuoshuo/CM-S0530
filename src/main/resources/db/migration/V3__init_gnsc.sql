@@ -841,6 +841,7 @@ CREATE TABLE IF NOT EXISTS gns.gns_push_message (
    push_id              uuid                 not null,
    user_id              uuid                 null,
    title                VARCHAR(255)         null,
+   valid                BOOL                 NULL,
    push_type            INT4                 null,
    navigation_name      VARCHAR(255)         null,
    navigation_location  geometry             null,
@@ -861,6 +862,9 @@ comment on column gns.gns_push_message.user_id is
 
 comment on column gns.gns_push_message.title is
 '标题：title';
+
+comment on column gns.gns_push_message.valid is
+'是否有效：valid';
 
 comment on column gns.gns_push_message.push_type is
 '推送类型：push_type，1去宿舍，2去院系，3打卡';
