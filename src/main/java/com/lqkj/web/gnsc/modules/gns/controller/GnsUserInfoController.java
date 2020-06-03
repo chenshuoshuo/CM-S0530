@@ -61,4 +61,13 @@ public class GnsUserInfoController {
     public MessageListBean getUserAchievement(@RequestParam(name = "userId") String userId) {
         return userInfoService.getUserAchievement(userId);
     }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户id(必须)", paramType = "query")
+    })
+    @GetMapping(APIVersion.V1 + "/getUserSignRanking")
+    @ApiOperation("获取校友打卡排行排行榜")
+    public MessageBean getUserSignRanking(@RequestParam(name = "userId") String userId) {
+        return userInfoService.getUserSignRanking(userId);
+    }
 }

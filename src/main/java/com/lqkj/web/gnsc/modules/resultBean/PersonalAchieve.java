@@ -1,4 +1,4 @@
-package com.lqkj.web.gnsc.modules.gns.resultBean;
+package com.lqkj.web.gnsc.modules.resultBean;
 
 import java.io.Serializable;
 import java.sql.Timestamp;

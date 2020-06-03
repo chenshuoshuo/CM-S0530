@@ -8,7 +8,8 @@ import com.lqkj.web.gnsc.modules.gns.dao.GnsUserInfoDao;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsAccessRecord;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsStoreItem;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsUserInfo;
-import com.lqkj.web.gnsc.modules.gns.resultBean.PersonalAchieve;
+import com.lqkj.web.gnsc.modules.resultBean.PersonalAchieve;
+import com.lqkj.web.gnsc.modules.resultBean.UserSignRankBean;
 import com.lqkj.web.gnsc.utils.CommonUtils;
 import com.lqkj.web.gnsc.utils.ServletUtils;
 import com.lqkj.web.gnsc.utils.WeixinUtils;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -106,5 +108,26 @@ public class GnsUserInfoService {
             result.add(achieve);
         }
         return MessageListBean.ok(result);
+    }
+
+    public MessageBean getUserSignRanking(String userId) {
+        GnsUserInfo userInfo = userInfoDao.findByUUID(userId);
+        if (userInfo == null)
+            return MessageBean.error("不存在该用户");
+        //总排名
+        List<Object[]> list = userInfoDao.getRankOfUserSign(userInfo.getSchoolId());
+
+        UserSignRankBean bean = new UserSignRankBean();
+        for (Object[] objects : list) {
+            UserSignRankBean.SignRank signRank = new UserSignRankBean.SignRank(
+                    (BigInteger) objects[0],
+                    objects[2] == null ? "" : objects[2].toString(),
+                    objects[3] == null ? "" : objects[3].toString(),
+                    (Integer) objects[4]);
+            if (objects[1].toString().equals(userId))
+                bean.userRank = signRank;
+            bean.signRankList.add(signRank);
+        }
+        return MessageBean.ok(bean);
     }
 }

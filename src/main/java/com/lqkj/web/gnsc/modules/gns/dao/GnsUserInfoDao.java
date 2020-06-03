@@ -24,6 +24,12 @@ public interface GnsUserInfoDao extends JpaRepository<GnsUserInfo, String> {
             " ar.reach_time desc")
     List<Object[]> findAchieveByUserId(String userId);
 
+    @Query(nativeQuery = true, value = "select rank() over (order by u.sign_count desc) as rank," +
+            " u.user_id||'',u.head_url, u.nickname, u.sign_count" +
+            " from gns.gns_user_info u" +
+            " where u.school_id = :schoolId")
+    List<Object[]> getRankOfUserSign(Integer schoolId);
+
     /**
      * 获取用户位置并返回信息
      */
