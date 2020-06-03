@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/sign")
-@Api(value="打卡管理",tags={"打卡接口"})
+@Api(value="打卡管理",tags={"打卡管理"})
 public class GnsSignController {
     @Autowired
     private GnsSignService signService;
@@ -35,6 +35,17 @@ public class GnsSignController {
     public MessageListBean queryList(@ApiParam(name = "schoolId", value = "学校ID", required = true)@RequestParam(name = "schoolId")Integer schoolId){
 
         return MessageListBean.ok(signService.queryList(schoolId));
+    }
+
+
+    @PostMapping("/save")
+    @ApiOperation("上传打卡信息")
+    public MessageBean save(@ApiParam(name = "userCode",value = "用户ID")@RequestParam(name = "userCode")String userCode,
+                            @ApiParam(name = "mapCode",value = "地标ID，地标标签传入pointCode的值,其他为mapCode的值")@RequestParam(name = "mapCode")Integer mapCode,
+                            @ApiParam(name = "mapType",value = "地标类型（地标标签传point；大楼、房间、其他面传polygon")@RequestParam(name = "mapType") String mapType){
+
+        return signService.save(userCode,mapCode,mapType);
+
     }
 
 }

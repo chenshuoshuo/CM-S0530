@@ -83,8 +83,9 @@ public class PointTypeService {
         List<Map<String,Object>> pointTypeList = pointTypeDao.queryList(schoolId);
         //添加热门地标
         Map<String,Object> hotPointType = new HashMap<>();
-        hotPointType.put("typeCode",-1);
-        hotPointType.put("typeName","热门地标");
+        hotPointType.put("typecode",-1);
+        hotPointType.put("typename","热门地标");
+        hotPointType.put("vectoricon","/upload/images/icon-hot.png");
         pointTypeList.add(0,hotPointType);
 
         return pointTypeList;

@@ -39,7 +39,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("/guide")
-@Api(value = "迎新引导controller", tags = "迎新引导接口")
+@Api(value = "迎新引导controller", tags = "迎新引导")
 public class GuideController {
     @Autowired
     private GuideService guideService;

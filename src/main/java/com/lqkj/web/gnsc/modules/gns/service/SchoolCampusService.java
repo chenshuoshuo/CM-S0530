@@ -13,6 +13,8 @@ import com.lqkj.web.gnsc.modules.gns.domain.GnsCampusInfo;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsSchool;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsStoreItem;
 import com.lqkj.web.gnsc.utils.DisableSSLCertificateCheckUtil;
+import com.lqkj.web.gnsc.utils.GeoJSON;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
@@ -66,28 +68,27 @@ public class SchoolCampusService {
                 for (int i = 0; i < jsonArray.size(); i++) {
                     JSONObject contentJson = jsonArray.getJSONObject(i);
                     GnsCampusInfo schoolCampus = schoolCampusDao.findByCampusCode(contentJson.getInteger("groupId"));
-                    if (schoolCampus == null) {
-                        schoolCampus = new GnsCampusInfo();
-                        schoolCampus.setCampusCode(contentJson.getInteger("groupId"));
-                        schoolCampus.setCampusName(contentJson.getString("name"));
-                        JSONArray jsonZoneArray = contentJson.getJSONArray("zones");
-                        if (jsonZoneArray.size() > 0) {
-                            for (int j = 0; j < jsonZoneArray.size(); j++) {
-                                JSONObject jsonZoneObject = jsonZoneArray.getJSONObject(j);
-                                JSONObject jsonObject = jsonZoneObject.getJSONObject("mapZoneByZoneId");
 
-                                if (jsonObject.get("is2D").equals(true)) {
-                                    schoolCampus.setVectorZoomCode(jsonObject.getInteger("id"));
-                                }
-                                if (jsonObject.get("is2D").equals(false)) {
-                                    schoolCampus.setRasterZoomCode(jsonObject.getInteger("id"));
-                                }
+                    schoolCampus.setCampusCode(contentJson.getInteger("groupId"));
+                    schoolCampus.setCampusName(contentJson.getString("name"));
+                    JSONArray jsonZoneArray = contentJson.getJSONArray("zones");
+                    if (jsonZoneArray.size() > 0) {
+                        for (int j = 0; j < jsonZoneArray.size(); j++) {
+                            JSONObject jsonZoneObject = jsonZoneArray.getJSONObject(j);
+                            JSONObject jsonObject = jsonZoneObject.getJSONObject("mapZoneByZoneId");
+                            String polygonBBox = JSON.toJSONString(jsonObject.getJSONObject("polygonBBox"));
+                            if(StringUtils.isNotBlank(polygonBBox)){
+                                schoolCampus.setElectronicFence(GeoJSON.gjson.read(polygonBBox));
+                            }
+                            if (jsonObject.get("is2D").equals(true)) {
+                                schoolCampus.setVectorZoomCode(jsonObject.getInteger("id"));
+                            }
+                            if (jsonObject.get("is2D").equals(false)) {
+                                schoolCampus.setRasterZoomCode(jsonObject.getInteger("id"));
                             }
                         }
-                        schoolCampusDao.save(schoolCampus);
-                    } else {
-                        return MessageListBean.error("校区已经存在，数据没有改变");
                     }
+                    schoolCampusDao.save(schoolCampus);
                 }
             }
             List<GnsCampusInfo> list = schoolCampusDao.findAll();

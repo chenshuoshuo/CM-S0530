@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  **/
 @RestController
 @RequestMapping("/dorm")
-@Api(tags = "迎新宿舍接口")
+@Api(tags = "迎新宿舍")
 public class DormNavigationController {
 
     @Autowired

@@ -22,7 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/pointCategory")
-@Api(value="地标分类信息controller",tags={"地标分类信息接口"})
+@Api(value="地标分类信息controller",tags={"地标分类信息"})
 public class PointTypeController {
     @Autowired
     private PointTypeService pointTypeService;
@@ -68,7 +68,7 @@ public class PointTypeController {
      */
     @ApiOperation("h5获取地标详情")
     @GetMapping("/detail")
-    public MessageBean pointList(@ApiParam(name="mapCode",value="地图编号/地标编号",required=true)@RequestParam(name = "mapCode", required = true) Integer mapCode,
+    public MessageBean pointList(@ApiParam(name="mapCode",value="地标ID，点标注传入pointCode的值,其他为mapCode的值",required=true)@RequestParam(name = "mapCode", required = true) Integer mapCode,
                                  @ApiParam(name="mapType",value="地标类型（地标标签传point；大楼、房间、其他面传polygon）",required=true)@RequestParam(name = "mapType", required = true) String mapType){
 
         return MessageBean.ok(pointTypeService.queryByMapCode(mapCode,mapType));

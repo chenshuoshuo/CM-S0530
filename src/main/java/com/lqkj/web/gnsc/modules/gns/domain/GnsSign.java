@@ -1,8 +1,11 @@
 package com.lqkj.web.gnsc.modules.gns.domain;
 
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * @author cs
@@ -13,14 +16,25 @@ import java.util.Objects;
 @Table(name = "gns_sign", schema = "gns")
 public class GnsSign {
     private Integer signId;
-    private String userId;
+    private UUID userId;
     private Long landmarkId;
     private String landmarkName;
     private String landmarkType;
     private Timestamp createTime;
 
+    public GnsSign() {
+    }
+
+    public GnsSign(UUID userId, Long landmarkId, String landmarkName, String landmarkType) {
+        this.userId = userId;
+        this.landmarkId = landmarkId;
+        this.landmarkName = landmarkName;
+        this.landmarkType = landmarkType;
+    }
+
     @Id
     @Column(name = "sign_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getSignId() {
         return signId;
     }
@@ -31,11 +45,11 @@ public class GnsSign {
 
     @Basic
     @Column(name = "user_id", nullable = true)
-    public String getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 
@@ -71,6 +85,7 @@ public class GnsSign {
 
     @Basic
     @Column(name = "create_time", nullable = true)
+    @UpdateTimestamp
     public Timestamp getCreateTime() {
         return createTime;
     }

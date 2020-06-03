@@ -265,6 +265,7 @@ CREATE TABLE IF NOT EXISTS gns.gns_campus_info (
    raster_zoom_code     INT4                 null,
    vector_zoom_code     INT4                 null,
    gate_lng_lat         VARCHAR(100)         null,
+   electronic_fence     geometry             null,
    campus_description   VARCHAR(255)         null,
    roam_url             VARCHAR(1024)        null,
    order_id             INT4                 null,
@@ -292,6 +293,9 @@ comment on column gns.gns_campus_info.vector_zoom_code is
 
 comment on column gns.gns_campus_info.gate_lng_lat is
 '校门坐标：gate_lng_lat';
+
+comment on column gns_campus_info.electronic_fence is
+'电子围栏：electronic_fence';
 
 comment on column gns.gns_campus_info.campus_description is
 '校区描述：campus_description';

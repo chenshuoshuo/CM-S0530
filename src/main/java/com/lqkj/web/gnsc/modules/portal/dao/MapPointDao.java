@@ -37,6 +37,8 @@ public interface MapPointDao extends JpaRepository<MapPoint, Integer> {
 
     MapPoint queryByMapCode(Long mapCode);
 
+    MapPoint queryByPointCode(Integer pointCode);
+
     Boolean existsByMapCode(Long mapCode);
 
     Boolean existsByPointCode(Integer pointCode);

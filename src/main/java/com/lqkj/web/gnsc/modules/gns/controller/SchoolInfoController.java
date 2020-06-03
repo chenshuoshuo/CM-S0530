@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/schoolInfo")
-@Api(value = "学校信息controller", tags = "学校信息接口")
+@Api(value = "学校信息controller", tags = "学校信息")
 public class SchoolInfoController {
 
     @Autowired

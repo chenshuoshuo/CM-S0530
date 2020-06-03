@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/helper")
-@Api(value="迎新通讯录controller",tags={"迎新通讯录接口"})
+@Api(value="迎新通讯录controller",tags={"迎新通讯录"})
 public class HelperController {
 
     @Autowired

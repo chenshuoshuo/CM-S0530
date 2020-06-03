@@ -1,5 +1,11 @@
 package com.lqkj.web.gnsc.modules.gns.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.lqkj.web.gnsc.utils.JacksonGeometryDeserializer;
+import com.lqkj.web.gnsc.utils.JacksonGeometrySerializer;
+import com.vividsolutions.jts.geom.Geometry;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -17,6 +23,9 @@ public class GnsCampusInfo {
     private Integer rasterZoomCode;
     private Integer vectorZoomCode;
     private String gateLngLat;
+    @JsonSerialize(using = JacksonGeometrySerializer.class)
+    @JsonDeserialize(using = JacksonGeometryDeserializer.class)
+    private Geometry electronicFence;
     private String campusDescription;
     private String roamUrl;
     private Integer orderId;
@@ -130,6 +139,15 @@ public class GnsCampusInfo {
 
     public void setSchoolName(String schoolName) {
         this.schoolName = schoolName;
+    }
+
+    @Column(name = "electronic_fence")
+    public Geometry getElectronicFence() {
+        return electronicFence;
+    }
+
+    public void setElectronicFence(Geometry electronicFence) {
+        this.electronicFence = electronicFence;
     }
 
     @Override

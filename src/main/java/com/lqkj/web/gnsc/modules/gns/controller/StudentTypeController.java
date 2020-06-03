@@ -18,7 +18,7 @@ import java.util.List;
  */
 
 @RestController
-@Api(value = "学生类型controller", tags = "学生类型接口")
+@Api(value = "学生类型controller", tags = "学生类型")
 @RequestMapping("/studentType")
 public class StudentTypeController {
     @Autowired

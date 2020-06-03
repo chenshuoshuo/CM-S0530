@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
-@Api(value = "迎新接待点controller", tags = "迎新接待点接口")
+@Api(value = "迎新接待点controller", tags = "迎新接待点")
 @RequestMapping("/receptionPlace")
 public class ReceptionPlaceController {
     @Autowired

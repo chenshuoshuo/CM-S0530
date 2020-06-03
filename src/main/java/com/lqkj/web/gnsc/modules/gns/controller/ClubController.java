@@ -18,7 +18,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/club")
-@Api(value="校园社团管理",tags={"迎新校园社团接口"})
+@Api(value="校园社团管理",tags={"迎新校园社团"})
 public class ClubController {
     @Autowired
     private ClubService clubService;

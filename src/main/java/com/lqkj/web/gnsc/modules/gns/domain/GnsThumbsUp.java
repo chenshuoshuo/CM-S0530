@@ -1,6 +1,7 @@
 package com.lqkj.web.gnsc.modules.gns.domain;
 
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -21,6 +22,17 @@ public class GnsThumbsUp {
     private String landmarkName;
     private String landmarkType;
     private Timestamp createTime;
+
+    public GnsThumbsUp() {
+    }
+
+
+    public GnsThumbsUp(UUID userId, Long landmarkId, String landmarkName, String landmarkType) {
+        this.userId = userId;
+        this.landmarkId = landmarkId;
+        this.landmarkName = landmarkName;
+        this.landmarkType = landmarkType;
+    }
 
     @Id
     @Column(name = "sign_id", nullable = false)
@@ -75,6 +87,7 @@ public class GnsThumbsUp {
 
     @Basic
     @Column(name = "create_time", nullable = true)
+    @UpdateTimestamp
     public Timestamp getCreateTime() {
         return createTime;
     }

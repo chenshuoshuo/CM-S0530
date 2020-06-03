@@ -1,5 +1,7 @@
 package com.lqkj.web.gnsc.modules.gns.domain;
 
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
@@ -21,8 +23,20 @@ public class GnsGroupPhoto {
     private String photoUrl;
     private Timestamp createTime;
 
+    public GnsGroupPhoto() {
+    }
+
+    public GnsGroupPhoto(UUID userId, Long landmarkId, String landmarkName, String landmarkType, String photoUrl) {
+        this.userId = userId;
+        this.landmarkId = landmarkId;
+        this.landmarkName = landmarkName;
+        this.landmarkType = landmarkType;
+        this.photoUrl = photoUrl;
+    }
+
     @Id
     @Column(name = "sign_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getSignId() {
         return signId;
     }
@@ -83,6 +97,7 @@ public class GnsGroupPhoto {
 
     @Basic
     @Column(name = "create_time", nullable = true)
+    @UpdateTimestamp
     public Timestamp getCreateTime() {
         return createTime;
     }

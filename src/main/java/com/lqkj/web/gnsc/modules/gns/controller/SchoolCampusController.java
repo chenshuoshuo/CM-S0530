@@ -23,7 +23,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/schoolCampus")
-@Api(value="校区信息controller",tags={"校区信息接口"})
+@Api(value="校区信息controller",tags={"校区信息"})
 public class SchoolCampusController {
     @Autowired
     private SchoolCampusService schoolCampusService;

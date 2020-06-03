@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/registeringNotice")
-@Api(value="报到须知controller",tags={"迎新报到须知接口"})
+@Api(value="报到须知controller",tags={"迎新报到须知"})
 public class RegisteringNoticeController {
 
     @Autowired

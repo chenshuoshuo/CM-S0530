@@ -19,7 +19,7 @@ import java.util.List;
  */
 
 @RestController
-@Api(value = "接待点分类controller", tags = "迎新接待点分类接口")
+@Api(value = "接待点分类controller", tags = "迎新接待点分类")
 @RequestMapping("/receptionType")
 public class ReceptionTypeController {
     @Autowired
