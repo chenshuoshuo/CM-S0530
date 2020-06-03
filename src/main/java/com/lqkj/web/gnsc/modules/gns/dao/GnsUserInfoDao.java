@@ -17,8 +17,8 @@ public interface GnsUserInfoDao extends JpaRepository<GnsUserInfo, String> {
     /**
      * 获取用户位置并返回信息
      */
-    @Query(nativeQuery = true,
-        value = "")
-    String loadUserLocation();
+//    @Query(nativeQuery = true,
+//        value = "")
+//    String loadUserLocation();
 
 }
