@@ -19,10 +19,10 @@ public interface MapRoomDao extends JpaRepository<MapRoom, Integer> {
      * @return
      */
     @Query(nativeQuery = true,
-            value = "select room_code roomCode,room_name roomName,brief brief,audio_url audioUrl,video_url videoUrl,st_asgeojson(lng_lat) vectorGeom, " +
-                    "thumbs_up_count thumbsUpCount,photo_background photoBackground,roam_url roamUrl,open_gns_sign openGnsSign,gns_sign_count gnsSignCount " +
-                    "from portal.map_room where map_code = :mapCode")
-    Map<String,Object> queryDetailByMapCode(Long mapCode);
+            value = "with t1 as(select room_code ,room_name ,brief ,audio_url ,video_url ,st_asgeojson(lng_lat)\\:\\:json lng_lat,thumbs_up_count ,photo_background ,roam_url ,open_gns_sign ,gns_sign_count  " +
+                    "from portal.map_room where map_code = :mapCode)" +
+                    "select json_build_object('infoCode',room_code,'infoName',room_name,'brief',brief,'audioUrl',audio_url,'videoUrl',video_url,'vectorGeom',lng_lat,'thumbsUpCount',thumbs_up_count,'photoBackground',photo_background,'roamUrl',roam_url,'openGnsSign',open_gns_sign,'gnsSignCount',gns_sign_count)\\:\\:varchar from t1")
+    String queryDetailByMapCode(Long mapCode);
 
     MapRoom queryByMapCode(Long mapCode);
 

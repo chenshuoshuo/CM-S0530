@@ -36,11 +36,12 @@ public class GnsThumbsUp {
 
     @Id
     @Column(name = "sign_id", nullable = false)
-    public int getSignId() {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Integer getSignId() {
         return signId;
     }
 
-    public void setSignId(int signId) {
+    public void setSignId(Integer signId) {
         this.signId = signId;
     }
 

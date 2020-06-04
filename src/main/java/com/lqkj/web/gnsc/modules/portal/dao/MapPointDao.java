@@ -19,8 +19,11 @@ public interface MapPointDao extends JpaRepository<MapPoint, Integer> {
      * @return
      */
     @Query(nativeQuery = true,
-        value = "select point_code pointCode,point_name pointName,brief brief,audio_url audioUrl,video_url videoUrl,st_asgeojson(lng_lat) vectorGeom, thumbs_up_count thumbsUpCount,photo_background photoBackground,roam_url roamUrl,open_gns_sign openGnsSign,gns_sign_count gnsSignCount from portal.map_point where point_code = :pointCode")
-    Map<String,Object> queryDetailByPointCode(Integer pointCode);
+        value = "with t1 as(select point_code ,point_name ,brief ,audio_url ,video_url ,st_asgeojson(lng_lat)\\:\\:json lng_lat," +
+                "st_asgeojson(raster_lng_lat)\\:\\:json raster_lng_lat, thumbs_up_count ,photo_background ,roam_url ,open_gns_sign ,gns_sign_count  " +
+                "from portal.map_point where point_code = :pointCode)" +
+                "select json_build_object('infoCode',point_code,'infoName',point_name,'brief',brief,'audioUrl',audio_url,'videoUrl',video_url,'vectorGeom',lng_lat,'rasterGeom',raster_lng_lat,'thumbsUpCount',thumbs_up_count,'photoBackground',photo_background,'roamUrl',roam_url,'openGnsSign',open_gns_sign,'gnsSignCount',gns_sign_count)\\:\\:varchar from t1")
+    String queryDetailByPointCode(Integer pointCode);
 
     @Query(value = "select count(p.pointCode) from MapPoint p where p.typeCode = :typeCode and p.campusCode = :campusCode and p.delete = false")
     Integer countWithTypeCode(@Param("typeCode") Integer typeCode,

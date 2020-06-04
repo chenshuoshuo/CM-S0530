@@ -56,6 +56,8 @@ public class GnsSignService {
      */
     public MessageBean save(String userCode, Integer mapCode, String mapType){
         String landMarkName = null;
+        Integer signCount = null;
+        Integer signInterval = null;
         //判断是否已经打卡
         Boolean checkSignList = signDao.existsByUserCodeAndMapCode(userCode,mapCode);
         if(checkSignList){
@@ -63,6 +65,8 @@ public class GnsSignService {
                 MapPoint point = pointDao.queryByPointCode(mapCode);
                 landMarkName = point.getPointName();
                 point.setGnsSignCount(point.getGnsSignCount() + 1);
+                signCount = point.getGnsSignCount();
+                signInterval = point.getGnsSignInterval() * 60;
                 pointDao.save(point);
             }else {
                 //获取房间 大楼 其他面信息
@@ -70,24 +74,31 @@ public class GnsSignService {
                     MapBuilding building = buildingDao.queryByMapCode(Long.parseLong(mapCode.toString()));
                     landMarkName = building.getBuildingName();
                     building.setGnsSignCount(building.getGnsSignCount() + 1);
+                    signCount = building.getGnsSignCount();
+                    signInterval = building.getGnsSignInterval() * 60;
                     buildingDao.save(building);
                 }else if(roomDao.existsByMapCode(Long.parseLong(mapCode.toString()))){
                     MapRoom room = roomDao.queryByMapCode(Long.parseLong(mapCode.toString()));
                     landMarkName = room.getRoomName();
                     room.setGnsSignCount(room.getGnsSignCount() + 1);
+                    signCount = room.getGnsSignCount();
+                    signInterval = room.getGnsSignInterval();
                     roomDao.save(room);
                 }else if(othersPolygonDao.existsByMapCode(Long.parseLong(mapCode.toString()))){
                     MapOthersPolygon othersPolygon = othersPolygonDao.queryByMapCode(Long.parseLong(mapCode.toString()));
                     landMarkName = othersPolygon.getPolygonName();
                     othersPolygon.setGnsSignCount(othersPolygon.getGnsSignCount() + 1);
+                    signCount = othersPolygon.getGnsSignCount();
+                    signInterval = othersPolygon.getGnsSignInterval() * 60;
                     othersPolygonDao.save(othersPolygon);
                 }
             }
             //保存打卡记录
             GnsSign sign = new GnsSign(UUID.fromString(userCode),Long.parseLong(mapCode.toString()),landMarkName,mapType);
-            return MessageBean.ok(signDao.save(sign));
+            signDao.save(sign);
+            return MessageBean.ok(signCount);
         }else {
-            return MessageBean.error("打卡间隔为1个小时");
+            return MessageBean.error("提示：您已打卡，过" + signInterval + "分钟可以再次打卡哦！");
         }
     }
 }

@@ -21,6 +21,7 @@ public class GnsClubVO {
     private Integer campusName;
     private String clubName;
     private String description;
+    private Integer click;
     private Timestamp updateTime;
 
     @Id
@@ -73,4 +74,13 @@ public class GnsClubVO {
         this.updateTime = updateTime;
     }
 
+    @Basic
+    @Column(name = "click")
+    public Integer getClick() {
+        return click;
+    }
+
+    public void setClick(Integer click) {
+        this.click = click;
+    }
 }

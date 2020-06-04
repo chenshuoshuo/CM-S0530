@@ -1237,6 +1237,7 @@ CREATE TABLE IF NOT EXISTS gns.gns_tour_route (
    route_name           VARCHAR(50)          null,
    point_count          INT4                 null,
    mileage              VARCHAR(20)          null,
+   navigation_route     jsonb                null,
    update_time          TIMESTAMP                 null,
    order_id             INT4                 null,
    memo                 VARCHAR(255)         null,
@@ -1260,6 +1261,9 @@ comment on column gns.gns_tour_route.point_count is
 
 comment on column gns.gns_tour_route.mileage is
 '路线里程：mileage';
+
+comment on column gns_tour_route.navigation_route is
+'路径规划线路：navigation_route';
 
 comment on column gns.gns_tour_route.update_time is
 '更新时间：update_time';

@@ -19,10 +19,11 @@ public interface MapBuildingDao extends JpaRepository<MapBuilding, Integer> {
      * @return
      */
     @Query(nativeQuery = true,
-            value = "select building_code buildingCode,building_name buildingName,brief brief,audio_url audioUrl,video_url videoUrl,st_asgeojson(lng_lat) vectorGeom, " +
-                    "thumbs_up_count thumbsUpCount,photo_background photoBackground,roam_url roamUrl,open_gns_sign openGnsSign,gns_sign_count gnsSignCount " +
-                    "from portal.map_building where map_code = :mapCode")
-    Map<String,Object> queryDetailByMapCode(Long mapCode);
+            value = "with t1 as(select building_code ,building_name ,brief ,audio_url ,video_url ,st_asgeojson(lng_lat)\\:\\:json lng_lat," +
+                    "st_asgeojson(raster_lng_lat)\\:\\:json raster_lng_lat, thumbs_up_count ,photo_background ,roam_url ,open_gns_sign ,gns_sign_count  " +
+                    "from portal.map_building where map_code = :mapCode)" +
+                    "select json_build_object('infoCode',building_code,'infoName',building_name,'brief',brief,'audioUrl',audio_url,'videoUrl',video_url,'vectorGeom',lng_lat,'rasterGeom',raster_lng_lat,'thumbsUpCount',thumbs_up_count,'photoBackground',photo_background,'roamUrl',roam_url,'openGnsSign',open_gns_sign,'gnsSignCount',gns_sign_count)\\:\\:varchar from t1")
+    String queryDetailByMapCode(Long mapCode);
 
     MapBuilding queryByMapCode(Long mapCode);
 

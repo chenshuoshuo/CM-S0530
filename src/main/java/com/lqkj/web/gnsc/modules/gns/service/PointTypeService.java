@@ -6,9 +6,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.lqkj.web.gnsc.message.MessageBean;
 import com.lqkj.web.gnsc.message.MessageListBean;
 import com.lqkj.web.gnsc.modules.gns.dao.GnsStoreItemDao;
+import com.lqkj.web.gnsc.modules.gns.dao.HotPointVODao;
 import com.lqkj.web.gnsc.modules.gns.dao.PointTypeDao;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsDisplayPointType;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsStoreItem;
+import com.lqkj.web.gnsc.modules.gns.domain.vo.GnsHelperVO;
+import com.lqkj.web.gnsc.modules.gns.domain.vo.HotPointVO;
 import com.lqkj.web.gnsc.modules.portal.dao.*;
 import com.lqkj.web.gnsc.modules.portal.model.*;
 import com.lqkj.web.gnsc.modules.portal.service.*;
@@ -24,6 +27,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +44,8 @@ import java.util.Map;
 public class PointTypeService {
     @Autowired
     private PointTypeDao pointTypeDao;
+    @Autowired
+    private HotPointVODao hotPointVODao;
     @Autowired
     private MapPointImgService pointImgService;
     @Autowired
@@ -64,6 +72,33 @@ public class PointTypeService {
     private MapOthersPolygonExtendsService othersPolygonExtendsService;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    /**
+     * 分页
+     */
+    public Page<HotPointVO> page(Integer schoolId,Integer campusCode, String pointName, Integer page, Integer pageSize){
+
+        Pageable pageable = PageRequest.of(page,pageSize);
+        return hotPointVODao.page(schoolId,campusCode,pointName,pageable);
+    }
+
+    /**
+     * 开启/禁用
+     */
+    public MapPoint open(Integer pointCode,Boolean open){
+        MapPoint point = pointDao.queryByPointCode(pointCode);
+        point.setGnsHot(open);
+        return pointDao.save(point);
+    }
+
+    /**
+     * 编辑点击数
+     */
+    public MapPoint updateThumpsUp(Integer pointCode, Integer thumpsUpCount){
+        MapPoint point = pointDao.queryByPointCode(pointCode);
+        point.setThumbsUpCount(thumpsUpCount);
+        return pointDao.save(point);
+    }
 
     /**
      * 保存默认地标
@@ -115,53 +150,41 @@ public class PointTypeService {
      */
     public Object queryByMapCode(Integer mapCode,String mapType){
         try {
-            Map<String,Object> resultMap = new HashMap<>();
+            JSONObject resultJson = new JSONObject();
             if("point".equals(mapType) && pointDao.existsByPointCode(mapCode)){
-                Map<String,Object> linkedHashMap = pointDao.queryDetailByPointCode(mapCode);
-                resultMap.putAll(linkedHashMap);
-                resultMap.put("type", "point");
-                resultMap.put("mapPointImgList",pointImgService.queryListWithPointCode(mapCode));
-                resultMap.put("mapPointExtendsList",pointExtendsService.queryList(mapCode));
+                String pointJsonString = pointDao.queryDetailByPointCode(mapCode);
+                JSONObject pointJson = JSONObject.parseObject(pointJsonString);
+                pointJson.put("type", "point");
+                pointJson.put("mapPointImgList",pointImgService.queryListWithPointCode(mapCode));
+                pointJson.put("mapPointExtendsList",pointExtendsService.queryList(mapCode));
 
-                if(linkedHashMap.get("vectorGeom") != null){
-                    resultMap.put("vectorGeom", JSONObject.parseObject(linkedHashMap.get("vectorGeom").toString()));
-                }
-                return resultMap;
+                return pointJson;
 
             } else{
                 if(buildingDao.existsByMapCode(Long.parseLong(mapCode.toString()))){
-                    Map<String,Object> linkedHashMap = buildingDao.queryDetailByMapCode(Long.parseLong(mapCode.toString()));
-                    resultMap.putAll(linkedHashMap);
-                    resultMap.put("type", "polygon");
-                    resultMap.put("mapBuildingImgList",buildingImgService.queryListWithBuildingCode(Integer.parseInt(linkedHashMap.get("buildingCode").toString())));
-                    resultMap.put("mapBuildingExtendsList",buildingExtendsService.queryList(Integer.parseInt(linkedHashMap.get("buildingCode").toString())));
+                    String buildingJsonString = buildingDao.queryDetailByMapCode(Long.parseLong(mapCode.toString()));
+                    JSONObject buildingJson = JSONObject.parseObject(buildingJsonString);
+                    buildingJson.put("type", "polygon");
+                    buildingJson.put("mapBuildingImgList",buildingImgService.queryListWithBuildingCode(Integer.parseInt(buildingJson.get("buildingCode").toString())));
+                    buildingJson.put("mapBuildingExtendsList",buildingExtendsService.queryList(Integer.parseInt(buildingJson.get("buildingCode").toString())));
 
-                    if(linkedHashMap.get("vectorGeom") != null){
-                        resultMap.put("vectorGeom", JSONObject.parseObject(linkedHashMap.get("vectorGeom").toString()));
-                    }
-                    return resultMap;
+                    return buildingJson;
                 }else if(roomDao.existsByMapCode(Long.parseLong(mapCode.toString()))){
-                    Map<String,Object> linkedHashMap = roomDao.queryDetailByMapCode(Long.parseLong(mapCode.toString()));
-                    resultMap.putAll(linkedHashMap);
-                    resultMap.put("type", "polygon");
-                    resultMap.put("mapRoomImgList",roomImgService.queryListWithRoomCode(Integer.parseInt(linkedHashMap.get("roomCode").toString())));
-                    resultMap.put("mapRoomExtendsList",roomExtendsService.queryList(Integer.parseInt(linkedHashMap.get("roomCode").toString())));
+                    String roomJsonString = roomDao.queryDetailByMapCode(Long.parseLong(mapCode.toString()));
+                    JSONObject roomJson = JSONObject.parseObject(roomJsonString);
+                    roomJson.put("type", "polygon");
+                    roomJson.put("mapRoomImgList",roomImgService.queryListWithRoomCode(Integer.parseInt(roomJson.get("roomCode").toString())));
+                    roomJson.put("mapRoomExtendsList",roomExtendsService.queryList(Integer.parseInt(roomJson.get("roomCode").toString())));
 
-                    if(linkedHashMap.get("vectorGeom") != null){
-                        resultMap.put("vectorGeom", JSONObject.parseObject(linkedHashMap.get("vectorGeom").toString()));
-                    }
-                    return resultMap;
+                    return roomJson;
                 }else if(othersPolygonDao.existsByMapCode(Long.parseLong(mapCode.toString()))){
-                    Map<String,Object> linkedHashMap = othersPolygonDao.queryDetailByMapCode(Long.parseLong(mapCode.toString()));
-                    resultMap.putAll(linkedHashMap);
-                    resultMap.put("type", "polygon");
-                    resultMap.put("mapOtherPolygonImgList",othersPolygonImgService.queryListWithPolygonCode(Integer.parseInt(linkedHashMap.get("polygonCode").toString())));
-                    resultMap.put("mapOtherPolygonExtendsList",othersPolygonExtendsService.queryList(Integer.parseInt(linkedHashMap.get("polygonCode").toString())));
+                    String otherPolygonJsonString = othersPolygonDao.queryDetailByMapCode(Long.parseLong(mapCode.toString()));
+                    JSONObject otherPolygonJson = JSONObject.parseObject(otherPolygonJsonString);
+                    otherPolygonJson.put("type", "polygon");
+                    otherPolygonJson.put("mapOtherPolygonImgList",othersPolygonImgService.queryListWithPolygonCode(Integer.parseInt(otherPolygonJson.get("polygonCode").toString())));
+                    otherPolygonJson.put("mapOtherPolygonExtendsList",othersPolygonExtendsService.queryList(Integer.parseInt(otherPolygonJson.get("polygonCode").toString())));
 
-                    if(linkedHashMap.get("vectorGeom") != null){
-                        resultMap.put("vectorGeom", JSONObject.parseObject(linkedHashMap.get("vectorGeom").toString()));
-                    }
-                    return resultMap;
+                    return otherPolygonJson;
                 }else {
                     return null;
                 }

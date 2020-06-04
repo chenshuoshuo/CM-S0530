@@ -1,6 +1,12 @@
 package com.lqkj.web.gnsc.modules.gns.domain;
 
+import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 /**
@@ -10,13 +16,15 @@ import java.util.Objects;
  **/
 @Entity
 @Table(name = "gns_tour_route", schema = "gns")
+@TypeDef(name = "jsonb-node",typeClass = JsonNodeBinaryType.class)
 public class GnsTourRoute {
     private Integer campusCode;
     private Integer routeId;
     private String routeName;
     private Integer pointCount;
     private String mileage;
-    private String updateTime;
+    private Object navigation_route;
+    private Timestamp updateTime;
     private Integer orderId;
     private String memo;
 
@@ -32,6 +40,7 @@ public class GnsTourRoute {
 
     @Id
     @Column(name = "route_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getRouteId() {
         return routeId;
     }
@@ -72,11 +81,12 @@ public class GnsTourRoute {
 
     @Basic
     @Column(name = "update_time", nullable = true, length = -1)
-    public String getUpdateTime() {
+    @UpdateTimestamp
+    public Timestamp getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(String updateTime) {
+    public void setUpdateTime(Timestamp updateTime) {
         this.updateTime = updateTime;
     }
 
@@ -98,6 +108,17 @@ public class GnsTourRoute {
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    @Basic
+    @Type(type = "jsonb-node")
+    @Column(name = "navigation_route")
+    public Object getNavigation_route() {
+        return navigation_route;
+    }
+
+    public void setNavigation_route(Object navigation_route) {
+        this.navigation_route = navigation_route;
     }
 
     @Override

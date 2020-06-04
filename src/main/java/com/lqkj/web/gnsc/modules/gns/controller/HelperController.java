@@ -9,7 +9,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 
 /**
@@ -111,6 +115,16 @@ public class HelperController {
     @DeleteMapping("/bulkDelete")
     public MessageBean bulkDelete(@ApiParam(name="ids",value="通讯录信息ID，多个以','分隔",required=true) @RequestParam(name = "ids", required = true) String ids){
         return MessageBean.ok(helperService.bulkDelete(ids));
+    }
+
+    /**
+     * 下载导入模板
+     * @throws IOException IO异常
+     */
+    @GetMapping("/info/downloadTemplate")
+    public ResponseEntity<InputStreamResource> exportTemplate(@ApiParam(name="schoolId",value="学校ID",required=true) @RequestParam(name = "schoolId", required = true) Integer schoolId)
+            throws IOException{
+        return helperService.exportTemplate(schoolId);
     }
 
 }

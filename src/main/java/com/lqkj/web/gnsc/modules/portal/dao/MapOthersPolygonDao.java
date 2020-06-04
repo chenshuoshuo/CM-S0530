@@ -19,10 +19,10 @@ public interface MapOthersPolygonDao extends JpaRepository<MapOthersPolygon, Int
      * @return
      */
     @Query(nativeQuery = true,
-            value = "select polygon_code polygonCode,polygon_name polygonName,brief brief,audio_url audioUrl,video_url videoUrl, " +
-                    "thumbs_up_count thumbsUpCount,photo_background photoBackground,roam_url roamUrl,open_gns_sign openGnsSign,gns_sign_count gnsSignCount " +
-                    "from portal.map_others_polygon where map_code = :mapCode")
-    Map<String,Object> queryDetailByMapCode(Long mapCode);
+            value = "with t1 as(select polygon_code ,polygon_name ,brief ,audio_url ,video_url ,thumbs_up_count ,photo_background ,roam_url ,open_gns_sign ,gns_sign_count  " +
+                    "from portal.map_others_polygon where map_code = :mapCode)" +
+                    "select json_build_object('infoCode',polygon_code,'infoName',polygon_name,'brief',brief,'audioUrl',audio_url,'videoUrl',video_url,'thumbsUpCount',thumbs_up_count,'photoBackground',photo_background,'roamUrl',roam_url,'openGnsSign',open_gns_sign,'gnsSignCount',gns_sign_count)\\:\\:varchar from t1")
+    String queryDetailByMapCode(Long mapCode);
 
     MapOthersPolygon queryByMapCode(Long mapCode);
 

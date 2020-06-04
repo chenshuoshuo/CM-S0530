@@ -2,14 +2,13 @@ package com.lqkj.web.gnsc.modules.gns.controller;
 
 import com.lqkj.web.gnsc.message.MessageBean;
 import com.lqkj.web.gnsc.modules.gns.service.GnsThumbsUpService;
+import com.lqkj.web.gnsc.modules.gns.service.GnsUserInfoService;
+import com.lqkj.web.gnsc.modules.handler.WebSocketPushHandler;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 用户位置上传
@@ -20,23 +19,23 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value="用户位置上传",tags={"用户位置上传"})
 public class GnsUserLocationController {
     @Autowired
-    private GnsThumbsUpService thumbsUpService;
+    private GnsUserInfoService userInfoService;
+    @Autowired
+    private WebSocketPushHandler webSocketPushHandler;
 
 
     /**
-     * 点赞
+     * 上传位置并推送
      * @param userCode
-     * @param mapCode
-     * @param mapType
      * @return
      */
-    @PostMapping("/save")
-    @ApiOperation("点赞")
+    @GetMapping("/loadUserLocation")
+    @ApiOperation("上传位置并推送")
     public MessageBean save(@ApiParam(name = "userCode",value = "用户ID")@RequestParam(name = "userCode")String userCode,
-                            @ApiParam(name = "mapCode",value = "地标ID，地标标签传入pointCode的值,其他为mapCode的值")@RequestParam(name = "mapCode")Integer mapCode,
-                            @ApiParam(name = "mapType",value = "地标类型（地标标签传point；大楼、房间、其他面传polygon")@RequestParam(name = "mapType") String mapType){
+                            @ApiParam(name = "lng",value = "经度")@RequestParam(name = "lng")Double lng,
+                            @ApiParam(name = "lat",value = "纬度")@RequestParam(name = "lat") Double lat){
 
-        return MessageBean.ok(thumbsUpService.save(userCode,mapCode,mapType));
+        return MessageBean.ok(userInfoService.loadUserLocation(userCode,lng,lat));
 
     }
 

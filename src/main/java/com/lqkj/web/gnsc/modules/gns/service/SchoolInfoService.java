@@ -74,8 +74,12 @@ public class SchoolInfoService {
                     true, null, null, null,null, true, 2, null);
             applicationDao.save(application);
 
+            application = new GnsApplication(null, enrollment.getApplicationId(), s.getSchoolId(), "新生引导", "student_enrollment",
+                    true, null, null, null,null, true, 3, null);
+            applicationDao.save(application);
+
             application = new GnsApplication(null, enrollment.getApplicationId(), s.getSchoolId(), "更多应用", "more_application",
-                    true, null, null,null, null, true, 3, null);
+                    true, null, null,null, null, true, 4, null);
             GnsApplication moreApplication = applicationDao.save(application);
             //三级应用
             application = new GnsApplication(null, moreApplication.getApplicationId(), s.getSchoolId(), "迎新接待", "reception_place",

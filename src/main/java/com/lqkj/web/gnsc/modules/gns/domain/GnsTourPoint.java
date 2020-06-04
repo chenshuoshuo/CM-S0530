@@ -16,8 +16,18 @@ public class GnsTourPoint {
     private Long mapCode;
     private String elementType;
 
+    public GnsTourPoint() {
+    }
+
+    public GnsTourPoint(Integer routeId, Long mapCode, String elementType) {
+        this.routeId = routeId;
+        this.mapCode = mapCode;
+        this.elementType = elementType;
+    }
+
     @Id
     @Column(name = "point_code", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getPointCode() {
         return pointCode;
     }

@@ -28,7 +28,7 @@ public interface PointTypeDao extends JpaRepository<GnsDisplayPointType, GnsDisp
     @Query(nativeQuery = true,
         value = "with t1 as(select p.point_code,p.point_name,st_asgeojson(lng_lat)\\:\\:json lng_lat,st_asgeojson(raster_lng_lat)\\:\\:json raster_lng_lat,p.brief,p.audio_url " +
                 "from portal.map_point p left join gns.gns_campus_info c on p.campus_code = c.vector_zoom_code where p.campus_code = :campusCode and p.type_code in (select type_code from portal.map_point_type where parent_code = :typeCode) order by p.order_id asc)\n" +
-                "select array_to_json(array_agg(json_build_object('pointCode',t1.point_code,'pointName',t1.point_name,'vectorGeom',t1.lng_lat,'rasterGeom',t1.raster_lng_lat,'brief',t1.brief,'audioUrl',t1.audio_url)))\\:\\:varchar from t1")
+                "select array_to_json(array_agg(json_build_object('infoCode',t1.point_code,'infoName',t1.point_name,'vectorGeom',t1.lng_lat,'rasterGeom',t1.raster_lng_lat,'brief',t1.brief,'audioUrl',t1.audio_url)))\\:\\:varchar from t1")
     String queryListWithType(Integer campusCode,Integer typeCode);
 
     /**
@@ -37,8 +37,13 @@ public interface PointTypeDao extends JpaRepository<GnsDisplayPointType, GnsDisp
     @Query(nativeQuery = true,
             value = "with t1 as(select p.point_code,p.point_name,st_asgeojson(lng_lat)\\:\\:json lng_lat,st_asgeojson(raster_lng_lat)\\:\\:json raster_lng_lat,p.brief,p.audio_url " +
                     "from portal.map_point p left join gns.gns_campus_info c on p.campus_code = c.vector_zoom_code where p.campus_code = :campusCode and p.gns_hot = true order by p.thumbs_up_count desc limit 10)\n" +
-                    "select array_to_json(array_agg(json_build_object('pointCode',t1.point_code,'pointName',t1.point_name,'vectorGeom',t1.lng_lat,'rasterGeom',t1.raster_lng_lat,'brief',t1.brief,'audioUrl',t1.audio_url)))\\:\\:varchar from t1")
+                    "select array_to_json(array_agg(json_build_object('infoCode',t1.point_code,'infoName',t1.point_name,'vectorGeom',t1.lng_lat,'rasterGeom',t1.raster_lng_lat,'brief',t1.brief,'audioUrl',t1.audio_url)))\\:\\:varchar from t1")
     String queryHotListWithType(Integer campusCode);
+
+    /**
+     * 地标分页管理
+     */
+
 
 
 }

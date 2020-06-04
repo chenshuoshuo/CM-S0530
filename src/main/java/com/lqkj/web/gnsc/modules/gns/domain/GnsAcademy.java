@@ -1,5 +1,9 @@
 package com.lqkj.web.gnsc.modules.gns.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.lqkj.web.gnsc.utils.JacksonGeometryDeserializer;
+import com.lqkj.web.gnsc.utils.JacksonGeometrySerializer;
 import com.vividsolutions.jts.geom.Geometry;
 
 import javax.persistence.*;
@@ -17,6 +21,8 @@ public class GnsAcademy {
     private Integer academyCode;
     private Integer schoolId;
     private String academyName;
+    @JsonSerialize(using = JacksonGeometrySerializer.class)
+    @JsonDeserialize(using = JacksonGeometryDeserializer.class)
     private Geometry location;
     private Timestamp updateTime;
     private Integer orderId;

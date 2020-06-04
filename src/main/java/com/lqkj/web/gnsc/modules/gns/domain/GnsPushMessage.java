@@ -18,6 +18,7 @@ public class GnsPushMessage {
     private UUID pushId;
     private UUID userId;
     private String title;
+    private Boolean valid;
     private Integer pushType;
     private String navigationName;
     private Geometry navigationLocation;
@@ -113,6 +114,16 @@ public class GnsPushMessage {
 
     public void setCreateTime(Timestamp createTime) {
         this.createTime = createTime;
+    }
+
+    @Basic
+    @Column(name = "valid")
+    public Boolean getValid() {
+        return valid;
+    }
+
+    public void setValid(Boolean valid) {
+        this.valid = valid;
     }
 
     @Override

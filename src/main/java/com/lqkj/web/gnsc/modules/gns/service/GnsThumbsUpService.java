@@ -41,13 +41,14 @@ public class GnsThumbsUpService {
     /**
      * 点赞
      */
-    public GnsThumbsUp save(String userCode, Integer mapCode, String mapType){
+    public Integer save(String userCode, Integer mapCode, String mapType){
         String landMarkName = null;
-
+        Integer thumpUpCount = null;
         if("point".equals(mapType) && pointDao.existsByPointCode(mapCode)){
             MapPoint point = pointDao.queryByPointCode(mapCode);
             landMarkName = point.getPointName();
             point.setThumbsUpCount(point.getThumbsUpCount() + 1);
+            thumpUpCount = point.getThumbsUpCount();
             pointDao.save(point);
         }else {
             //获取房间 大楼 其他面信息
@@ -55,21 +56,25 @@ public class GnsThumbsUpService {
                 MapBuilding building = buildingDao.queryByMapCode(Long.parseLong(mapCode.toString()));
                 landMarkName = building.getBuildingName();
                 building.setThumbsUpCount(building.getThumbsUpCount() + 1);
+                thumpUpCount = building.getThumbsUpCount();
                 buildingDao.save(building);
             }else if(roomDao.existsByMapCode(Long.parseLong(mapCode.toString()))){
                 MapRoom room = roomDao.queryByMapCode(Long.parseLong(mapCode.toString()));
                 landMarkName = room.getRoomName();
                 room.setThumbsUpCount(room.getThumbsUpCount() + 1);
+                thumpUpCount = room.getThumbsUpCount();
                 roomDao.save(room);
             }else if(othersPolygonDao.existsByMapCode(Long.parseLong(mapCode.toString()))){
                 MapOthersPolygon othersPolygon = othersPolygonDao.queryByMapCode(Long.parseLong(mapCode.toString()));
                 landMarkName = othersPolygon.getPolygonName();
                 othersPolygon.setThumbsUpCount(othersPolygon.getThumbsUpCount() + 1);
+                thumpUpCount = othersPolygon.getThumbsUpCount();
                 othersPolygonDao.save(othersPolygon);
             }
         }
         //上传留影
         GnsThumbsUp thumbsUp = new GnsThumbsUp(UUID.fromString(userCode),Long.parseLong(mapCode.toString()),landMarkName,mapType);
-        return thumbsUpDao.save(thumbsUp);
+        thumbsUpDao.save(thumbsUp);
+        return thumpUpCount;
     }
 }

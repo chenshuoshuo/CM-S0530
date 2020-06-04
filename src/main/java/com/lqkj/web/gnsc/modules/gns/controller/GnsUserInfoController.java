@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
  * @Date 2020/05/28 10:35
  * @Version 1.0
  **/
-@Api(tags = "微信用户信息")
+@Api(tags = "用户信息")
 @RestController
 @RequestMapping("/gns/userInfo/")
 public class GnsUserInfoController {
@@ -29,11 +29,17 @@ public class GnsUserInfoController {
     private GnsUserInfoService userInfoService;
 
 
-    @GetMapping(APIVersion.V1 + "/getUserInfo")
-    @ApiOperation("获取微信用户信息")
+    @GetMapping(APIVersion.V1 + "/getWxUserInfo")
+    @ApiOperation("根据重定向code获取信息")
     public MessageBean<Object> getUserInfo (@RequestParam(name = "code") String code,
                                                   @RequestParam(name = "schoolId") Integer schoolId,
                                                   HttpServletRequest request) {
         return userInfoService.getUserInfo(request,schoolId,code);
+    }
+
+    @GetMapping("/getUserById")
+    @ApiOperation("根据用户ID获取信息")
+    public MessageBean<Object> getUserInfo (@RequestParam(name = "userCode") String userCode) {
+        return MessageBean.ok(userInfoService.getUserById(userCode));
     }
 }

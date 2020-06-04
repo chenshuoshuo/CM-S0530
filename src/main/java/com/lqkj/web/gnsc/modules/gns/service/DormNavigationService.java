@@ -39,4 +39,16 @@ public class DormNavigationService {
         return new JSONArray();
     }
 
+    /**
+     *
+     * h5根据学校获取宿舍楼列表
+     */
+    public JSONArray queryDormListWithSchoolId(Integer schoolId){
+        String result = dormNavigationDao.queryListWithSchoolId(schoolId);
+        if(StringUtils.isNotBlank(result)){
+            return JSONArray.parseArray(result);
+        }
+        return new JSONArray();
+    }
+
 }

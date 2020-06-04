@@ -39,13 +39,14 @@ public class GnsGroupPhotoService {
     /**
      * 上传留影
      */
-    public GnsGroupPhoto save(String userCode,Integer mapCode,String mapType,String photoUrl){
+    public Integer save(String userCode,Integer mapCode,String mapType,String photoUrl){
         String landMarkName = null;
-
+        Integer photoCount = null;
         if("point".equals(mapType) && pointDao.existsByPointCode(mapCode)){
             MapPoint point = pointDao.queryByPointCode(mapCode);
             landMarkName = point.getPointName();
             point.setPohotoTakenCount(point.getPohotoTakenCount() + 1);
+            photoCount = point.getPohotoTakenCount();
             pointDao.save(point);
         }else {
             //获取房间 大楼 其他面信息
@@ -53,21 +54,25 @@ public class GnsGroupPhotoService {
                 MapBuilding building = buildingDao.queryByMapCode(Long.parseLong(mapCode.toString()));
                 landMarkName = building.getBuildingName();
                 building.setPohotoTakenCount(building.getPohotoTakenCount() + 1);
+                photoCount = building.getPohotoTakenCount();
                 buildingDao.save(building);
             }else if(roomDao.existsByMapCode(Long.parseLong(mapCode.toString()))){
                 MapRoom room = roomDao.queryByMapCode(Long.parseLong(mapCode.toString()));
                 landMarkName = room.getRoomName();
                 room.setPohotoTakenCount(room.getPohotoTakenCount() + 1);
+                photoCount = room.getPohotoTakenCount();
                 roomDao.save(room);
             }else if(othersPolygonDao.existsByMapCode(Long.parseLong(mapCode.toString()))){
                 MapOthersPolygon othersPolygon = othersPolygonDao.queryByMapCode(Long.parseLong(mapCode.toString()));
                 landMarkName = othersPolygon.getPolygonName();
                 othersPolygon.setPohotoTakenCount(othersPolygon.getPohotoTakenCount() + 1);
+                photoCount = othersPolygon.getPohotoTakenCount();
                 othersPolygonDao.save(othersPolygon);
             }
         }
         //上传留影
         GnsGroupPhoto photo = new GnsGroupPhoto(UUID.fromString(userCode),Long.parseLong(mapCode.toString()),landMarkName,mapType,photoUrl);
-        return photoDao.save(photo);
+        photoDao.save(photo);
+        return photoCount;
     }
 }
