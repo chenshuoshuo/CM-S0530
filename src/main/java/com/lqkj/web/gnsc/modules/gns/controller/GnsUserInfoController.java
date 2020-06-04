@@ -79,4 +79,13 @@ public class GnsUserInfoController {
     public MessageBean getAcademySignRanking(@RequestParam(name = "userId") String userId) {
         return userInfoService.getUserSignRanking(userId, true);
     }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户id(必须)", paramType = "query")
+    })
+    @PostMapping(APIVersion.V1 + "/addShareTimes")
+    @ApiOperation("分享时调用接口分享次数加一")
+    public MessageBean addShareTimes(@RequestParam(name = "userId") String userId) {
+        return userInfoService.addShareTimes(userId);
+    }
 }

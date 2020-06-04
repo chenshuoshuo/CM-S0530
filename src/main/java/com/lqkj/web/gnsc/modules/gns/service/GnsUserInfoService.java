@@ -104,7 +104,7 @@ public class GnsUserInfoService {
                     object[3].toString(),
                     object[4].toString(),
                     gained,
-                    gained ? (Timestamp) object[5] : null);
+                    gained ? CommonUtils.formatTimeStamp((Timestamp) object[5]) : "");
             result.add(achieve);
         }
         return MessageListBean.ok(result);
@@ -130,5 +130,15 @@ public class GnsUserInfoService {
             bean.signRankList.add(signRank);
         }
         return MessageBean.ok(bean);
+    }
+
+    public MessageBean addShareTimes(String userId) {
+        GnsUserInfo userInfo = userInfoDao.findByUUID(userId);
+        if (userInfo == null)
+            return MessageBean.error("不存在该用户");
+        if (userInfo.getShareTimes() == null)
+            userInfo.setShareTimes(1);
+        else userInfo.setShareTimes(userInfo.getShareTimes() + 1);
+        return MessageBean.ok(userInfo.getShareTimes());
     }
 }

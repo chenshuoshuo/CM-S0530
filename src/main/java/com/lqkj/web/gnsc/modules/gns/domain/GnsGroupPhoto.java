@@ -1,5 +1,6 @@
 package com.lqkj.web.gnsc.modules.gns.domain;
 
+import com.lqkj.web.gnsc.utils.CommonUtils;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ public class GnsGroupPhoto {
     private String landmarkType;
     private String photoUrl;
     private Timestamp createTime;
+    private String formatTime;
 
     public GnsGroupPhoto() {
     }
@@ -123,5 +125,16 @@ public class GnsGroupPhoto {
     @Override
     public int hashCode() {
         return Objects.hash(signId, userId, landmarkId, landmarkName, landmarkType, photoUrl, createTime);
+    }
+
+    @Transient
+    public String getFormatTime() {
+        if (createTime == null)
+            return "";
+        return CommonUtils.formatTimeStamp(createTime);
+    }
+
+    public void setFormatTime(String formatTime) {
+        this.formatTime = formatTime;
     }
 }

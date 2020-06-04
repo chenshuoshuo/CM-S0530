@@ -97,7 +97,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
         //序列化支持
-        objectMapper.registerModule(new Hibernate5Module());
+        objectMapper.registerModule(new Hibernate5Module()
+                .configure(Hibernate5Module.Feature.USE_TRANSIENT_ANNOTATION, false));//强制转换@Transient注解的字段);
         objectMapper.registerModule(new JavaTimeModule());
 
         return jsonConverter;

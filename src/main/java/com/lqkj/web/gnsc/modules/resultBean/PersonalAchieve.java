@@ -1,7 +1,6 @@
 package com.lqkj.web.gnsc.modules.resultBean;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 public class PersonalAchieve implements Serializable {
     private String achieveName;
@@ -9,10 +8,10 @@ public class PersonalAchieve implements Serializable {
     private String brief;
     private String condition;
     private boolean gained;
-    private Timestamp gainTime;
+    private String gainTime;
 
     public PersonalAchieve(String achieveName, String icon, String brief,
-                           String condition, boolean gained, Timestamp gainTime) {
+                           String condition, boolean gained, String gainTime) {
         this.achieveName = achieveName;
         this.icon = icon;
         this.brief = brief;
@@ -61,11 +60,11 @@ public class PersonalAchieve implements Serializable {
         this.gained = gained;
     }
 
-    public Timestamp getGainTime() {
+    public String getGainTime() {
         return gainTime;
     }
 
-    public void setGainTime(Timestamp gainTime) {
+    public void setGainTime(String gainTime) {
         this.gainTime = gainTime;
     }
 }
