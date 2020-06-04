@@ -11,6 +11,8 @@ import com.lqkj.web.gnsc.modules.portal.model.MapOthersPolygon;
 import com.lqkj.web.gnsc.modules.portal.model.MapPoint;
 import com.lqkj.web.gnsc.modules.portal.model.MapRoom;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,5 +71,9 @@ public class GnsGroupPhotoService {
         //上传留影
         GnsGroupPhoto photo = new GnsGroupPhoto(UUID.fromString(userCode),Long.parseLong(mapCode.toString()),landMarkName,mapType,photoUrl);
         return photoDao.save(photo);
+    }
+
+    public Page<GnsGroupPhoto> getUserPhotos(String userId, int page, int pageSize) {
+        return photoDao.getUserPhotos(userId, PageRequest.of(page, pageSize));
     }
 }

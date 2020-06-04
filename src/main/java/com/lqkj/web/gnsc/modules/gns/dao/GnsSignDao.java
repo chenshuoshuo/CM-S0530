@@ -1,8 +1,11 @@
 package com.lqkj.web.gnsc.modules.gns.dao;
 
 import com.lqkj.web.gnsc.modules.gns.domain.GnsSign;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -61,4 +64,8 @@ public interface GnsSignDao extends JpaRepository<GnsSign, Integer> {
                     "  and o.polygon_name != ''\n" +
                     "order by count desc limit 10")
     List<Object[]> getSignRanking(Integer campusCode);
+
+    @Query(nativeQuery = true, value = "select * from gns.gns_sign s where s.user_id||'' = :userId" +
+            " order by s.create_time desc")
+    Page<GnsSign> getUserSigns(@Param("userId") String userId, Pageable pageable);
 }

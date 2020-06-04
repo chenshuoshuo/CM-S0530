@@ -14,6 +14,8 @@ import com.lqkj.web.gnsc.modules.portal.model.MapOthersPolygon;
 import com.lqkj.web.gnsc.modules.portal.model.MapPoint;
 import com.lqkj.web.gnsc.modules.portal.model.MapRoom;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -101,5 +103,9 @@ public class GnsSignService {
             result.add(bean);
         }
         return MessageListBean.ok(result);
+    }
+
+    public Page<GnsSign> getUserSigns(String userId, int page, int pageSize) {
+        return signDao.getUserSigns(userId, PageRequest.of(page, pageSize));
     }
 }

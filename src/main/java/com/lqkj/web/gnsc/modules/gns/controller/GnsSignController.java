@@ -3,9 +3,11 @@ package com.lqkj.web.gnsc.modules.gns.controller;
 import com.lqkj.web.gnsc.APIVersion;
 import com.lqkj.web.gnsc.message.MessageBean;
 import com.lqkj.web.gnsc.message.MessageListBean;
+import com.lqkj.web.gnsc.modules.gns.domain.GnsSign;
 import com.lqkj.web.gnsc.modules.gns.service.GnsSignService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -50,5 +52,19 @@ public class GnsSignController {
     @ApiOperation("获取打卡地标排行榜")
     public MessageListBean getSignRanking(@RequestParam(name = "campusCode") Integer campusCode) {
         return signService.getSignRanking(campusCode);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户id(必须)", paramType = "query"),
+            @ApiImplicitParam(name = "page", value = "当前页(默认为0,0代表第一页)", paramType = "query"),
+            @ApiImplicitParam(name = "pageSize", value = "同一页数量(默认为10)", paramType = "query")
+    })
+    @ApiOperation("分页查询用户打卡记录")
+    @GetMapping(APIVersion.V1 + "/getUserSigns")
+    public MessageBean<Page<GnsSign>> page(@RequestParam String userId,
+                                           @RequestParam(required = false, defaultValue = "0") Integer page,
+                                           @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
+
+        return MessageBean.ok(signService.getUserSigns(userId, page, pageSize));
     }
 }
