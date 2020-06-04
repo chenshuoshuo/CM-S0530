@@ -65,9 +65,18 @@ public class GnsUserInfoController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户id(必须)", paramType = "query")
     })
-    @GetMapping(APIVersion.V1 + "/getUserSignRanking")
-    @ApiOperation("获取校友打卡排行排行榜")
-    public MessageBean getUserSignRanking(@RequestParam(name = "userId") String userId) {
-        return userInfoService.getUserSignRanking(userId);
+    @GetMapping(APIVersion.V1 + "/getSchoolSignRanking")
+    @ApiOperation("获取校友打卡排行榜")
+    public MessageBean getSchoolSignRanking(@RequestParam(name = "userId") String userId) {
+        return userInfoService.getUserSignRanking(userId, false);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户id(必须)", paramType = "query")
+    })
+    @GetMapping(APIVersion.V1 + "/getAcademySignRanking")
+    @ApiOperation("获取学院打卡排行榜")
+    public MessageBean getAcademySignRanking(@RequestParam(name = "userId") String userId) {
+        return userInfoService.getUserSignRanking(userId, true);
     }
 }

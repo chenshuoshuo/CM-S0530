@@ -110,12 +110,13 @@ public class GnsUserInfoService {
         return MessageListBean.ok(result);
     }
 
-    public MessageBean getUserSignRanking(String userId) {
+    public MessageBean getUserSignRanking(String userId, boolean sameAcademy) {
         GnsUserInfo userInfo = userInfoDao.findByUUID(userId);
         if (userInfo == null)
             return MessageBean.error("不存在该用户");
         //总排名
-        List<Object[]> list = userInfoDao.getRankOfUserSign(userInfo.getSchoolId());
+        List<Object[]> list = userInfoDao.getRankOfUserSign(userInfo.getSchoolId()
+                , sameAcademy ? userInfo.getAcademyCode() : "");
 
         UserSignRankBean bean = new UserSignRankBean();
         for (Object[] objects : list) {
