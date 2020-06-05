@@ -17,7 +17,7 @@ import java.util.UUID;
 @Table(name = "gns_thumbs_up", schema = "gns")
 public class GnsThumbsUp {
     private Integer signId;
-    private UUID userId;
+    private String userId;
     private Long landmarkId;
     private String landmarkName;
     private String landmarkType;
@@ -27,7 +27,7 @@ public class GnsThumbsUp {
     }
 
 
-    public GnsThumbsUp(UUID userId, Long landmarkId, String landmarkName, String landmarkType) {
+    public GnsThumbsUp(String userId, Long landmarkId, String landmarkName, String landmarkType) {
         this.userId = userId;
         this.landmarkId = landmarkId;
         this.landmarkName = landmarkName;
@@ -47,12 +47,11 @@ public class GnsThumbsUp {
 
     @Basic
     @Column(name = "user_id", nullable = true)
-    @Type(type = "org.hibernate.type.PostgresUUIDType")
-    public UUID getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(UUID userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

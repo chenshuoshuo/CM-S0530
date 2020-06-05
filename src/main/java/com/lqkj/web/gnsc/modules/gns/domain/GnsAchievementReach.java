@@ -16,7 +16,7 @@ import java.util.UUID;
 @Table(name = "gns_achievement_reach", schema = "gns")
 public class GnsAchievementReach {
     private Integer id;
-    private UUID userId;
+    private String userId;
     private Integer achievementId;
     private Integer schoolId;
     private Timestamp reachTime;
@@ -33,12 +33,11 @@ public class GnsAchievementReach {
 
     @Basic
     @Column(name = "user_id", nullable = true)
-    @Type(type = "org.hibernate.type.PostgresUUIDType")
-    public UUID getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(UUID userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

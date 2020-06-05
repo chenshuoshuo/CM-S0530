@@ -16,8 +16,7 @@ public class GnsUserInfo {
     @Id
     @Column(name = "user_id")
     @ApiModelProperty(value = "用户ID")
-    @Type(type = "org.hibernate.type.PostgresUUIDType")
-    private UUID userId;
+    private String userId;
 
     @Column(name = "school_id")
     @ApiModelProperty(value = "学校ID")
@@ -89,11 +88,11 @@ public class GnsUserInfo {
 
 
     public GnsUserInfo() {
-        this.userId = UUID.randomUUID();
+        this.userId = UUID.randomUUID().toString();
     }
 
     public GnsUserInfo(Integer schoolId, String openid, String nickname, String sex, String province, String city, String country, String headUrl, String unionId) {
-        this.userId = UUID.randomUUID();
+        this.userId = UUID.randomUUID().toString();
         this.schoolId = schoolId;
         this.openid = openid;
         this.nickname = nickname;
@@ -105,11 +104,11 @@ public class GnsUserInfo {
         this.unionId = unionId;
     }
 
-    public UUID getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(UUID userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

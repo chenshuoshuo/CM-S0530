@@ -3,6 +3,7 @@ package com.lqkj.web.gnsc.modules.gns.service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.lqkj.web.gnsc.message.MessageBean;
+import com.lqkj.web.gnsc.message.MessageListBean;
 import com.lqkj.web.gnsc.modules.gns.dao.GnsAccessRecordDao;
 import com.lqkj.web.gnsc.modules.gns.dao.GnsUserInfoDao;
 import com.lqkj.web.gnsc.modules.gns.dao.LocationInfoDao;
@@ -10,6 +11,9 @@ import com.lqkj.web.gnsc.modules.gns.domain.GnsAccessRecord;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsPushMessage;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsStoreItem;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsUserInfo;
+import com.lqkj.web.gnsc.modules.resultBean.PersonalAchieve;
+import com.lqkj.web.gnsc.modules.resultBean.UserSignRankBean;
+import com.lqkj.web.gnsc.utils.CommonUtils;
 import com.lqkj.web.gnsc.utils.ServletUtils;
 import com.lqkj.web.gnsc.utils.WeixinUtils;
 import io.swagger.annotations.ApiParam;
@@ -22,8 +26,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 @Service
 @Transactional
@@ -89,6 +98,66 @@ public class GnsUserInfoService {
         }
     }
 
+    public MessageBean<Object> updateUserInfo(String userId, String name, String mobile,
+                                              String academyCode, String dormId) {
+        GnsUserInfo userInfo = userInfoDao.findByUUID(userId);
+        if (userInfo == null)
+            return MessageBean.error("不存在该用户");
+        if (CommonUtils.ifNotNull(name)) userInfo.setRealName(name);
+        if (CommonUtils.ifNotNull(mobile)) userInfo.setMobile(mobile);
+        if (CommonUtils.ifNotNull(academyCode)) userInfo.setAcademyCode(academyCode);
+        if (CommonUtils.ifNotNull(dormId)) userInfo.setDormId(dormId);
+        return MessageBean.ok("更新用户信息成功");
+    }
+
+    public MessageListBean<PersonalAchieve> getUserAchievement(String userId) {
+        List<Object[]> list = userInfoDao.findAchieveByUserId(userId);
+        ArrayList<PersonalAchieve> result = new ArrayList<>();
+        for (Object[] object : list) {
+            boolean gained = object[5] != null;
+            PersonalAchieve achieve = new PersonalAchieve(object[0].toString(),
+                    gained ? object[1].toString() : object[2].toString(),
+                    object[3].toString(),
+                    object[4].toString(),
+                    gained,
+                    gained ? CommonUtils.formatTimeStamp((Timestamp) object[5]) : "");
+            result.add(achieve);
+        }
+        return MessageListBean.ok(result);
+    }
+
+    public MessageBean getUserSignRanking(String userId, boolean sameAcademy) {
+        GnsUserInfo userInfo = userInfoDao.findByUUID(userId);
+        if (userInfo == null)
+            return MessageBean.error("不存在该用户");
+        //总排名
+        List<Object[]> list = userInfoDao.getRankOfUserSign(userInfo.getSchoolId()
+                , sameAcademy ? userInfo.getAcademyCode() : "");
+
+        UserSignRankBean bean = new UserSignRankBean();
+        for (Object[] objects : list) {
+            UserSignRankBean.SignRank signRank = new UserSignRankBean.SignRank(
+                    (BigInteger) objects[0],
+                    objects[2] == null ? "" : objects[2].toString(),
+                    objects[3] == null ? "" : objects[3].toString(),
+                    (Integer) objects[4]);
+            if (objects[1].toString().equals(userId))
+                bean.userRank = signRank;
+            bean.signRankList.add(signRank);
+        }
+        return MessageBean.ok(bean);
+    }
+
+    public MessageBean addShareTimes(String userId) {
+        GnsUserInfo userInfo = userInfoDao.findByUUID(userId);
+        if (userInfo == null)
+            return MessageBean.error("不存在该用户");
+        if (userInfo.getShareTimes() == null)
+            userInfo.setShareTimes(1);
+        else userInfo.setShareTimes(userInfo.getShareTimes() + 1);
+        return MessageBean.ok(userInfo.getShareTimes());
+    }
+
     /**
      * 上传用户位置
      */
@@ -107,9 +176,28 @@ public class GnsUserInfoService {
      * 根据用户ID 获取
      */
     public JSONObject getUserById(String userCode){
-        String result = userInfoDao.findByUserId(UUID.fromString(userCode));
+        String result = userInfoDao.findByUserId(userCode);
+        Integer userInfoPerfected  = userInfoDao.userInfoPerfected(userCode);
         if(StringUtils.isNotBlank(result)){
-            return JSONObject.parseObject(result);
+            JSONObject resultJSON = JSONObject.parseObject(result);
+
+            if(userInfoPerfected == 0){
+                resultJSON.put("informationPerfection","完善个人信息获得成就奖励哟~");
+                resultJSON.put("informationCheck",false);
+            }else if(userInfoPerfected == 1) {
+                resultJSON.put("informationPerfection","个人信息已完成25%~");
+                resultJSON.put("informationCheck",false);
+            }else if(userInfoPerfected == 2){
+                resultJSON.put("informationPerfection","个人信息已完成50%~");
+                resultJSON.put("informationCheck",false);
+            }else if(userInfoPerfected == 3){
+                resultJSON.put("informationPerfection","个人信息已完成75%~");
+                resultJSON.put("informationCheck",false);
+            }else {
+                resultJSON.put("informationPerfection","个人信息已完善~");
+                resultJSON.put("informationCheck",true);
+            }
+            return resultJSON;
         }
         return new JSONObject();
     }

@@ -16,8 +16,8 @@ import java.util.UUID;
 @Entity
 @Table(name = "gns_access_record", schema = "gns")
 public class GnsAccessRecord {
-    private UUID recordId;
-    private UUID userId;
+    private String recordId;
+    private String userId;
     private String ip;
     private Timestamp createTime;
     private String createDate;
@@ -25,11 +25,11 @@ public class GnsAccessRecord {
     private String createHour;
 
     public GnsAccessRecord() {
-        this.recordId = UUID.randomUUID();
+        this.recordId = UUID.randomUUID().toString();
     }
 
-    public GnsAccessRecord(UUID userId, String ip,String createDate, String createMonth, String createHour) {
-        this.recordId = UUID.randomUUID();;
+    public GnsAccessRecord(String userId, String ip,String createDate, String createMonth, String createHour) {
+        this.recordId = UUID.randomUUID().toString();;
         this.userId = userId;
         this.ip = ip;
         this.createDate = createDate;
@@ -39,23 +39,21 @@ public class GnsAccessRecord {
 
     @Id
     @Column(name = "record_id", nullable = false)
-    @Type(type = "org.hibernate.type.PostgresUUIDType")
-    public UUID getRecordId() {
+    public String getRecordId() {
         return recordId;
     }
 
-    public void setRecordId(UUID recordId) {
+    public void setRecordId(String recordId) {
         this.recordId = recordId;
     }
 
     @Basic
     @Column(name = "user_id", nullable = true)
-    @Type(type = "org.hibernate.type.PostgresUUIDType")
-    public UUID getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(UUID userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

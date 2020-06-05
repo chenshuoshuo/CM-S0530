@@ -1,5 +1,6 @@
 package com.lqkj.web.gnsc.modules.gns.domain;
 
+import com.lqkj.web.gnsc.utils.CommonUtils;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -16,17 +17,18 @@ import java.util.UUID;
 @Table(name = "gns_group_photo", schema = "gns")
 public class GnsGroupPhoto {
     private Integer signId;
-    private UUID userId;
+    private String userId;
     private Long landmarkId;
     private String landmarkName;
     private String landmarkType;
     private String photoUrl;
     private Timestamp createTime;
+    private String formatTime;
 
     public GnsGroupPhoto() {
     }
 
-    public GnsGroupPhoto(UUID userId, Long landmarkId, String landmarkName, String landmarkType, String photoUrl) {
+    public GnsGroupPhoto(String userId, Long landmarkId, String landmarkName, String landmarkType, String photoUrl) {
         this.userId = userId;
         this.landmarkId = landmarkId;
         this.landmarkName = landmarkName;
@@ -47,11 +49,11 @@ public class GnsGroupPhoto {
 
     @Basic
     @Column(name = "user_id", nullable = true)
-    public UUID getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(UUID userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -123,5 +125,16 @@ public class GnsGroupPhoto {
     @Override
     public int hashCode() {
         return Objects.hash(signId, userId, landmarkId, landmarkName, landmarkType, photoUrl, createTime);
+    }
+
+    @Transient
+    public String getFormatTime() {
+        if (createTime == null)
+            return "";
+        return CommonUtils.formatTimeStamp(createTime);
+    }
+
+    public void setFormatTime(String formatTime) {
+        this.formatTime = formatTime;
     }
 }

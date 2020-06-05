@@ -15,31 +15,29 @@ import java.util.UUID;
 @Entity
 @Table(name = "gns_map_use", schema = "gns")
 public class GnsMapUse {
-    private UUID recordId;
-    private UUID gnsUserId;
+    private String recordId;
+    private String gnsUserId;
     private Integer recordType;
     private String mapElementName;
     private Timestamp createTime;
 
     @Id
     @Column(name = "record_id", nullable = false)
-    @Type(type = "org.hibernate.type.PostgresUUIDType")
-    public UUID getRecordId() {
+    public String getRecordId() {
         return recordId;
     }
 
-    public void setRecordId(UUID recordId) {
+    public void setRecordId(String recordId) {
         this.recordId = recordId;
     }
 
     @Basic
     @Column(name = "gns_user_id", nullable = true)
-    @Type(type = "org.hibernate.type.PostgresUUIDType")
-    public UUID getGnsUserId() {
+    public String getGnsUserId() {
         return gnsUserId;
     }
 
-    public void setGnsUserId(UUID gnsUserId) {
+    public void setGnsUserId(String gnsUserId) {
         this.gnsUserId = gnsUserId;
     }
 

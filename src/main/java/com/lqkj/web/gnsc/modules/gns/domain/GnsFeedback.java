@@ -14,7 +14,7 @@ import java.util.UUID;
 @Table(name = "gns_feedback", schema = "gns")
 public class GnsFeedback {
     private Integer feedbackId;
-    private UUID userId;
+    private String userId;
     private String nickname;
     private String openId;
     private String content;
@@ -32,11 +32,11 @@ public class GnsFeedback {
 
     @Basic
     @Column(name = "user_id", nullable = true)
-    public UUID getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(UUID userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

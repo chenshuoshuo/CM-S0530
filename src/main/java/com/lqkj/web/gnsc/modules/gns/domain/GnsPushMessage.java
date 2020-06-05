@@ -15,8 +15,8 @@ import java.util.UUID;
 @Entity
 @Table(name = "gns_push_message", schema = "gns")
 public class GnsPushMessage {
-    private UUID pushId;
-    private UUID userId;
+    private String pushId;
+    private String userId;
     private String title;
     private Boolean valid;
     private Integer pushType;
@@ -28,21 +28,21 @@ public class GnsPushMessage {
 
     @Id
     @Column(name = "push_id", nullable = false)
-    public UUID getPushId() {
+    public String getPushId() {
         return pushId;
     }
 
-    public void setPushId(UUID pushId) {
+    public void setPushId(String pushId) {
         this.pushId = pushId;
     }
 
     @Basic
     @Column(name = "user_id", nullable = true)
-    public UUID getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(UUID userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

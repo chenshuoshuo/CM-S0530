@@ -63,6 +63,18 @@ public class FileUploadService {
         return MessageBean.error("文件格式错误");
     }
 
+    /**
+     * 上传文件
+     * 返回文件输入流
+     * @param file 文件
+     * @param folder 上传路径
+     * @return
+     */
+    public InputStream uploadFileReturnInputStream(MultipartFile file, String folder) throws FileNotFoundException {
+        File uploadFile = uploadFileReturnFile(file, folder);
+        return new FileInputStream(uploadFile.getAbsolutePath());
+    }
+
     private File uploadFileReturnFile(MultipartFile file, String folder){
         try {
             String fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));

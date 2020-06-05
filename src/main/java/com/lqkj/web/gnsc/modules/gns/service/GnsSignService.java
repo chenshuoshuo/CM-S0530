@@ -1,9 +1,10 @@
 package com.lqkj.web.gnsc.modules.gns.service;
 
 import com.lqkj.web.gnsc.message.MessageBean;
+import com.lqkj.web.gnsc.message.MessageListBean;
 import com.lqkj.web.gnsc.modules.gns.dao.GnsSignDao;
-import com.lqkj.web.gnsc.modules.gns.domain.GnsGroupPhoto;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsSign;
+import com.lqkj.web.gnsc.modules.resultBean.RankingBean;
 import com.lqkj.web.gnsc.modules.portal.dao.MapBuildingDao;
 import com.lqkj.web.gnsc.modules.portal.dao.MapOthersPolygonDao;
 import com.lqkj.web.gnsc.modules.portal.dao.MapPointDao;
@@ -12,11 +13,13 @@ import com.lqkj.web.gnsc.modules.portal.model.MapBuilding;
 import com.lqkj.web.gnsc.modules.portal.model.MapOthersPolygon;
 import com.lqkj.web.gnsc.modules.portal.model.MapPoint;
 import com.lqkj.web.gnsc.modules.portal.model.MapRoom;
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -43,6 +46,7 @@ public class GnsSignService {
 
     /**
      * 获取弹幕
+     *
      * @param schoolId
      * @return
      */
@@ -94,11 +98,25 @@ public class GnsSignService {
                 }
             }
             //保存打卡记录
-            GnsSign sign = new GnsSign(UUID.fromString(userCode),Long.parseLong(mapCode.toString()),landMarkName,mapType);
+            GnsSign sign = new GnsSign(userCode,Long.parseLong(mapCode.toString()),landMarkName,mapType);
             signDao.save(sign);
             return MessageBean.ok(signCount);
         }else {
             return MessageBean.error("提示：您已打卡，过" + signInterval + "分钟可以再次打卡哦！");
         }
+    }
+
+    public MessageListBean getSignRanking(Integer campusCode) {
+        List<Object[]> list = signDao.getSignRanking(campusCode);
+        ArrayList<RankingBean> result = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            RankingBean bean = new RankingBean(i, list.get(i)[0].toString(), (Integer) list.get(i)[1]);
+            result.add(bean);
+        }
+        return MessageListBean.ok(result);
+    }
+
+    public Page<GnsSign> getUserSigns(String userId, int page, int pageSize) {
+        return signDao.getUserSigns(userId, PageRequest.of(page, pageSize));
     }
 }

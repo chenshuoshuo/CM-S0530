@@ -4,6 +4,7 @@ package com.lqkj.web.gnsc.modules.gns.controller;
 import com.lqkj.web.gnsc.message.MessageBean;
 import com.lqkj.web.gnsc.message.MessageListBean;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsHelper;
+import com.lqkj.web.gnsc.modules.gns.service.FileUploadService;
 import com.lqkj.web.gnsc.modules.gns.service.HelperService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -11,9 +12,12 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 
 /**
@@ -27,6 +31,10 @@ public class HelperController {
 
     @Autowired
     private HelperService helperService;
+    @Autowired
+    private FileUploadService fileUploadService;
+
+    private static String FILE_UPLOAD_FOLDER = "helper";
 
 
     /**
@@ -121,10 +129,36 @@ public class HelperController {
      * 下载导入模板
      * @throws IOException IO异常
      */
+    @ApiOperation("下载导入模板")
     @GetMapping("/info/downloadTemplate")
     public ResponseEntity<InputStreamResource> exportTemplate(@ApiParam(name="schoolId",value="学校ID",required=true) @RequestParam(name = "schoolId", required = true) Integer schoolId)
             throws IOException{
         return helperService.exportTemplate(schoolId);
+    }
+
+    /**
+     * 导出
+     * @throws IOException IO异常
+     */
+    @ApiOperation("导出")
+    @GetMapping("/info/download")
+    public ResponseEntity<InputStreamResource> download(@ApiParam(name="schoolId",value="学校ID",required=true) @RequestParam(name = "schoolId", required = true) Integer schoolId) throws IOException{
+        return helperService.download(schoolId);
+    }
+
+    /**
+     * 导入
+     */
+    @PostMapping("/info/upload")
+    @ApiOperation("导入")
+    public MessageBean upload(MultipartFile file, @ApiParam(name="schoolId",value="学校ID",required=true) @RequestParam(name = "schoolId", required = true) Integer schoolId)
+            throws NoSuchMethodException,
+            IllegalAccessException,
+            InvocationTargetException,
+            IOException{
+
+        return MessageBean.ok(helperService.upload(
+                fileUploadService.uploadFileReturnInputStream(file, FILE_UPLOAD_FOLDER),schoolId));
     }
 
 }

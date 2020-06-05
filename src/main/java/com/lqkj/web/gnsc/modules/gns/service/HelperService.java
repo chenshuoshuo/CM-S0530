@@ -1,6 +1,7 @@
 package com.lqkj.web.gnsc.modules.gns.service;
 
 import com.alibaba.excel.metadata.BaseRowModel;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.lqkj.web.gnsc.message.MessageBean;
 import com.lqkj.web.gnsc.modules.gns.dao.HelperDao;
 import com.lqkj.web.gnsc.modules.gns.dao.HelperTypeDao;
@@ -8,9 +9,12 @@ import com.lqkj.web.gnsc.modules.gns.dao.HelperVODao;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsHelper;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsHelperType;
 import com.lqkj.web.gnsc.modules.gns.domain.vo.GnsHelperVO;
+import com.lqkj.web.gnsc.utils.DataImportLog;
 import com.lqkj.web.gnsc.utils.ExcelModel;
 import com.lqkj.web.gnsc.utils.ExcelUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.ReflectUtils;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,8 +24,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -32,6 +41,8 @@ public class HelperService {
     private HelperVODao helperVODao;
     @Autowired
     private HelperTypeDao helperTypeDao;
+    private boolean dataTransferStatus = true;
+
 
     public Page<GnsHelperVO> page(Integer typeCode, String title, Integer page, Integer pageSize){
 
@@ -141,11 +152,83 @@ public class HelperService {
                 "通讯录信息.xlsx");
     }
 
+    public Object upload(InputStream inputStream, Integer schoolId) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, IOException {
+
+        List<GnsHelperType> typeList = helperTypeDao.findAllBySchoolId(schoolId);
+
+        List<List<Object>> dataList = ExcelUtils.readMultipleSheetExcel(inputStream,
+                ExcelUtils.loadClazzListWithOneClass(ExcelModel.class, typeList.size()));
+
+        DataImportLog dataImportLog = new DataImportLog();
+        dataImportLog.setCategory("通讯录信息导入");
+        if (dataList.size() != typeList.size()) {
+            dataImportLog.setErrorCode(-1);
+            dataImportLog.setErrorMsg("请重新下载通讯录导入模板");
+        } else {
+            List<GnsHelper> helperList = new ArrayList<>();
+            for (int i = 0; i < typeList.size(); i++) {
+                GnsHelperType helperType = typeList.get(i);
+
+                List<Object> subDataList = dataList.get(i);
+
+                dataImportLog.setSubCategory(helperType.getTypeName());
+                dataImportLog.setSubTotalCount(subDataList.size());
+                dataImportLog.setTotalCount(dataImportLog.getTotalCount() + dataImportLog.getSubTotalCount());
+
+                for (Object object : subDataList) {
+                    ExcelModel excelModel = (ExcelModel) object;
+                    GnsHelper helper = new GnsHelper();
+                    dataTransferStatus = true;
+                    String errMsg = "";
+
+                    if (excelModel.getColumn1() != null) {
+                        if (StringUtils.isNotEmpty(excelModel.getColumn1())) {
+                            helper.setHelperId(Integer.parseInt(excelModel.getColumn1()));
+                        } else {
+                            dataTransferStatus = false;
+                            errMsg += "通讯录编号不能为空；";
+                        }
+                    } else {
+                        dataTransferStatus = false;
+                        errMsg += "通讯录编号必填；";
+                    }
+                    helper.setTypeCode(helperType.getTypeCode());
+
+                    helper.setTitle(excelModel.getColumn3());
+                    helper.setContact(excelModel.getColumn4());
+                    if (StringUtils.isNumeric(excelModel.getColumn5())) {
+                        helper.setOrderId(Integer.parseInt(excelModel.getColumn5()));
+                    } else {
+                        dataTransferStatus = false;
+                        errMsg += "排序必须是数字；";
+                    }
+                    if (excelModel.getColumn6() != null) {
+                        helper.setMemo(excelModel.getColumn6());
+                    }
+                    if(errMsg.length() > 0){
+                        Map<String, Object> errMap = new HashMap<>();
+                        errMap.put("errMsg", errMsg);
+                        dataImportLog.addError(false, errMap);
+                        return dataImportLog;
+                    }else {
+                        GnsHelper helpExist = this.get(helper.getHelperId());
+                        if(helpExist != null){//更新
+                            this.update(helper);
+                        }else {
+                            this.add(helper);
+                        }
+                    }
+                }
+            }
+        }
+        return dataImportLog;
+    }
+
 
     private List<List<List<String>>> loadHeadList(List<GnsHelperType> typeList) {
         List<List<List<String>>> headList = new ArrayList<>();
 
-        String publicHeadString = "分类编号,名称,联系号码,排序,备注";
+        String publicHeadString = "通讯录编号,分类编号,名称,联系号码,排序,备注";
         for (GnsHelperType helperType : typeList) {
             String headString = publicHeadString;
             headList.add(ExcelUtils.loadHead(headString));
@@ -170,6 +253,7 @@ public class HelperService {
 
             for (GnsHelper helper : helperList) {
                 List<String> columns = new ArrayList<>();
+                columns.add(helper.getHelperId().toString());
                 columns.add(helper.getTypeCode().toString());
                 columns.add(helper.getTitle());
                 columns.add(helper.getContact());
@@ -181,4 +265,5 @@ public class HelperService {
         }
         return list;
     }
+
 }

@@ -73,7 +73,7 @@ public class GnsThumbsUpService {
             }
         }
         //上传留影
-        GnsThumbsUp thumbsUp = new GnsThumbsUp(UUID.fromString(userCode),Long.parseLong(mapCode.toString()),landMarkName,mapType);
+        GnsThumbsUp thumbsUp = new GnsThumbsUp(userCode,Long.parseLong(mapCode.toString()),landMarkName,mapType);
         thumbsUpDao.save(thumbsUp);
         return thumpUpCount;
     }
