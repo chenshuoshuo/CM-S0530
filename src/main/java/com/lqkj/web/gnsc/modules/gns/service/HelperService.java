@@ -180,30 +180,18 @@ public class HelperService {
                     GnsHelper helper = new GnsHelper();
                     dataTransferStatus = true;
                     String errMsg = "";
-
-                    if (excelModel.getColumn1() != null) {
-                        if (StringUtils.isNotEmpty(excelModel.getColumn1())) {
-                            helper.setHelperId(Integer.parseInt(excelModel.getColumn1()));
-                        } else {
-                            dataTransferStatus = false;
-                            errMsg += "通讯录编号不能为空；";
-                        }
-                    } else {
-                        dataTransferStatus = false;
-                        errMsg += "通讯录编号必填；";
-                    }
                     helper.setTypeCode(helperType.getTypeCode());
 
-                    helper.setTitle(excelModel.getColumn3());
-                    helper.setContact(excelModel.getColumn4());
-                    if (StringUtils.isNumeric(excelModel.getColumn5())) {
-                        helper.setOrderId(Integer.parseInt(excelModel.getColumn5()));
+                    helper.setTitle(excelModel.getColumn2());
+                    helper.setContact(excelModel.getColumn3());
+                    if (StringUtils.isNumeric(excelModel.getColumn4())) {
+                        helper.setOrderId(Integer.parseInt(excelModel.getColumn4()));
                     } else {
                         dataTransferStatus = false;
                         errMsg += "排序必须是数字；";
                     }
-                    if (excelModel.getColumn6() != null) {
-                        helper.setMemo(excelModel.getColumn6());
+                    if (excelModel.getColumn5() != null) {
+                        helper.setMemo(excelModel.getColumn5());
                     }
                     if(errMsg.length() > 0){
                         Map<String, Object> errMap = new HashMap<>();
@@ -211,14 +199,22 @@ public class HelperService {
                         dataImportLog.addError(false, errMap);
                         return dataImportLog;
                     }else {
-                        GnsHelper helpExist = this.get(helper.getHelperId());
-                        if(helpExist != null){//更新
-                            this.update(helper);
-                        }else {
-                            this.add(helper);
-                        }
+                        helperList.add(helper);
                     }
                 }
+            }
+            List<String> errMsgList = new ArrayList<>();
+            helperList.forEach(v ->{
+                MessageBean messageBean = this.add(v);
+                String errMsg = "";
+                if(!messageBean.isStatus()){
+                    errMsg =  v.getContact() + messageBean.getMessage();
+                    errMsgList.add(errMsg);
+                }
+            });
+            if(errMsgList.size() > 0){
+                dataImportLog.addError(false,errMsgList);
+                dataImportLog.setErrorCount(errMsgList.size());
             }
         }
         return dataImportLog;
@@ -228,7 +224,7 @@ public class HelperService {
     private List<List<List<String>>> loadHeadList(List<GnsHelperType> typeList) {
         List<List<List<String>>> headList = new ArrayList<>();
 
-        String publicHeadString = "通讯录编号,分类编号,名称,联系号码,排序,备注";
+        String publicHeadString = "分类编号,名称,联系号码,排序,备注";
         for (GnsHelperType helperType : typeList) {
             String headString = publicHeadString;
             headList.add(ExcelUtils.loadHead(headString));
@@ -253,7 +249,6 @@ public class HelperService {
 
             for (GnsHelper helper : helperList) {
                 List<String> columns = new ArrayList<>();
-                columns.add(helper.getHelperId().toString());
                 columns.add(helper.getTypeCode().toString());
                 columns.add(helper.getTitle());
                 columns.add(helper.getContact());

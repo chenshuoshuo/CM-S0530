@@ -1,5 +1,9 @@
 package com.lqkj.web.gnsc.modules.gns.domain;
 
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.metadata.BaseRowModel;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
@@ -11,13 +15,18 @@ import java.util.Objects;
  **/
 @Entity
 @Table(name = "gns_registering_notice", schema = "gns")
-public class GnsRegisteringNotice {
+public class GnsRegisteringNotice extends BaseRowModel {
     private Integer noticeId;
+    @ExcelProperty(value = {"学校编号"}, index = 0)
     private Integer schoolId;
+    @ExcelProperty(value = {"报道须知名称"}, index = 1)
     private String title;
+    @ExcelProperty(value = {"报道点内容"}, index = 2)
     private String content;
     private Timestamp updateTime;
+    @ExcelProperty(value = {"排序"}, index = 3)
     private Integer orderId;
+    @ExcelProperty(value = {"备注"}, index = 4)
     private String memo;
 
     @Id
@@ -63,6 +72,7 @@ public class GnsRegisteringNotice {
 
     @Basic
     @Column(name = "update_time", nullable = true, length = -1)
+    @UpdateTimestamp
     public Timestamp getUpdateTime() {
         return updateTime;
     }

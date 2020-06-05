@@ -1,5 +1,8 @@
 package com.lqkj.web.gnsc.modules.gns.domain.vo;
 
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.metadata.BaseRowModel;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,11 +15,19 @@ import java.sql.Timestamp;
  * @Version 2.2.2.0
  **/
 @Entity
-public class GnsReceptionPlaceVO {
+public class GnsReceptionPlaceVO extends BaseRowModel {
     private Integer placeId;
+
+    private Integer typeCode;
+
+    private Integer campusCode;
+
     private String tyeName;
+
     private String campusName;
+
     private String title;
+
     private String content;
     private Timestamp updateTime;
 
@@ -77,5 +88,23 @@ public class GnsReceptionPlaceVO {
         this.updateTime = updateTime;
     }
 
+    @Basic
+    @Column(name = "type_code", nullable = true, length = -1)
+    public Integer getTypeCode() {
+        return typeCode;
+    }
 
+    public void setTypeCode(Integer typeCode) {
+        this.typeCode = typeCode;
+    }
+
+    @Basic
+    @Column(name = "campus_code", nullable = true, length = -1)
+    public Integer getCampusCode() {
+        return campusCode;
+    }
+
+    public void setCampusCode(Integer campusCode) {
+        this.campusCode = campusCode;
+    }
 }

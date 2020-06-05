@@ -31,7 +31,8 @@ public interface GnsSignDao extends JpaRepository<GnsSign, Integer> {
      * 判断是否已打卡
      */
     @Query(nativeQuery = true,
-            value = "select case when (now() - t1.max_time) > interval '1 hour' then true else false end from (select max(gs.create_time) max_time from gns.gns_sign gs where gs.user_id = :userCode and gs.landmark_id = :mapCode) t1")
+            value = "select case when t1.max_time is null then true else (case when (now() - t1.max_time) > interval '1 hour' then true else false end) end " +
+                    "from (select max(gs.create_time) max_time from gns.gns_sign gs where gs.user_id = :userCode and gs.landmark_id = :mapCode) t1")
     Boolean existsByUserCodeAndMapCode(String userCode, Integer mapCode);
 
 
@@ -68,4 +69,9 @@ public interface GnsSignDao extends JpaRepository<GnsSign, Integer> {
     @Query(nativeQuery = true, value = "select * from gns.gns_sign s where s.user_id||'' = :userId" +
             " order by s.create_time desc")
     Page<GnsSign> getUserSigns(@Param("userId") String userId, Pageable pageable);
+
+    /**
+     * 统计当前用户打卡地标数量
+     */
+    Integer countAllByUserId(String userId);
 }

@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.*;
 public class GnsAcademyController {
     @Autowired
     private GnsAcademyService academyService;
-    @Autowired
-    private WebSocketPushHandler webSocketPushHandler;
 
 
     /**

@@ -3,12 +3,19 @@ package com.lqkj.web.gnsc.modules.gns.controller;
 import com.lqkj.web.gnsc.message.MessageBean;
 import com.lqkj.web.gnsc.message.MessageListBean;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsRegisteringNotice;
+import com.lqkj.web.gnsc.modules.gns.service.FileUploadService;
 import com.lqkj.web.gnsc.modules.gns.service.RegisteringNoticeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 
 /**
@@ -22,6 +29,11 @@ public class RegisteringNoticeController {
 
     @Autowired
     private RegisteringNoticeService registeringNoticeService;
+
+    @Autowired
+    private FileUploadService fileUploadService;
+
+    private static String FILE_UPLOAD_FOLDER = "receptionNotice";
 
 
     /**
@@ -113,5 +125,31 @@ public class RegisteringNoticeController {
     public MessageBean bulkDelete(@ApiParam(name="ids",value="报到须知信息ID，多个以','分隔",required=true) @RequestParam(name = "ids", required = true) String ids){
 
         return MessageBean.ok(registeringNoticeService.bulkDelete(ids));
+    }
+
+
+    /**
+     * 导出
+     * @throws IOException IO异常
+     */
+    @ApiOperation("导出")
+    @GetMapping("/info/download")
+    public ResponseEntity<InputStreamResource> download(@ApiParam(name="schoolId",value="学校ID",required=true) @RequestParam(name = "schoolId", required = true) Integer schoolId) throws IOException{
+        return registeringNoticeService.download(schoolId);
+    }
+
+    /**
+     * 导入
+     */
+    @PostMapping("/info/upload")
+    @ApiOperation("导入")
+    public MessageBean upload(MultipartFile file, @ApiParam(name="schoolId",value="学校ID",required=true) @RequestParam(name = "schoolId", required = true) Integer schoolId)
+            throws NoSuchMethodException,
+            IllegalAccessException,
+            InvocationTargetException,
+            IOException{
+
+        return MessageBean.ok(registeringNoticeService.upload(
+                fileUploadService.uploadFileReturnInputStream(file, FILE_UPLOAD_FOLDER),schoolId));
     }
 }

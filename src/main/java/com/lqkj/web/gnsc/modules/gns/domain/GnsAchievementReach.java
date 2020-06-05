@@ -1,6 +1,7 @@
 package com.lqkj.web.gnsc.modules.gns.domain;
 
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -21,8 +22,18 @@ public class GnsAchievementReach {
     private Integer schoolId;
     private Timestamp reachTime;
 
+    public GnsAchievementReach() {
+    }
+
+    public GnsAchievementReach(String userId, Integer achievementId, Integer schoolId) {
+        this.userId = userId;
+        this.achievementId = achievementId;
+        this.schoolId = schoolId;
+    }
+
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return id;
     }
@@ -63,6 +74,7 @@ public class GnsAchievementReach {
 
     @Basic
     @Column(name = "reach_time", nullable = true)
+    @UpdateTimestamp
     public Timestamp getReachTime() {
         return reachTime;
     }

@@ -86,6 +86,10 @@ public class GnsUserInfo {
     @ApiModelProperty(value = "分享次数")
     private Integer shareTimes;
 
+    @Column(name = "listen_times")
+    @ApiModelProperty(value = "播放音频次数")
+    private Integer listenTimes;
+
 
     public GnsUserInfo() {
         this.userId = UUID.randomUUID().toString();
@@ -246,5 +250,13 @@ public class GnsUserInfo {
 
     public void setShareTimes(Integer shareTimes) {
         this.shareTimes = shareTimes;
+    }
+
+    public Integer getListenTimes() {
+        return listenTimes;
+    }
+
+    public void setListenTimes(Integer listenTimes) {
+        this.listenTimes = listenTimes;
     }
 }

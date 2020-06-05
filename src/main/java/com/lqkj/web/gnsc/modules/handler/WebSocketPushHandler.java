@@ -13,10 +13,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author wells
@@ -50,6 +47,12 @@ public class WebSocketPushHandler extends TextWebSocketHandler {
 
     }
 
+    /**
+     * 单用户推送
+     * @param uid
+     * @param msg
+     * @return
+     */
     public Boolean pushMsg(String uid,String msg) {
         WebSocketSession webSocketSession = WEB_SOCKET_SESSION_HASH_MAP.get(uid);
         if(webSocketSession==null){
@@ -60,6 +63,7 @@ public class WebSocketPushHandler extends TextWebSocketHandler {
             TextMessage sendMsg = new TextMessage(JSON.toJSONString(MessageBean.ok(msg),SerializerFeature.WriteNullStringAsEmpty));
             try {
                 webSocketSession.sendMessage(sendMsg);
+                LOGGER.info("推送消息",sendMsg);
                 return true;
             }catch (IOException e){
                 LOGGER.info("消息推送失败",e.getMessage());
@@ -69,6 +73,24 @@ public class WebSocketPushHandler extends TextWebSocketHandler {
         LOGGER.info("消息推送失败，连接已断开");
         return false;
     }
+
+    /**
+     * 群发
+     * @throws Exception
+     */
+    public Boolean pushAllMsg(String msg){
+        Set<String> uids = WEB_SOCKET_SESSION_HASH_MAP.keySet();
+        if(uids.size() > 0){
+            for (String uid : uids) {
+                this.pushMsg(uid,msg);
+            }
+            LOGGER.info("消息推送：" + msg);
+            return true;
+        }
+        LOGGER.info("消息推送失败，连接已断开");
+        return false;
+    }
+
     //连接建立后处理
     @SuppressWarnings("unchecked")
     @Override

@@ -5,29 +5,20 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.lqkj.web.gnsc.message.MessageBean;
 import com.lqkj.web.gnsc.message.MessageListBean;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsGuide;
+import com.lqkj.web.gnsc.modules.gns.service.FileUploadService;
 import com.lqkj.web.gnsc.modules.gns.service.GuideService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.commons.io.FileUtils;
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * 迎新引导管理
@@ -43,6 +34,10 @@ import java.util.List;
 public class GuideController {
     @Autowired
     private GuideService guideService;
+    @Autowired
+    private FileUploadService fileUploadService;
+
+    private static String FILE_UPLOAD_FOLDER = "guide";
 
     @ApiOperation("H5获取迎新引导列表")
     @GetMapping("/list")
@@ -74,14 +69,14 @@ public class GuideController {
      */
     @ApiOperation("迎新引导信息分页")
     @GetMapping("/page")
-    public MessageBean pageQuery(
+    public MessageBean pageQuery(   @ApiParam(name = "schoolId", value = "学校ID", required = true) @RequestParam(name = "schoolId") Integer schoolId,
                              @ApiParam(name = "campusCode", value = "校区区域组ID，全部（0）", required = true) @RequestParam(name = "campusCode", required = false, defaultValue = "0") Integer campusCode,
                              @ApiParam(name="typeCode",value="学生类型，全部（0）",required=true) @RequestParam(name = "typeCode", required = false, defaultValue = "0") Integer typeCode,
                              @ApiParam(name="title",value="标题",required=false) @RequestParam(name = "title", required = false) String title,
                              @ApiParam(name="page",value="页码",required=true) @RequestParam(name = "page", required = true) Integer page,
                              @ApiParam(name="pageSize",value="每页数据条数",required=true) @RequestParam(name = "pageSize", required = true) Integer pageSize){
 
-        return MessageBean.ok(guideService.page(campusCode,typeCode,title,page,pageSize));
+        return MessageBean.ok(guideService.page(schoolId,campusCode,typeCode,title,page,pageSize));
     }
 
     /**
@@ -128,5 +123,42 @@ public class GuideController {
     public MessageBean bulkDelete(@ApiParam(name="ids",value="迎新引导信息ID，多个以','分隔",required=true) @RequestParam(name = "ids", required = true) String ids){
        return MessageBean.ok(guideService.bulkDelete(ids));
     }
+
+    /**
+     * 下载导入模板
+     * @throws IOException IO异常
+     */
+    @ApiOperation("下载导入模板")
+    @GetMapping("/info/downloadTemplate")
+    public ResponseEntity<InputStreamResource> exportTemplate(@ApiParam(name="schoolId",value="学校ID",required=true) @RequestParam(name = "schoolId", required = true) Integer schoolId)
+            throws IOException{
+        return guideService.exportTemplate(schoolId);
+    }
+
+    /**
+     * 导出
+     * @throws IOException IO异常
+     */
+    @ApiOperation("导出")
+    @GetMapping("/info/download")
+    public ResponseEntity<InputStreamResource> download(@ApiParam(name="schoolId",value="学校ID",required=true) @RequestParam(name = "schoolId", required = true) Integer schoolId) throws IOException{
+        return guideService.download(schoolId);
+    }
+
+    /**
+     * 导入
+     */
+    @PostMapping("/info/upload")
+    @ApiOperation("导入")
+    public MessageBean upload(MultipartFile file, @ApiParam(name="schoolId",value="学校ID",required=true) @RequestParam(name = "schoolId", required = true) Integer schoolId)
+            throws NoSuchMethodException,
+            IllegalAccessException,
+            InvocationTargetException,
+            IOException{
+
+        return MessageBean.ok(guideService.upload(
+                fileUploadService.uploadFileReturnInputStream(file, FILE_UPLOAD_FOLDER),schoolId));
+    }
+
 
 }

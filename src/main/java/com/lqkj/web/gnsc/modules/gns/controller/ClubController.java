@@ -8,7 +8,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
+
 import java.util.List;
 
 /**
@@ -29,9 +33,10 @@ public class ClubController {
      */
     @ApiOperation("根据校区获取校园社团列表")
     @GetMapping("/list")
-    public MessageListBean loadClub(@ApiParam(name="campusCode",value = "校区区域组ID",required = true) @RequestParam("campusCode") Integer campusCode){
-
-        return MessageListBean.ok(clubService.queryList(campusCode));
+    public MessageListBean loadClub(@ApiParam(name="campusCode",value = "校区区域组ID",required = true) @RequestParam("campusCode") Integer campusCode, @ApiIgnore Authentication authentication){
+        Jwt jwt = (Jwt)authentication.getPrincipal();
+        String userName = (String)jwt.getClaims().get("user_name") == null? "guest" : (String)jwt.getClaims().get("user_name");
+        return MessageListBean.ok(clubService.queryList(campusCode,userName));
     }
     /**
      * 根据ID获取校园社团详情
@@ -40,8 +45,10 @@ public class ClubController {
      */
     @ApiOperation("H5获取校园社团详情")
     @GetMapping("/get")
-    public MessageBean get(@ApiParam(name="clubId",value="H5获取校园社团详情",required=true) @RequestParam(name = "clubId", required = true) Integer clubId){
-        return MessageBean.ok(clubService.get(clubId));
+    public MessageBean get(@ApiParam(name="clubId",value="H5获取校园社团详情",required=true) @RequestParam(name = "clubId", required = true) Integer clubId, @ApiIgnore Authentication authentication){
+        Jwt jwt = (Jwt)authentication.getPrincipal();
+        String userName = (String)jwt.getClaims().get("user_name") == null? "guest" : (String)jwt.getClaims().get("user_name");
+        return MessageBean.ok(clubService.get(clubId,userName));
     }
 
     /**
@@ -57,9 +64,10 @@ public class ClubController {
     public MessageBean pageQuery(@ApiParam(name = "campusCode", value = "校区区域组ID，全部（0）", required = true) @RequestParam(name = "campusCode", required = true, defaultValue = "0") Integer campusCode,
             @ApiParam(name="clubName",value="校团名称",required=false) @RequestParam(name = "clubName", required = false, defaultValue = "") String clubName,
             @ApiParam(name="page",value="页码",required=true) @RequestParam(name = "page", required = true) Integer page,
-            @ApiParam(name="pageSize",value="每页数据条数",required=true) @RequestParam(name = "pageSize", required = true) Integer pageSize){
-
-        return MessageBean.ok(clubService.page(campusCode,clubName,page,pageSize));
+            @ApiParam(name="pageSize",value="每页数据条数",required=true) @RequestParam(name = "pageSize", required = true) Integer pageSize, @ApiIgnore Authentication authentication){
+        Jwt jwt = (Jwt)authentication.getPrincipal();
+        String userName = (String)jwt.getClaims().get("user_name") == null? "guest" : (String)jwt.getClaims().get("user_name");
+        return MessageBean.ok(clubService.page(campusCode,clubName,page,pageSize,userName));
     }
     /**
      * 添加校园社团信息
@@ -68,9 +76,10 @@ public class ClubController {
      */
     @ApiOperation("添加校园社团信息")
     @PostMapping("/add")
-    public MessageBean add(@ApiParam(name="club",value="社团对象信息",required=true) @RequestBody GnsClub club){
-
-        return clubService.add(club);
+    public MessageBean add(@ApiParam(name="club",value="社团对象信息",required=true) @RequestBody GnsClub club, @ApiIgnore Authentication authentication){
+        Jwt jwt = (Jwt)authentication.getPrincipal();
+        String userName = (String)jwt.getClaims().get("user_name") == null? "guest" : (String)jwt.getClaims().get("user_name");
+        return clubService.add(club,userName);
     }
 
     /**
@@ -80,9 +89,10 @@ public class ClubController {
      */
     @ApiOperation("更新校园社团信息")
     @PostMapping("/update")
-    public MessageBean update(@ApiParam(name="club",value="校园社团信息",required=true) @RequestBody GnsClub club){
-
-        return MessageBean.ok(clubService.update(club));
+    public MessageBean update(@ApiParam(name="club",value="校园社团信息",required=true) @RequestBody GnsClub club, @ApiIgnore Authentication authentication){
+        Jwt jwt = (Jwt)authentication.getPrincipal();
+        String userName = (String)jwt.getClaims().get("user_name") == null? "guest" : (String)jwt.getClaims().get("user_name");
+        return MessageBean.ok(clubService.update(club,userName));
     }
 
     /**
@@ -92,9 +102,10 @@ public class ClubController {
      */
     @ApiOperation("删除校园社团信息")
     @DeleteMapping("/delete")
-    public MessageBean delete(@ApiParam(name="clubId",value="社团ID",required=true) @RequestParam(name = "clubId", required = true) Integer clubId){
-
-        return MessageBean.ok(clubService.delete(clubId));
+    public MessageBean delete(@ApiParam(name="clubId",value="社团ID",required=true) @RequestParam(name = "clubId", required = true ) Integer clubId,@ApiIgnore Authentication authentication){
+        Jwt jwt = (Jwt)authentication.getPrincipal();
+        String userName = (String)jwt.getClaims().get("user_name") == null? "guest" : (String)jwt.getClaims().get("user_name");
+        return MessageBean.ok(clubService.delete(clubId,userName));
     }
 
     /**
@@ -104,8 +115,9 @@ public class ClubController {
      */
     @ApiOperation("批量删除社团信息")
     @DeleteMapping("/bulkDelete")
-    public MessageBean bulkDelete(@ApiParam(name="ids",value="社团信息ID，多个以','分隔",required=true) @RequestParam(name = "ids", required = true) String ids){
-
-        return MessageBean.ok(clubService.bulkDelete(ids));
+    public MessageBean bulkDelete(@ApiParam(name="ids",value="社团信息ID，多个以','分隔",required=true) @RequestParam(name = "ids", required = true) String ids, @ApiIgnore Authentication authentication){
+        Jwt jwt = (Jwt)authentication.getPrincipal();
+        String userName = (String)jwt.getClaims().get("user_name") == null? "guest" : (String)jwt.getClaims().get("user_name");
+        return MessageBean.ok(clubService.bulkDelete(ids,userName));
     }
 }

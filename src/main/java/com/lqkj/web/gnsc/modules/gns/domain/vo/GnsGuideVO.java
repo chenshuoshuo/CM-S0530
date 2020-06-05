@@ -20,6 +20,10 @@ public class GnsGuideVO {
     private String content;
     private Timestamp updateTime;
     private Integer orderId;
+    private Integer typeCode;
+    private Integer campusCode;
+    private String lngLatString;
+    private String rasterLngLat;
 
     @Id
     @Column(name = "guide_id", nullable = false)
@@ -68,8 +72,6 @@ public class GnsGuideVO {
         this.content = content;
     }
 
-
-
     @Basic
     @Column(name = "update_time", nullable = true, length = -1)
     public Timestamp getUpdateTime() {
@@ -90,6 +92,43 @@ public class GnsGuideVO {
         this.orderId = orderId;
     }
 
+    @Basic
+    @Column(name = "studnet_type_code")
+    public Integer getTypeCode() {
+        return typeCode;
+    }
 
+    public void setTypeCode(Integer typeCode) {
+        this.typeCode = typeCode;
+    }
 
+    @Basic
+    @Column(name = "campus_code")
+    public Integer getCampusCode() {
+        return campusCode;
+    }
+
+    public void setCampusCode(Integer campusCode) {
+        this.campusCode = campusCode;
+    }
+
+    @Basic
+    @Column(name = "lng_lat")
+    public String getLngLatString() {
+        return lngLatString;
+    }
+
+    public void setLngLatString(String lngLatString) {
+        this.lngLatString = lngLatString;
+    }
+
+    @Basic
+    @Column(name = "raster_lng_lat")
+    public String getRasterLngLat() {
+        return rasterLngLat;
+    }
+
+    public void setRasterLngLat(String rasterLngLat) {
+        this.rasterLngLat = rasterLngLat;
+    }
 }

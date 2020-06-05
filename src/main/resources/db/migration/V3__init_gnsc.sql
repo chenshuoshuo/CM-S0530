@@ -49,8 +49,8 @@ comment on column gns.gns_academy.memo is
 /* Table: gns_access_record                                     */
 /*==============================================================*/
 CREATE TABLE IF NOT EXISTS gns.gns_access_record (
-   record_id            uuid                 not null,
-   user_id              uuid                 null,
+   record_id            VARCHAR(64)                  not null,
+   user_id              VARCHAR(64)          null,
    ip                   VARCHAR(128)         null,
    create_time          TIMESTAMP            null,
    create_date          VARCHAR(50)          null,
@@ -138,7 +138,7 @@ comment on column gns.gns_achievement.memo is
 /*==============================================================*/
 CREATE TABLE IF NOT EXISTS gns.gns_achievement_reach (
    id                   SERIAL               not null,
-   user_id              uuid                 null,
+   user_id              VARCHAR(64)                  null,
    achievement_id       INT4                 null,
    school_id            INT4                 null,
    reach_time           TIMESTAMP            null,
@@ -233,9 +233,9 @@ comment on column gns.gns_application.memo is
 /* Table: gns_application_use                                   */
 /*==============================================================*/
 CREATE TABLE IF NOT EXISTS gns.gns_application_use (
-   record_id            uuid                 not null,
+   record_id            VARCHAR(64)                  not null,
    application_id       INT4                 null,
-   user_id              uuid                 null,
+   user_id              VARCHAR(64)                  null,
    create_time          TIMESTAMP            null,
    constraint PK_GNS_APPLICATION_USE primary key (record_id)
 );
@@ -364,7 +364,7 @@ comment on column gns.gns_club.memo is
 /*==============================================================*/
 CREATE TABLE IF NOT EXISTS gns.gns_feedback (
    feedback_id          SERIAL               not null,
-   user_id              uuid                 null,
+   user_id              VARCHAR(64)                  null,
    nickname             VARCHAR(255)         null,
    open_id              VARCHAR(255)         null,
    content              TEXT                 null,
@@ -398,7 +398,7 @@ comment on column gns.gns_feedback.create_time is
 /*==============================================================*/
 CREATE TABLE IF NOT EXISTS gns.gns_group_photo (
    sign_id              SERIAL               not null,
-   user_id              uuid                 null,
+   user_id              VARCHAR(64)                  null,
    landmark_id          INT8                 null,
    landmark_name        VARCHAR(255)         null,
    landmark_type        VARCHAR(50)          null,
@@ -808,8 +808,8 @@ comment on column gns.gns_manage_user_role.user_id is
 /* Table: gns_map_use                                           */
 /*==============================================================*/
 CREATE TABLE IF NOT EXISTS gns.gns_map_use (
-   record_id            uuid                 not null,
-   gns_user_id          uuid                 null,
+   record_id            VARCHAR(64)                  not null,
+   gns_user_id          VARCHAR(64)                  null,
    record_type          INT4                 null,
    map_element_name     VARCHAR(255)         null,
    create_time          TIMESTAMP            null,
@@ -838,8 +838,8 @@ comment on column gns.gns_map_use.create_time is
 /* Table: gns_push_message                                      */
 /*==============================================================*/
 CREATE TABLE IF NOT EXISTS gns.gns_push_message (
-   push_id              uuid                 not null,
-   user_id              uuid                 null,
+   push_id              VARCHAR(64)                  not null,
+   user_id              VARCHAR(64)                  null,
    title                VARCHAR(255)         null,
    valid                BOOL                 NULL,
    push_type            INT4                 null,
@@ -1045,7 +1045,7 @@ comment on column gns.gns_school.memo is
 /*==============================================================*/
 CREATE TABLE IF NOT EXISTS gns.gns_sign (
    sign_id              SERIAL               not null,
-   user_id              uuid                 null,
+   user_id              VARCHAR(64)                  null,
    landmark_id          INT8                 null,
    landmark_name        VARCHAR(255)         null,
    landmark_type        VARCHAR(50)          null,
@@ -1173,7 +1173,7 @@ comment on column gns.gns_student_type.memo is
 /*==============================================================*/
 CREATE TABLE IF NOT EXISTS gns.gns_thumbs_up (
    sign_id              SERIAL               not null,
-   user_id              uuid                 null,
+   user_id              VARCHAR(64)                  null,
    landmark_id          INT8                 null,
    landmark_name        VARCHAR(255)         null,
    landmark_type        VARCHAR(50)          null,
@@ -1278,7 +1278,7 @@ comment on column gns.gns_tour_route.memo is
 /* Table: gns_user_info                                         */
 /*==============================================================*/
 CREATE TABLE IF NOT EXISTS gns.gns_user_info (
-   user_id              uuid                 not null,
+   user_id              VARCHAR(64)                  not null,
    school_id            INT4                 null,
    open_id              VARCHAR(255)         null,
    nickname             VARCHAR(255)         null,
@@ -1296,6 +1296,7 @@ CREATE TABLE IF NOT EXISTS gns.gns_user_info (
    last_use_time        TIMESTAMP            null,
    last_use_location    geometry             null,
    share_times          INT4                 null,
+   listen_times          INT4                 null,
    constraint PK_GNS_USER_INFO primary key (user_id)
 );
 
@@ -1356,6 +1357,9 @@ comment on column gns.gns_user_info.last_use_location is
 
 comment on column gns.gns_user_info.share_times is
 '分享次数：share_times';
+
+comment on column gns.gns_user_info.listen_times is
+'音频播放次数：listen_times';
 
 /*==============================================================*/
 /* Table: gns_display_point_type                                */

@@ -1,16 +1,13 @@
 package com.lqkj.web.gnsc.modules.gns.service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.lqkj.web.gnsc.message.MessageBean;
 import com.lqkj.web.gnsc.message.MessageListBean;
-import com.lqkj.web.gnsc.modules.gns.dao.GnsAccessRecordDao;
-import com.lqkj.web.gnsc.modules.gns.dao.GnsUserInfoDao;
-import com.lqkj.web.gnsc.modules.gns.dao.LocationInfoDao;
-import com.lqkj.web.gnsc.modules.gns.domain.GnsAccessRecord;
-import com.lqkj.web.gnsc.modules.gns.domain.GnsPushMessage;
-import com.lqkj.web.gnsc.modules.gns.domain.GnsStoreItem;
-import com.lqkj.web.gnsc.modules.gns.domain.GnsUserInfo;
+import com.lqkj.web.gnsc.modules.gns.dao.*;
+import com.lqkj.web.gnsc.modules.gns.domain.*;
+import com.lqkj.web.gnsc.modules.handler.WebSocketPushHandler;
 import com.lqkj.web.gnsc.modules.resultBean.PersonalAchieve;
 import com.lqkj.web.gnsc.modules.resultBean.UserSignRankBean;
 import com.lqkj.web.gnsc.utils.CommonUtils;
@@ -24,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigInteger;
@@ -49,6 +47,15 @@ public class GnsUserInfoService {
 
     @Autowired
     private LocationInfoDao locationInfoDao;
+
+    @Autowired
+    private GnsAchievementReachDao achievementReachDao;
+
+    @Autowired
+    private GnsAchievementDao achievementDao;
+
+    @Autowired
+    private WebSocketPushHandler webSocketPushHandler;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -107,6 +114,22 @@ public class GnsUserInfoService {
         if (CommonUtils.ifNotNull(mobile)) userInfo.setMobile(mobile);
         if (CommonUtils.ifNotNull(academyCode)) userInfo.setAcademyCode(academyCode);
         if (CommonUtils.ifNotNull(dormId)) userInfo.setDormId(dormId);
+        userInfoDao.save(userInfo);
+        if(userInfo.getDormId() != null && userInfo.getAcademyCode() != null
+                && userInfo.getRealName() != null && userInfo.getMobile() != null ){
+            //身份信息完善后保存成就并推送
+            GnsAchievementReach achievementReach = new GnsAchievementReach(userId,1,userInfo.getSchoolId());
+            GnsAchievementReach reach = achievementReachDao.save(achievementReach);
+            Integer personReachNumber = achievementReachDao.countAllByUserId(userId);
+            Integer schoolReachNumber = achievementReachDao.countAllByAchievementIdAndSchoolId(1,userInfo.getSchoolId());
+            GnsAchievement achievement = achievementDao.findByAchievementId(1);
+            PersonalAchieve personalAchieve = new PersonalAchieve(achievement.getAchievementName(),achievement.getAchievedIcon(),achievement.getBrief(),achievement.getCondition(),
+                    true,CommonUtils.formatTimeStamp(reach.getReachTime()),
+                    personReachNumber == null ? 0 : personReachNumber,
+                    schoolReachNumber == null ? 0 : schoolReachNumber);
+            //推送
+            webSocketPushHandler.pushMsg(userId, JSON.toJSONString(personalAchieve));
+        }
         return MessageBean.ok("更新用户信息成功");
     }
 
@@ -155,7 +178,47 @@ public class GnsUserInfoService {
         if (userInfo.getShareTimes() == null)
             userInfo.setShareTimes(1);
         else userInfo.setShareTimes(userInfo.getShareTimes() + 1);
+        userInfoDao.save(userInfo);
+        //分享5次获得成就
+        if(userInfo.getShareTimes() == 5){
+            GnsAchievementReach achievementReach = new GnsAchievementReach(userId,4,userInfo.getSchoolId());
+            GnsAchievementReach reach = achievementReachDao.save(achievementReach);
+            Integer personReachNumber = achievementReachDao.countAllByUserId(userId);
+            Integer schoolReachNumber = achievementReachDao.countAllByAchievementIdAndSchoolId(4,userInfo.getSchoolId());
+            GnsAchievement achievement = achievementDao.findByAchievementId(4);
+            PersonalAchieve personalAchieve = new PersonalAchieve(achievement.getAchievementName(),achievement.getAchievedIcon(),achievement.getBrief(),achievement.getCondition(),
+                    true,CommonUtils.formatTimeStamp(reach.getReachTime()),
+                    personReachNumber == null ? 0 : personReachNumber,
+                    schoolReachNumber == null ? 0 : schoolReachNumber);
+            //推送
+            webSocketPushHandler.pushMsg(userId, JSON.toJSONString(personalAchieve));
+        }
         return MessageBean.ok(userInfo.getShareTimes());
+    }
+
+    public MessageBean addListenTimes(String userId) {
+        GnsUserInfo userInfo = userInfoDao.findByUUID(userId);
+        if (userInfo == null)
+            return MessageBean.error("不存在该用户");
+        if (userInfo.getListenTimes() == null)
+            userInfo.setListenTimes(1);
+        else userInfo.setListenTimes(userInfo.getListenTimes() + 1);
+        userInfoDao.save(userInfo);
+        //播放5次获得成就
+        if(userInfo.getListenTimes() == 5){
+            GnsAchievementReach achievementReach = new GnsAchievementReach(userId,2,userInfo.getSchoolId());
+            GnsAchievementReach reach = achievementReachDao.save(achievementReach);
+            Integer personReachNumber = achievementReachDao.countAllByUserId(userId);
+            Integer schoolReachNumber = achievementReachDao.countAllByAchievementIdAndSchoolId(2,userInfo.getSchoolId());
+            GnsAchievement achievement = achievementDao.findByAchievementId(2);
+            PersonalAchieve personalAchieve = new PersonalAchieve(achievement.getAchievementName(),achievement.getAchievedIcon(),achievement.getBrief(),achievement.getCondition(),
+                    true,CommonUtils.formatTimeStamp(reach.getReachTime()),
+                    personReachNumber == null ? 0 : personReachNumber,
+                    schoolReachNumber == null ? 0 : schoolReachNumber);
+            //推送
+            webSocketPushHandler.pushMsg(userId, JSON.toJSONString(personalAchieve));
+        }
+        return MessageBean.ok(userInfo.getListenTimes());
     }
 
     /**

@@ -1,7 +1,10 @@
 package com.lqkj.web.gnsc.modules.gns.domain;
 
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.metadata.BaseRowModel;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.lqkj.web.gnsc.utils.GeoJSON;
 import com.lqkj.web.gnsc.utils.JacksonGeometryDeserializer;
 import com.lqkj.web.gnsc.utils.JacksonGeometrySerializer;
 import com.vividsolutions.jts.geom.Geometry;
@@ -18,11 +21,15 @@ import java.util.Objects;
  **/
 @Entity
 @Table(name = "gns_reception_place", schema = "gns")
-public class GnsReceptionPlace {
+public class GnsReceptionPlace extends BaseRowModel {
     private Integer placeId;
+    @ExcelProperty(value = {"分类编号"}, index = 2)
     private Integer typeCode;
+    @ExcelProperty(value = {"校区区域组ID"}, index = 3)
     private Integer campusCode;
+    @ExcelProperty(value = {"接待点名称"}, index = 0)
     private String title;
+    @ExcelProperty(value = {"接待点内容"}, index = 1)
     private String content;
     @JsonSerialize(using = JacksonGeometrySerializer.class)
     @JsonDeserialize(using = JacksonGeometryDeserializer.class)
@@ -30,6 +37,8 @@ public class GnsReceptionPlace {
     private Timestamp updateTime;
     private Integer orderId;
     private String memo;
+    @ExcelProperty(value = {"接待点坐标"}, index = 4)
+    private String lngLatString;
 
     @Id
     @Column(name = "place_id", nullable = false)
@@ -121,6 +130,19 @@ public class GnsReceptionPlace {
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    @Transient
+    public String getLngLatString() {
+        if(this.getLngLat() != null){
+            return GeoJSON.gjson.toString(this.getLngLat());
+        }
+        return lngLatString;
+    }
+
+    public void setLngLatString(String lngLatString) {
+
+        this.lngLatString = lngLatString;
     }
 
     @Override

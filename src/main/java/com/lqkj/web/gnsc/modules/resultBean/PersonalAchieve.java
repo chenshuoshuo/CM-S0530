@@ -9,6 +9,8 @@ public class PersonalAchieve implements Serializable {
     private String condition;
     private boolean gained;
     private String gainTime;
+    private Integer personAchieveNumber;
+    private Integer schoolAchieveNumber;
 
     public PersonalAchieve(String achieveName, String icon, String brief,
                            String condition, boolean gained, String gainTime) {
@@ -18,6 +20,17 @@ public class PersonalAchieve implements Serializable {
         this.condition = condition;
         this.gained = gained;
         this.gainTime = gainTime;
+    }
+
+    public PersonalAchieve(String achieveName, String icon, String brief, String condition, boolean gained, String gainTime, Integer personAchieveNumber, Integer schoolAchieveNumber) {
+        this.achieveName = achieveName;
+        this.icon = icon;
+        this.brief = brief;
+        this.condition = condition;
+        this.gained = gained;
+        this.gainTime = gainTime;
+        this.personAchieveNumber = personAchieveNumber;
+        this.schoolAchieveNumber = schoolAchieveNumber;
     }
 
     public String getAchieveName() {
@@ -66,5 +79,21 @@ public class PersonalAchieve implements Serializable {
 
     public void setGainTime(String gainTime) {
         this.gainTime = gainTime;
+    }
+
+    public Integer getPersonAchieveNumber() {
+        return personAchieveNumber;
+    }
+
+    public void setPersonAchieveNumber(Integer personAchieveNumber) {
+        this.personAchieveNumber = personAchieveNumber;
+    }
+
+    public Integer getSchoolAchieveNumber() {
+        return schoolAchieveNumber;
+    }
+
+    public void setSchoolAchieveNumber(Integer schoolAchieveNumber) {
+        this.schoolAchieveNumber = schoolAchieveNumber;
     }
 }

@@ -1,10 +1,12 @@
 package com.lqkj.web.gnsc.modules.gns.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.lqkj.web.gnsc.APIVersion;
 import com.lqkj.web.gnsc.message.MessageBean;
 import com.lqkj.web.gnsc.message.MessageListBean;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsSign;
 import com.lqkj.web.gnsc.modules.gns.service.GnsSignService;
+import com.lqkj.web.gnsc.modules.handler.WebSocketPushHandler;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 public class GnsSignController {
     @Autowired
     private GnsSignService signService;
+    @Autowired
+    private WebSocketPushHandler webSocketPushHandler;
 
 
     /**
@@ -34,14 +38,23 @@ public class GnsSignController {
         return MessageListBean.ok(signService.queryList(schoolId));
     }
 
+    @ApiOperation("推送弹幕")
+    @PostMapping("/push/msg")
+    public MessageBean msg(@ApiParam(name = "schoolId", value = "学校ID", required = true) @RequestParam(name = "schoolId") Integer schoolId,
+                           @ApiParam(name = "userCode", value = "用户ID", required = true) @RequestParam(name = "userCode", required = true) String userCode) throws Exception {
+        Boolean pushStatus = webSocketPushHandler.pushMsg(userCode, JSON.toJSONString(signService.queryList(schoolId)));
+        return pushStatus?MessageBean.ok():MessageBean.error("推送失败");
+    }
+
 
     @PostMapping("/save")
     @ApiOperation("上传打卡信息")
-    public MessageBean save(@ApiParam(name = "userCode", value = "用户ID") @RequestParam(name = "userCode") String userCode,
+    public MessageBean save(@ApiParam(name = "schoolId", value = "学校ID") @RequestParam(name = "schoolId") Integer schoolId,
+                            @ApiParam(name = "userCode", value = "用户ID") @RequestParam(name = "userCode") String userCode,
                             @ApiParam(name = "mapCode", value = "地标ID，地标标签传入pointCode的值,其他为mapCode的值") @RequestParam(name = "mapCode") Integer mapCode,
                             @ApiParam(name = "mapType", value = "地标类型（地标标签传point；大楼、房间、其他面传polygon") @RequestParam(name = "mapType") String mapType) {
 
-        return signService.save(userCode, mapCode, mapType);
+        return signService.save(userCode, mapCode, mapType,schoolId);
 
     }
 
