@@ -8,11 +8,13 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
 
 @Service
+@Transactional
 public class MapBuildingImgService{
     @Autowired
     MapBuildingImgDao mapBuildingImgDao;
@@ -33,5 +35,10 @@ public class MapBuildingImgService{
 
     public Integer deleteAllByBuildingCode(Integer buildingCode) {
         return mapBuildingImgDao.deleteAllByBuildingCode(buildingCode);
+    }
+
+    public Integer saveImgList(List<MapBuildingImg> mapBuildingImgList) {
+        mapBuildingImgDao.saveAll(mapBuildingImgList);
+        return mapBuildingImgList.size();
     }
 }

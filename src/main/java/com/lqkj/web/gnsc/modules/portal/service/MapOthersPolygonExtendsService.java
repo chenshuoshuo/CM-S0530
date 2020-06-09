@@ -7,10 +7,12 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class MapOthersPolygonExtendsService {
     @Autowired
     MapOthersPolygonExtendsDao mapOthersPolygonExtendsDao;

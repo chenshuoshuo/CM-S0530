@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class MapOthersPolygonImgService{
     @Autowired
     MapOthersPolygonImgDao mapOthersPolygonImgDao;
@@ -32,7 +33,7 @@ public class MapOthersPolygonImgService{
         return mapOthersPolygonImgDao.findAll(example, sort);
     }
 
-    @Transactional
+
     public List<MapOthersPolygonImg> saveImgList(List<MapOthersPolygonImg> mapOthersPolygonImgList) {
         return  mapOthersPolygonImgDao.saveAll(mapOthersPolygonImgList);
     }

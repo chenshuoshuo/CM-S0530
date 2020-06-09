@@ -15,7 +15,6 @@ public interface MapRoomImgDao extends JpaRepository<MapRoomImg, Integer> {
      * @param roomCode
      */
     @Modifying
-    @Transactional
     @Query(value = "delete from MapRoomImg  where roomCode = :roomCode")
     Integer deleteAllByRoomCode(@Param("roomCode") Integer roomCode);
 }

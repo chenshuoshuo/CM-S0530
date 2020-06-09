@@ -1,6 +1,7 @@
 package com.lqkj.web.gnsc.modules.portal.model;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -34,6 +35,9 @@ public class MapOthersPolygon {
     private Integer gnsSignCount;
     private Integer pohotoTakenCount;
     private Integer thumbsUpCount;
+    private MapOthersPolygonType mapOthersPolygonType;
+    private List<MapOthersPolygonImg> mapOthersPolygonImgList;
+    private List<MapOthersPolygonExtends> mapOthersPolygonExtendsList;
 
     @Id
     @Column(name = "polygon_code", nullable = false)
@@ -263,6 +267,33 @@ public class MapOthersPolygon {
 
     public void setThumbsUpCount(Integer thumbsUpCount) {
         this.thumbsUpCount = thumbsUpCount;
+    }
+
+    @Transient
+    public MapOthersPolygonType getMapOthersPolygonType() {
+        return mapOthersPolygonType;
+    }
+
+    public void setMapOthersPolygonType(MapOthersPolygonType mapOthersPolygonType) {
+        this.mapOthersPolygonType = mapOthersPolygonType;
+    }
+
+    @Transient
+    public List<MapOthersPolygonImg> getMapOthersPolygonImgList() {
+        return mapOthersPolygonImgList;
+    }
+
+    public void setMapOthersPolygonImgList(List<MapOthersPolygonImg> mapOthersPolygonImgList) {
+        this.mapOthersPolygonImgList = mapOthersPolygonImgList;
+    }
+
+    @Transient
+    public List<MapOthersPolygonExtends> getMapOthersPolygonExtendsList() {
+        return mapOthersPolygonExtendsList;
+    }
+
+    public void setMapOthersPolygonExtendsList(List<MapOthersPolygonExtends> mapOthersPolygonExtendsList) {
+        this.mapOthersPolygonExtendsList = mapOthersPolygonExtendsList;
     }
 
     @Override

@@ -87,6 +87,9 @@ public class GnsSignService {
                 signCount = point.getGnsSignCount();
                 signInterval = point.getGnsSignInterval() * 60;
                 pointDao.save(point);
+                //保存打卡记录
+                GnsSign sign = new GnsSign(userCode,Long.parseLong(mapCode.toString()),landMarkName,mapType);
+                signDao.save(sign);
             }else {
                 //获取房间 大楼 其他面信息
                 if(buildingDao.existsByMapCode(Long.parseLong(mapCode.toString()))){
@@ -96,6 +99,9 @@ public class GnsSignService {
                     signCount = building.getGnsSignCount();
                     signInterval = building.getGnsSignInterval() * 60;
                     buildingDao.save(building);
+                    //保存打卡记录
+                    GnsSign sign = new GnsSign(userCode,Long.parseLong(mapCode.toString()),landMarkName,mapType);
+                    signDao.save(sign);
                 }else if(roomDao.existsByMapCode(Long.parseLong(mapCode.toString()))){
                     MapRoom room = roomDao.queryByMapCode(Long.parseLong(mapCode.toString()));
                     landMarkName = room.getRoomName();
@@ -103,6 +109,9 @@ public class GnsSignService {
                     signCount = room.getGnsSignCount();
                     signInterval = room.getGnsSignInterval();
                     roomDao.save(room);
+                    //保存打卡记录
+                    GnsSign sign = new GnsSign(userCode,Long.parseLong(mapCode.toString()),landMarkName,mapType);
+                    signDao.save(sign);
                 }else if(othersPolygonDao.existsByMapCode(Long.parseLong(mapCode.toString()))){
                     MapOthersPolygon othersPolygon = othersPolygonDao.queryByMapCode(Long.parseLong(mapCode.toString()));
                     landMarkName = othersPolygon.getPolygonName();
@@ -110,11 +119,11 @@ public class GnsSignService {
                     signCount = othersPolygon.getGnsSignCount();
                     signInterval = othersPolygon.getGnsSignInterval() * 60;
                     othersPolygonDao.save(othersPolygon);
+                    //保存打卡记录
+                    GnsSign sign = new GnsSign(userCode,Long.parseLong(mapCode.toString()),landMarkName,mapType);
+                    signDao.save(sign);
                 }
             }
-            //保存打卡记录
-            GnsSign sign = new GnsSign(userCode,Long.parseLong(mapCode.toString()),landMarkName,mapType);
-            signDao.save(sign);
             //当前用户打卡地标超过5则获得成就
             Integer userSignCount = signDao.countAllByUserId(userCode);
             if(userSignCount == 5){

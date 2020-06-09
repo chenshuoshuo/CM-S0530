@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.JsonArray;
 import com.lqkj.web.gnsc.message.MessageBean;
+import com.lqkj.web.gnsc.modules.base.BaseService;
 import com.lqkj.web.gnsc.modules.gns.dao.*;
 import com.lqkj.web.gnsc.modules.gns.domain.*;
 import com.lqkj.web.gnsc.modules.gns.domain.vo.GnsTourPointVO;
@@ -52,7 +53,7 @@ import java.util.*;
  */
 @Service
 @Transactional
-public class GnsTourRouteService {
+public class GnsTourRouteService extends BaseService {
 
     @Autowired
     private GnsTourRouteDao tourRouteDao;
@@ -214,25 +215,10 @@ public class GnsTourRouteService {
             tourRouteForm.getTourRoute().setPointCount(tourRouteForm.getTourPointList().size());
         }
         //根据多点位从cmgis获取路径规划结果
-        GnsStoreItem serverApiUrl = storeItemDao.findMapConfig("otherConfigurations", "cmgisApiUrl");
-        GnsStoreItem mapToken = storeItemDao.findMapConfig("otherConfigurations", "mapToken");
         try {
-            DisableSSLCertificateCheckUtil.disableChecks();
-            HttpClient client = new DefaultHttpClient();
-            //post
-            HttpPost httpPost = new HttpPost(serverApiUrl.getItemValue() + "map/route/v3/multiPoint/split/find/" + tourRoute.getCampusCode());
-            // 构建消息实体
-            StringEntity entity = new StringEntity(JSON.toJSONString(pointList), Charset.forName("UTF-8"));
-            entity.setContentEncoding("UTF-8");
-            // 发送Json格式的数据请求
-            entity.setContentType("application/json");
-            httpPost.setEntity(entity);
-            httpPost.addHeader("authorization", mapToken.getItemValue());
-            HttpResponse response = client.execute(httpPost);
             Double distance = 0.00;
-
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                String result = EntityUtils.toString(response.getEntity());
+            String result = queryRouteWithMultiPoint(pointList,tourRoute.getCampusCode());
+            if(StringUtils.isNotBlank(result)){
                 JSONObject responseJson = JSONObject.parseObject(result);
                 JSONArray dataArray = responseJson.getJSONArray("data");
                 if(dataArray.size() > 0){
@@ -250,11 +236,11 @@ public class GnsTourRouteService {
                     }
                     tourRoute.setMileage(Math.round(distance * 100) / 100.0 + "m");
                 }
-            }
 
+            }
             tourPointDao.saveAll(tourPointList);
             return tourRouteDao.save(tourRoute);
-        }catch (IOException e){
+        }catch (Exception e){
             logger.error(e.getMessage(),e);
             return null;
         }

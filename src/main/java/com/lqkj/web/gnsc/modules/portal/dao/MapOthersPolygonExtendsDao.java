@@ -13,6 +13,5 @@ public interface MapOthersPolygonExtendsDao extends JpaRepository<MapOthersPolyg
      * 根据面图元编码删除扩展属性
      * @param polygonCode 面图源编码
      */
-    @Transactional
     void deleteAllByPolygonCode(Integer polygonCode);
 }

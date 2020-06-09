@@ -1,12 +1,12 @@
 package com.lqkj.web.gnsc.utils;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import org.apache.http.Header;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -28,14 +28,13 @@ public class HttpClientUtil {
      * @Description:
      * @param url 请求地址
      * @param headers 请求头
-     * @param data 请求实体
      * @param encoding 字符集
      * @author ts
      * @return String
      * @date 2018/11/8 9:53
      * @throws
      */
-    public static String sendPost(String url, Map<String, String> headers, JSONObject data, String encoding) {
+    public static String sendPost(String url, Map<String, String> headers, String jsonData, String encoding) {
         // 请求返回结果
         String resultJson = null;
         // 创建Client
@@ -57,8 +56,8 @@ public class HttpClientUtil {
                 httpPost.setHeaders(allHeader);
             }
             // 设置实体
-            if(data != null){
-                httpPost.setEntity(new StringEntity(JSON.toJSONString(data)));
+            if(jsonData != null){
+                httpPost.setEntity(new StringEntity(jsonData));
             }
             // 发送请求,返回响应对象
             CloseableHttpResponse response = client.execute(httpPost);
@@ -76,6 +75,129 @@ public class HttpClientUtil {
         return resultJson;
     }
 
+
+    /**
+     * @Title: sendPost
+     * @throws
+     */
+    public static String sendPost(String url, String data,String mapToken) {
+        // 设置默认请求头
+        Map<String, String> headers = new HashMap<>();
+        headers.put("content-type", "application/json");
+        headers.put("authorization","Basic Q21HaXNScGM6Q01naXNUISQmKCo=");
+        return sendPost(url, headers, data, ENCODING);
+    }
+
+    /**
+     * @Title: sendPost
+     * @Description:
+     * @param url 请求地址
+     * @param headers 请求头
+     * @param encoding 字符集
+     * @author ts
+     * @return String
+     * @date 2018/11/8 9:53
+     * @throws
+     */
+    public static String sendPut(String url, Map<String, String> headers, String jsonData, String encoding) {
+        // 请求返回结果
+        String resultJson = null;
+        // 创建Client
+        CloseableHttpClient client = HttpClients.createDefault();
+        // 创建HttpPost对象
+        HttpPut httpPut = new HttpPut();
+
+        try {
+            // 设置请求地址
+            httpPut.setURI(new URI(url));
+            // 设置请求头
+            if (headers != null) {
+                Header[] allHeader = new BasicHeader[headers.size()];
+                int i = 0;
+                for (Map.Entry<String, String> entry: headers.entrySet()){
+                    allHeader[i] = new BasicHeader(entry.getKey(), entry.getValue());
+                    i++;
+                }
+                httpPut.setHeaders(allHeader);
+            }
+            // 设置实体
+            if(jsonData != null){
+                httpPut.setEntity(new StringEntity(jsonData));
+            }
+            // 发送请求,返回响应对象
+            CloseableHttpResponse response = client.execute(httpPut);
+            // 获取响应状态
+            int status = response.getStatusLine().getStatusCode();
+            if (status == HttpStatus.SC_OK) {
+                // 获取响应结果
+                resultJson = EntityUtils.toString(response.getEntity(), encoding);
+            }
+        } catch (Exception e) {
+            System.out.println("发送put请求失败");
+        } finally {
+            httpPut.releaseConnection();
+        }
+        return resultJson;
+    }
+
+    /**
+     * @Title: sendPost
+     * @throws
+     */
+    public static String sendPut(String url, String data,String mapToken) {
+        // 设置默认请求头
+        Map<String, String> headers = new HashMap<>();
+        headers.put("content-type", "application/json");
+        headers.put("authorization", "Basic " + mapToken);
+        return sendPut(url, headers, data, ENCODING);
+    }
+
+    /**
+     * @Title: sendPost
+     * @Description:
+     * @param url 请求地址
+     * @author ts
+     * @return String
+     * @date 2018/11/8 9:53
+     * @throws
+     */
+    public static String sendDelete(String url,Map<String,String> headers, String jsonData, String encoding) {
+        // 请求返回结果
+        String resultJson = null;
+        // 创建Client
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        MyHttpDelete delete = new MyHttpDelete(url);
+
+        try {
+            // 设置请求地址
+            delete.setEntity(new StringEntity(jsonData));
+            // 设置请求头
+            if (headers != null) {
+                Header[] allHeader = new BasicHeader[headers.size()];
+                int i = 0;
+                for (Map.Entry<String, String> entry: headers.entrySet()){
+                    allHeader[i] = new BasicHeader(entry.getKey(), entry.getValue());
+                    i++;
+                }
+                delete.setHeaders(allHeader);
+            }
+            // 发送请求,返回响应对象
+            CloseableHttpResponse response = client.execute(delete);
+            // 获取响应状态
+            int status = response.getStatusLine().getStatusCode();
+            if (status == HttpStatus.SC_OK) {
+                // 获取响应结果
+                resultJson = EntityUtils.toString(response.getEntity(), ENCODING);
+            }
+        } catch (Exception e) {
+            System.out.println("发送put请求失败");
+        } finally {
+            delete.releaseConnection();
+        }
+        return resultJson;
+    }
+
     /**
      * @Title: sendPost
      * @Description:
@@ -86,63 +208,12 @@ public class HttpClientUtil {
      * @date 2018/11/8 9:53
      * @throws
      */
-    public static String sendPost(String url, JSONObject data) {
+    public static String sendDelete(String url, String data,String mapToken) {
         // 设置默认请求头
         Map<String, String> headers = new HashMap<>();
         headers.put("content-type", "application/json");
-
-        return sendPost(url, headers, data, ENCODING);
-    }
-
-    /**
-     * @Title: sendPost
-     * @Description:
-     * @param url 请求地址
-     * @param params 请求实体
-     * @author ts
-     * @return String
-     * @date 2018/11/8 9:53
-     * @throws
-     */
-    public static String sendPost(String url,Map<String,Object> params){
-        // 设置默认请求头
-        Map<String, String> headers = new HashMap<>();
-        headers.put("content-type", "application/json");
-        // 将map转成json
-        JSONObject data = JSONObject.parseObject(JSON.toJSONString(params));
-        return sendPost(url,headers,data,ENCODING);
-    }
-
-    /**
-     * @Title: sendPost
-     * @Description:
-     * @param url 请求地址
-     * @param headers 请求头
-     * @param data 请求实体
-     * @author ts
-     * @return String
-     * @date 2018/11/8 9:53
-     * @throws
-     */
-    public static String sendPost(String url, Map<String, String> headers, JSONObject data) {
-        return sendPost(url, headers, data, ENCODING);
-    }
-
-    /**
-     * @Title: sendPost
-     * @Description:(发送post请求，请求数据默认使用UTF-8编码)
-     * @param url 请求地址
-     * @param headers 请求头
-     * @param params 请求实体
-     * @author ts
-     * @return String
-     * @date 2018/11/8 9:53
-     * @throws
-     */
-    public static String sendPost(String url,Map<String,String> headers,Map<String,String> params){
-        // 将map转成json
-        JSONObject data = JSONObject.parseObject(JSON.toJSONString(params));
-        return sendPost(url,headers,data,ENCODING);
+        headers.put("authorization", "Basic " + mapToken);
+        return sendDelete(url, headers, data, ENCODING);
     }
 
     /**
@@ -217,15 +288,5 @@ public class HttpClientUtil {
         return sendGet(url,null,ENCODING);
     }
 
-    /**
-     * @Title: sendPost
-     * @Description:(发送post请求，请求数据默认使用UTF-8编码)
-     * @param url 请求地址
-     * @author ts
-     * @return String
-     * @date 2018/11/8 14:23
-     * @throws
-     */
-    public static String sendPost(String url) {return sendPost(url,null);}
 }
 

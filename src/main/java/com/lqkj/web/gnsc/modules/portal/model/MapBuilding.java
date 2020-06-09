@@ -1,5 +1,6 @@
 package com.lqkj.web.gnsc.modules.portal.model;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.lqkj.web.gnsc.utils.JacksonGeometryDeserializer;
@@ -7,6 +8,7 @@ import com.lqkj.web.gnsc.utils.JacksonGeometrySerializer;
 import com.vividsolutions.jts.geom.Geometry;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -19,6 +21,7 @@ import java.util.Objects;
 public class MapBuilding {
     private Integer buildingCode;
     private String buildingName;
+    private Integer typeCode;
     private Integer campusCode;
     private Long mapCode;
     private String enName;
@@ -44,6 +47,12 @@ public class MapBuilding {
     private Integer gnsSignCount;
     private Integer pohotoTakenCount;
     private Integer thumbsUpCount;
+    private String campusName;
+    private String center;
+    private JSONObject geoJson;
+    private MapBuildingType mapBuildingType;
+    private List<MapBuildingImg> mapBuildingImgList;
+    private List<MapBuildingExtends> mapBuildingExtendsList;
 
     @Id
     @Column(name = "building_code", nullable = false)
@@ -53,6 +62,15 @@ public class MapBuilding {
 
     public void setBuildingCode(Integer buildingCode) {
         this.buildingCode = buildingCode;
+    }
+
+    @Column(name = "type_code")
+    public Integer getTypeCode() {
+        return typeCode;
+    }
+
+    public void setTypeCode(Integer typeCode) {
+        this.typeCode = typeCode;
     }
 
     @Basic
@@ -273,6 +291,60 @@ public class MapBuilding {
 
     public void setThumbsUpCount(Integer thumbsUpCount) {
         this.thumbsUpCount = thumbsUpCount;
+    }
+
+    @Transient
+    public MapBuildingType getMapBuildingType() {
+        return mapBuildingType;
+    }
+
+    public void setMapBuildingType(MapBuildingType mapBuildingType) {
+        this.mapBuildingType = mapBuildingType;
+    }
+
+    @Transient
+    public List<MapBuildingImg> getMapBuildingImgList() {
+        return mapBuildingImgList;
+    }
+
+    public void setMapBuildingImgList(List<MapBuildingImg> mapBuildingImgList) {
+        this.mapBuildingImgList = mapBuildingImgList;
+    }
+
+    @Transient
+    public List<MapBuildingExtends> getMapBuildingExtendsList() {
+        return mapBuildingExtendsList;
+    }
+
+    public void setMapBuildingExtendsList(List<MapBuildingExtends> mapBuildingExtendsList) {
+        this.mapBuildingExtendsList = mapBuildingExtendsList;
+    }
+
+    @Transient
+    public String getCampusName() {
+        return campusName;
+    }
+
+    public void setCampusName(String campusName) {
+        this.campusName = campusName;
+    }
+
+    @Transient
+    public String getCenter() {
+        return center;
+    }
+
+    public void setCenter(String center) {
+        this.center = center;
+    }
+
+    @Transient
+    public JSONObject getGeoJson() {
+        return geoJson;
+    }
+
+    public void setGeoJson(JSONObject geoJson) {
+        this.geoJson = geoJson;
     }
 
     @Override

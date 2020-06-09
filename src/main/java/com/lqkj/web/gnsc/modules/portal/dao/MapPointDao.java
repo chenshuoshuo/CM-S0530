@@ -65,7 +65,6 @@ public interface MapPointDao extends JpaRepository<MapPoint, Integer> {
      * 变更非删除状态数据的同步状态
      */
     @Modifying
-    @Transactional
     @Query(value = "update MapPoint t set t.synStatus = true where t.campusCode = :zoneId and t.synStatus = false and t.delete = false ")
     void updateSynStatusAfterSyn(@Param("zoneId") Integer zoneId);
 
@@ -74,7 +73,6 @@ public interface MapPointDao extends JpaRepository<MapPoint, Integer> {
      * 删除状态为删除的数据
      */
     @Modifying
-    @Transactional
     @Query(value = "delete from MapPoint t where t.campusCode = :zoneId and (t.delete = true or t.mapCode in :mapCodes)")
     void deleteAfterSyn(@Param("mapCodes") Long[] mapCodes,
                         @Param("zoneId") Integer zoneId);

@@ -68,4 +68,19 @@ public class MessageListBean<T> extends MessageBaseBean implements Serializable 
         messageListBean.setMessage(message);
         return messageListBean;
     }
+
+    public static <T> MessageListBean<T> construct(List<T> data, String msg){
+        MessageListBean<T> messageListBean = new MessageListBean<>();
+        messageListBean.setStatus(true);
+        messageListBean.setData(data);
+        messageListBean.setMessage(msg);
+
+        if(data.size() == 0){
+            messageListBean.setCode(-100);
+        } else {
+            messageListBean.setCode(200);
+        }
+
+        return messageListBean;
+    }
 }

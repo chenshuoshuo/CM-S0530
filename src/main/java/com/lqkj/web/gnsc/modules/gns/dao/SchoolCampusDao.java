@@ -16,6 +16,11 @@ public interface SchoolCampusDao extends JpaRepository<GnsCampusInfo,Integer> {
     GnsCampusInfo findByCampusCode(Integer campusCode);
 
     /**
+     * 根据二维ID 获取
+     */
+    GnsCampusInfo findByVectorZoomCode(Integer campusCode);
+
+    /**
      * 获取默认校区
      * @param schoolId
      * @return

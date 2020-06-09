@@ -1,6 +1,11 @@
 package com.lqkj.web.gnsc.modules.portal.model;
 
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.metadata.BaseRowModel;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -10,21 +15,37 @@ import java.util.Objects;
  **/
 @Entity
 @Table(name = "map_point_type", schema = "portal")
-public class MapPointType {
+public class MapPointType extends BaseRowModel {
+    @ExcelProperty(value = {"分类编号"}, index = 0)
     private Integer typeCode;
+    @ExcelProperty(value = {"上级分类编号"}, index = 1)
     private Integer parentCode;
+    @ExcelProperty(value = {"分类名称"}, index = 2)
     private String typeName;
+    @ExcelProperty(value = {"显示级别(默认18)"}, index = 5)
     private Integer displayLevel;
+    @ExcelProperty(value = {"是否可点击(true/false)"}, index = 6)
     private Boolean click;
+    @ExcelProperty(value = {"是否可搜索(true/false)"}, index = 7)
     private Boolean search;
+    @ExcelProperty(value = {"描述"}, index = 9)
     private String description;
+    @ExcelProperty(value = {"三维图标地址"}, index = 3)
     private String rasterIcon;
+    @ExcelProperty(value = {"二维图标地址"}, index = 4)
     private String vectorIcon;
+    @ExcelProperty(value = {"是否显示(true/false)"}, index = 8)
     private Boolean display;
+    @ExcelProperty(value = {"排序"}, index = 10)
     private Integer orderId;
+    @ExcelProperty(value = {"备注"}, index = 11)
     private String memo;
+    @ExcelProperty(value = {"字体颜色"}, index = 11)
     private String fontColor;
+    @ExcelProperty(value = {"字体是否加粗"}, index = 11)
     private Boolean fontBold;
+    List<MapPointType> childrenMapPointTypeList = new ArrayList<>();
+    private Integer mapPointCount;
 
     @Id
     @Column(name = "type_code", nullable = false)
@@ -164,6 +185,24 @@ public class MapPointType {
 
     public void setFontBold(Boolean fontBold) {
         this.fontBold = fontBold;
+    }
+
+    @Transient
+    public List<MapPointType> getChildrenMapPointTypeList() {
+        return childrenMapPointTypeList;
+    }
+
+    public void setChildrenMapPointTypeList(List<MapPointType> childrenMapPointTypeList) {
+        this.childrenMapPointTypeList = childrenMapPointTypeList;
+    }
+
+    @Transient
+    public Integer getMapPointCount() {
+        return mapPointCount;
+    }
+
+    public void setMapPointCount(Integer mapPointCount) {
+        this.mapPointCount = mapPointCount;
     }
 
     @Override

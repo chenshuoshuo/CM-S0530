@@ -18,6 +18,14 @@ public class MapOthersPolygonImg {
     private Integer orderId;
     private String memo;
 
+    public MapOthersPolygonImg() {
+    }
+
+    public MapOthersPolygonImg(Integer polygonCode, String imgUrl) {
+        this.polygonCode = polygonCode;
+        this.imgUrl = imgUrl;
+    }
+
     @Id
     @Column(name = "img_id", nullable = false)
     public Integer getImgId() {

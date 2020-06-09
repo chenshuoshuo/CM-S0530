@@ -1,7 +1,9 @@
 package com.lqkj.web.gnsc.message;
 
+import com.lqkj.web.gnsc.utils.UtilPage;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.data.domain.Page;
 
 import java.io.Serializable;
 
@@ -53,6 +55,30 @@ public class MessageBean<T> extends MessageBaseBean implements Serializable {
         messageBean.setStatus(false);
         messageBean.setCode(-1);
         messageBean.setMessage(data);
+        return messageBean;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static <T> MessageBean<T> construct(T data, String msg){
+        MessageBean messageBean = new MessageBean();
+
+        messageBean.setData(data);
+        messageBean.setMessage(msg);
+        messageBean.setStatus(true);
+
+        int code;
+        if(data instanceof Page){
+            code = ((Page) data).getTotalElements() == 0L ? -100 : 200;
+        } else if(data instanceof UtilPage){
+            code = ((UtilPage) data).getTotalElements() == 0 ? -100 : 200;
+        } else{
+            code = data == null ? -100 : 200;
+        }
+        messageBean.setCode(code);
+
         return messageBean;
     }
 }

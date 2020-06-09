@@ -15,7 +15,10 @@ public interface MapBuildingImgDao extends JpaRepository<MapBuildingImg, Integer
      * @param buildingCode
      */
     @Modifying
-    @Transactional
     @Query(value = "delete from MapBuildingImg  where buildingCode = :buildingCode")
     Integer deleteAllByBuildingCode(@Param("buildingCode") Integer buildingCode);
+
+    /**
+     *
+     */
 }

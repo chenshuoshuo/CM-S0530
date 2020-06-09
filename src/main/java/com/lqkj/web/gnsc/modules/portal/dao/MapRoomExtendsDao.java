@@ -13,6 +13,5 @@ public interface MapRoomExtendsDao extends JpaRepository<MapRoomExtends, MapRoom
      * 根据房间编码删除扩展属性
      * @param roomCode 房间编码
      */
-    @Transactional
     void deleteAllByRoomCode(Integer roomCode);
 }

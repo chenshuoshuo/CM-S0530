@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class MapRoomImgService {
     @Autowired
     MapRoomImgDao mapRoomImgDao;
@@ -34,7 +35,7 @@ public class MapRoomImgService {
     }
 
 
-    @Transactional
+
     public List<MapRoomImg> saveImgList(List<MapRoomImg> mapRoomImgList) {
         return  mapRoomImgDao.saveAll(mapRoomImgList);
     }

@@ -18,6 +18,13 @@ public class MapBuildingImg {
     private Integer orderId;
     private String memo;
 
+    public MapBuildingImg() {}
+
+    public MapBuildingImg(Integer buildingCode, String imgUrl) {
+        this.buildingCode = buildingCode;
+        this.imgUrl = imgUrl;
+    }
+
     @Id
     @Column(name = "img_id", nullable = false)
     public Integer getImgId() {

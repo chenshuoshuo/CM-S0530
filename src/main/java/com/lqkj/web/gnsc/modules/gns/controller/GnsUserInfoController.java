@@ -94,4 +94,13 @@ public class GnsUserInfoController {
     public MessageBean addShareTimes(@RequestParam(name = "userId") String userId) {
         return userInfoService.addShareTimes(userId);
     }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户id(必须)", paramType = "query")
+    })
+    @PostMapping(APIVersion.V1 + "/addListenTimes")
+    @ApiOperation("播放音频时调用接口播放次数加一")
+    public MessageBean addListenTimes(@RequestParam(name = "userId") String userId) {
+        return userInfoService.addListenTimes(userId);
+    }
 }

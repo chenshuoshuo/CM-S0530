@@ -15,7 +15,6 @@ public interface MapPointImgDao extends JpaRepository<MapPointImg, Integer> {
      * @param pointCode
      */
     @Modifying
-    @Transactional
     @Query(value = "delete from MapPointImg  where pointCode = :pointCode")
     Integer deleteAllByPointCode(@Param("pointCode") Integer pointCode);
 

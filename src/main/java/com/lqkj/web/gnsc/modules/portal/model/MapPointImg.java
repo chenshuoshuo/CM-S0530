@@ -18,6 +18,14 @@ public class MapPointImg {
     private Integer orderId;
     private String memo;
 
+    public MapPointImg() {
+    }
+
+    public MapPointImg(Integer pointCode, String imgUrl) {
+        this.pointCode = pointCode;
+        this.imgUrl = imgUrl;
+    }
+
     @Id
     @Column(name = "img_id", nullable = false)
     public Integer getImgId() {

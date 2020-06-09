@@ -14,6 +14,7 @@ import java.util.List;
 
 
 @Service
+@Transactional
 public class MapPointImgService{
     @Autowired
     MapPointImgDao mapPointImgDao;
@@ -31,7 +32,6 @@ public class MapPointImgService{
         return mapPointImgDao.findAll(example, sort);
     }
 
-    @Transactional
     public List<MapPointImg> saveImgList(List<MapPointImg> mapPointImgList) {
        return mapPointImgDao.saveAll(mapPointImgList);
     }

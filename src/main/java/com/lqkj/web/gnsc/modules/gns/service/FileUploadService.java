@@ -1,14 +1,14 @@
 package com.lqkj.web.gnsc.modules.gns.service;
 
 import com.lqkj.web.gnsc.message.MessageBean;
+import com.lqkj.web.gnsc.utils.FileUtil;
+import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.table.TableRowSorter;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.*;
@@ -62,6 +62,42 @@ public class FileUploadService {
         }
         return MessageBean.error("文件格式错误");
     }
+    /**
+     * 上传base64图片
+     * @param folder
+     * @return
+     */
+    public MessageBean<String> uploadBase64ImgFile(String base64File, String fileName, String folder) {
+        String fileExtension = fileName.substring(fileName.lastIndexOf("."));
+        if(!FileUtil.isImgFile(fileExtension)){
+            return MessageBean.error("图片格式错误");
+        }
+        try{
+            String newFileName = UUID.randomUUID() + fileExtension;
+            File uploadFolder = new File("./upload/" + folder + "/");
+            if(!uploadFolder.exists()) {
+                uploadFolder.mkdirs();
+            }
+            String imgUrl = "./upload/" + folder + "/" + newFileName;
+            FileUtil.decoderBase64File(base64File,imgUrl);
+            File uploadFile = new File(imgUrl);
+            if(folder.equals("gns")){
+                Thumbnails.of(uploadFile.getAbsolutePath())
+                        .width(1125)
+                        .toFile(imgUrl);
+            }else {
+                Thumbnails.of(uploadFile.getAbsolutePath())
+                        .scale(1f)
+                        .outputQuality(0.25f)
+                        .toFile(imgUrl);
+            }
+            return  MessageBean.ok(imgUrl.substring(1));
+        }catch (Exception e){
+            //e.printStackTrace();
+            logger.error(e.getMessage(),e);
+            return MessageBean.error(e.getMessage());
+        }
+    }
 
     /**
      * 上传文件
@@ -73,6 +109,11 @@ public class FileUploadService {
     public InputStream uploadFileReturnInputStream(MultipartFile file, String folder) throws FileNotFoundException {
         File uploadFile = uploadFileReturnFile(file, folder);
         return new FileInputStream(uploadFile.getAbsolutePath());
+    }
+
+    public String uploadFileReturnAbsolutePath(MultipartFile file, String folder) {
+        File uploadFile = uploadFileReturnFile(file, folder);
+        return uploadFile.getAbsolutePath();
     }
 
     private File uploadFileReturnFile(MultipartFile file, String folder){

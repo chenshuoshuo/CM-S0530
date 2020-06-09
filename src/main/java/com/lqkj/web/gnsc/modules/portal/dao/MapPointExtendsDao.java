@@ -13,6 +13,5 @@ public interface MapPointExtendsDao extends JpaRepository<MapPointExtends, MapPo
      * 根据点标注编码删除扩展属性
      * @param pointCode 点标注编码
      */
-    @Transactional
     void deleteAllByPointCode(Integer pointCode);
 }

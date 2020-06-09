@@ -13,6 +13,5 @@ public interface MapBuildingExtendsDao extends JpaRepository<MapBuildingExtends,
      * 根据大楼编码删除扩展属性
      * @param buildingCode 大楼编码
      */
-    @Transactional
     void deleteAllByBuildingCode(Integer buildingCode);
 }

@@ -7,6 +7,7 @@ import com.lqkj.web.gnsc.utils.JacksonGeometrySerializer;
 import com.vividsolutions.jts.geom.Geometry;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -46,6 +47,10 @@ public class MapRoom {
     private Integer gnsSignCount;
     private Integer pohotoTakenCount;
     private Integer thumbsUpCount;
+    private String campusName;
+    private MapRoomType mapRoomType;
+    private List<MapRoomImg> mapRoomImgList;
+    private List<MapRoomExtends> mapRoomExtendsList;
 
 
     @Id
@@ -318,7 +323,41 @@ public class MapRoom {
         this.thumbsUpCount = thumbsUpCount;
     }
 
+    @Transient
+    public String getCampusName() {
+        return campusName;
+    }
 
+    public void setCampusName(String campusName) {
+        this.campusName = campusName;
+    }
+
+    @Transient
+    public MapRoomType getMapRoomType() {
+        return mapRoomType;
+    }
+
+    public void setMapRoomType(MapRoomType mapRoomType) {
+        this.mapRoomType = mapRoomType;
+    }
+
+    @Transient
+    public List<MapRoomImg> getMapRoomImgList() {
+        return mapRoomImgList;
+    }
+
+    public void setMapRoomImgList(List<MapRoomImg> mapRoomImgList) {
+        this.mapRoomImgList = mapRoomImgList;
+    }
+
+    @Transient
+    public List<MapRoomExtends> getMapRoomExtendsList() {
+        return mapRoomExtendsList;
+    }
+
+    public void setMapRoomExtendsList(List<MapRoomExtends> mapRoomExtendsList) {
+        this.mapRoomExtendsList = mapRoomExtendsList;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -7,6 +7,7 @@ import com.lqkj.web.gnsc.utils.JacksonGeometrySerializer;
 import com.vividsolutions.jts.geom.Geometry;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -46,7 +47,11 @@ public class MapPoint {
     private Integer pohotoTakenCount;
     private Boolean gnsHot;
     private Integer thumbsUpCount;
+    private String campusName;
     private MapPointType mapPointType;
+    private MapPointType parentMapPointType;
+    private List<MapPointImg> mapPointImgList;
+    private List<MapPointExtends> mapPointExtendsList;
 
     @Id
     @Column(name = "point_code", nullable = false)
@@ -306,6 +311,42 @@ public class MapPoint {
 
     public void setMapPointType(MapPointType mapPointType) {
         this.mapPointType = mapPointType;
+    }
+
+    @Transient
+    public String getCampusName() {
+        return campusName;
+    }
+
+    public void setCampusName(String campusName) {
+        this.campusName = campusName;
+    }
+
+    @Transient
+    public MapPointType getParentMapPointType() {
+        return parentMapPointType;
+    }
+
+    public void setParentMapPointType(MapPointType parentMapPointType) {
+        this.parentMapPointType = parentMapPointType;
+    }
+
+    @Transient
+    public List<MapPointImg> getMapPointImgList() {
+        return mapPointImgList;
+    }
+
+    public void setMapPointImgList(List<MapPointImg> mapPointImgList) {
+        this.mapPointImgList = mapPointImgList;
+    }
+
+    @Transient
+    public List<MapPointExtends> getMapPointExtendsList() {
+        return mapPointExtendsList;
+    }
+
+    public void setMapPointExtendsList(List<MapPointExtends> mapPointExtendsList) {
+        this.mapPointExtendsList = mapPointExtendsList;
     }
 
     @Override

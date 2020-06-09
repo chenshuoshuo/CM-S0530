@@ -7,11 +7,13 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
 
 @Service
+@Transactional
 public class MapBuildingExtendsService {
     @Autowired
     MapBuildingExtendsDao mapBuildingExtendsDao;
@@ -29,10 +31,11 @@ public class MapBuildingExtendsService {
         return mapBuildingExtendsDao.findAll(example, sort);
     }
 
-    public List<MapBuildingExtends> save(List<MapBuildingExtends> mapBuildingExtendsList) {
+    public Integer save(List<MapBuildingExtends> mapBuildingExtendsList) {
         if (mapBuildingExtendsList.size() > 0) {
             mapBuildingExtendsDao.deleteAllByBuildingCode(mapBuildingExtendsList.get(0).getBuildingCode());
         }
-        return  mapBuildingExtendsDao.saveAll(mapBuildingExtendsList);
+        mapBuildingExtendsDao.saveAll(mapBuildingExtendsList);
+        return  mapBuildingExtendsList.size();
     }
 }

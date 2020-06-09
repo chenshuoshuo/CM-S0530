@@ -1,5 +1,8 @@
 package com.lqkj.web.gnsc.modules.portal.model;
 
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.metadata.BaseRowModel;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -10,14 +13,21 @@ import java.util.Objects;
  **/
 @Entity
 @Table(name = "map_room_type", schema = "portal")
-public class MapRoomType {
+public class MapRoomType extends BaseRowModel {
+    @ExcelProperty(value = {"分类编号"}, index = 0)
     private Integer typeCode;
     private Integer parentCode;
+    @ExcelProperty(value = {"分类名称"}, index = 1)
     private String typeName;
+    @ExcelProperty(value = {"是否可点击(true/false)"}, index = 2)
     private Boolean click;
+    @ExcelProperty(value = {"是否可搜索(true/false)"}, index = 3)
     private Boolean search;
+    @ExcelProperty(value = {"分类描述"}, index = 4)
     private String description;
+    @ExcelProperty(value = {"分类排序"}, index = 5)
     private Integer orderId;
+    @ExcelProperty(value = {"分类备注"}, index = 6)
     private String memo;
 
     @Id

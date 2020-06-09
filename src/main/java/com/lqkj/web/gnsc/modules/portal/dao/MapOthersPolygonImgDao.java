@@ -15,7 +15,6 @@ public interface MapOthersPolygonImgDao extends JpaRepository<MapOthersPolygonIm
      * @param polygonCode
      */
     @Modifying
-    @Transactional
     @Query(value = "delete from MapOthersPolygonImg  where polygonCode = :polygonCode")
     Integer deleteAllByPolygonCode(@Param("polygonCode") Integer polygonCode);
 

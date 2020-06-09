@@ -1,5 +1,7 @@
 package com.lqkj.web.gnsc.modules.portal.model;
 
+import org.apache.tomcat.util.modeler.BaseModelMBean;
+
 import javax.persistence.*;
 import java.util.Objects;
 
