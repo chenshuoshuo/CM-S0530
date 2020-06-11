@@ -57,13 +57,16 @@ public class PropertyDeploy {
         System.out.println("指定server绑定的地址");
         String address = scanner.nextLine();
 
-        createConfigureFile(ip, port, dbName, userName, passWord, address);
+        System.out.println("请输入上传文件路径");
+        String uploadPath = scanner.nextLine();
+
+        createConfigureFile(ip, port, dbName, userName, passWord, address,uploadPath);
     }
 
     /**
      * 创建配置文件
      */
-    public void createConfigureFile(String ip, String port, String dbName, String userName, String passWord, String address) {
+    public void createConfigureFile(String ip, String port, String dbName, String userName, String passWord, String address,String uploadPath) {
         if (StringUtils.isEmpty(ip)){
             ip = "127.0.0.1";
         }
@@ -97,6 +100,9 @@ public class PropertyDeploy {
 
             LinkedHashMap<String, Object> serverAddress = (LinkedHashMap<String, Object>) application.get("server");
             serverAddress.put("address", address);
+
+            LinkedHashMap<String, Object> web = (LinkedHashMap<String, Object>) application.get("web");
+            web.put("uploadPath", uploadPath);
 
             sink = Okio.buffer(Okio.sink(applicationFile));
 

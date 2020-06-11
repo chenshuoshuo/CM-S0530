@@ -1,19 +1,31 @@
 package com.lqkj.web.gnsc.modules.gns.service;
 
 import com.lqkj.web.gnsc.message.MessageBean;
+import com.lqkj.web.gnsc.modules.gns.dao.GnsStoreItemDao;
+import com.lqkj.web.gnsc.modules.gns.domain.GnsStoreItem;
 import com.lqkj.web.gnsc.utils.FileUtil;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.FileUtils;
+import org.apache.http.entity.ContentType;
+import org.apache.logging.log4j.util.PropertiesUtil;
+import org.apache.tomcat.util.buf.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 /**
  * @author cs
@@ -22,6 +34,13 @@ import java.util.zip.ZipFile;
  **/
 @Service
 public class FileUploadService {
+    @Autowired
+    private GnsStoreItemService itemService;
+
+    @Value("${web.uploadPath}")
+    String uploadPath;
+
+
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -74,11 +93,11 @@ public class FileUploadService {
         }
         try{
             String newFileName = UUID.randomUUID() + fileExtension;
-            File uploadFolder = new File("./upload/" + folder + "/");
+            File uploadFolder = new File(uploadPath + "/" + folder + "/");
             if(!uploadFolder.exists()) {
                 uploadFolder.mkdirs();
             }
-            String imgUrl = "./upload/" + folder + "/" + newFileName;
+            String imgUrl = uploadPath + "/" + folder + "/" + newFileName;
             FileUtil.decoderBase64File(base64File,imgUrl);
             File uploadFile = new File(imgUrl);
             if(folder.equals("gns")){
@@ -120,7 +139,7 @@ public class FileUploadService {
         try {
             String fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
             String newFileName = UUID.randomUUID() + fileExtension;
-            File uploadFolder = new File("./upload/" + folder + "/");
+            File uploadFolder = new File(uploadPath + "/" + folder + "/");
             if(!uploadFolder.exists()) {
                 uploadFolder.mkdirs();
             }
@@ -142,7 +161,7 @@ public class FileUploadService {
 
         //解压路径
         try{
-            File uploadFolder = new File("./upload/" + folder + "/");
+            File uploadFolder = new File(uploadPath + "/" + folder + "/");
             if (!uploadFolder.exists()) {
                 uploadFolder.mkdirs();
             }
@@ -180,7 +199,7 @@ public class FileUploadService {
                 }
             }
             //删除压缩文件
-
+            zip.close();
             File deleteFile = new File(zipFile.getAbsolutePath());
             if (deleteFile.exists()) {
                 Boolean flag = deleteFile.delete();
@@ -209,5 +228,144 @@ public class FileUploadService {
         File newFile = new File(childPath);
         newFile.renameTo(new File(newFile.getParent()+"/"+time));
         return "/upload/gns/"+time+"/html/index.html";
+    }
+
+    /** 根据指定URL将压缩文件解压到指定目录
+     * urlPath  下载路径
+     * downloadDir 文件存放目录
+	* @return
+    */
+    public MessageBean synFile(String absolutePath){
+        try{
+            File file = new File(absolutePath);
+            FileInputStream fileInputStream = new FileInputStream(file);
+            File uploadFolder = new File("./upload/");
+            if (!uploadFolder.exists()) {
+                uploadFolder.mkdirs();
+            }
+            File zipFile = new File(uploadFolder,file.getName());
+            FileUtils.copyInputStreamToFile(fileInputStream, zipFile);
+            ZipFile zip = new ZipFile(zipFile, Charset.forName("GBK"));
+            File fileDir = null;
+            for (Enumeration enumeration = zip.entries(); enumeration.hasMoreElements(); ) {
+                ZipEntry entry = (ZipEntry) enumeration.nextElement();
+                if(entry != null ){
+                    String zipEntryName = entry.getName();
+                    InputStream in = zip.getInputStream(entry);
+                    if (entry.isDirectory()) {      //处理压缩文件包含文件夹的情况
+                        fileDir = new File( "./" + zipEntryName);
+                        if(!fileDir.exists()){
+                            fileDir.mkdir();
+                        }
+                        continue;
+                    }
+                    File outZipFile = new File(uploadFolder, zipEntryName);
+                    outZipFile.createNewFile();
+                    OutputStream out = new FileOutputStream(outZipFile);
+                    byte[] buff = new byte[1024];
+                    int len;
+                    while ((len = in.read(buff)) > 0) {
+                        out.write(buff, 0, len);
+                    }
+                    in.close();
+                    out.close();
+                }
+            }
+            zip.close();
+            //删除压缩文件
+
+            File deleteFile = new File(zipFile.getAbsolutePath());
+            logger.info(zipFile.getAbsolutePath());
+            if (deleteFile.exists()) {
+                Boolean flag = deleteFile.delete();
+                logger.info("删除压缩文件-----》" + flag);
+            }
+            return MessageBean.ok("同步成功");
+        }catch (IOException e){
+            logger.error(e.getMessage(),e);
+            return MessageBean.error("同步失败");
+        }
+    }
+
+    /**
+     * 压缩指定目录下文件
+     * @param fileName :压缩后文件的名称
+     * @return 返回压缩后文件绝对路径
+     */
+    public String fileToZip(String fileName){
+        FileOutputStream fos = null;
+        ZipOutputStream zipOut = null;
+        //指定压缩后文件存放路径
+        String zipFilePath = System.getProperty("user.dir")+ File.separator + "zip" + File.separator + fileName + ".zip" ;
+        //获取需要压缩的文件路劲
+        String sourceFilePath = System.getProperty("user.dir") + File.separator  + "upload" +  File.separator;
+        //获取需要压缩文件的文件数量
+        int parentDirectoryLen=sourceFilePath.lastIndexOf(File.separator) + 1;
+        File zipFile = new File(zipFilePath);
+        // 校验文件夹目录是否存在，不存在就创建一个目录
+        if (!zipFile.getParentFile().exists()) {
+            zipFile.getParentFile().mkdirs();
+        }
+        File[] copyfoldersList = new File(sourceFilePath).listFiles();
+
+        try {
+            fos = new FileOutputStream(zipFilePath);
+            zipOut = new ZipOutputStream(fos);
+            if(copyfoldersList != null && copyfoldersList.length > 1){
+                for (int i = 0; i < copyfoldersList.length; i++) {
+                    if (copyfoldersList[i].isDirectory()) {
+                        LinkedList<String> copysourcepath = new LinkedList<String>(Arrays.asList(copyfoldersList[i].getAbsolutePath()));
+                        while (copysourcepath.size() > 0) {
+                            File folders = new File(copysourcepath.peek());
+                            String[] file = folders.list();
+                            if(file != null && file.length > 1 ){
+                                for (int j = 0; j < file.length; j++) {
+                                    File ff = new File(copysourcepath.peek(), file[j]);
+                                    if (ff.isFile()) {
+                                        FileInputStream fis =null;
+                                        fis = new FileInputStream(ff);
+                                        ZipEntry entry = new ZipEntry(ff.getAbsoluteFile().getAbsolutePath().substring(parentDirectoryLen));
+                                        zipOut.putNextEntry(entry);
+                                        int nNumber;
+                                        byte[] buffer = new byte[1024*10];
+                                        while ((nNumber = fis.read(buffer)) != -1)
+                                            zipOut.write(buffer, 0, nNumber);
+                                    } else if (ff.isDirectory()) {
+                                        if(ff.listFiles() != null){
+                                            for (File f : ff.listFiles()) {
+                                                if (f.isDirectory())
+                                                    copysourcepath.add(f.getPath());
+                                                else if (f.isFile()) {
+                                                    FileInputStream fis =null;
+                                                    fis = new FileInputStream(f);
+                                                    ZipEntry entry = new ZipEntry(f.getAbsoluteFile().getAbsolutePath().substring(parentDirectoryLen));
+                                                    zipOut.putNextEntry(entry);
+                                                    int nNumber;
+                                                    byte[] buffer = new byte[1024*10];
+                                                    while ((nNumber = fis.read(buffer)) != -1)
+                                                        zipOut.write(buffer, 0, nNumber);
+
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            copysourcepath.removeFirst();
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally{
+            try {
+                 zipOut.close();
+                 fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return  zipFilePath;
     }
 }

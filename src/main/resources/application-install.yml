@@ -93,6 +93,7 @@ spring:
     chain:
       enabled: true
       cache: true
+    static-locations: file:${web.uploadPath}
   cloud:
     consul:
       enabled: true
@@ -126,5 +127,8 @@ management:
     web:
       exposure:
         include: "*"
+web:
+  uploadPath: file
 app:
   version: @project.version@
+
