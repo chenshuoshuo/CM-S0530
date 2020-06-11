@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lqkj.web.gnsc.modules.portal.dao.MapOthersPolygonTypeDao;
 import com.lqkj.web.gnsc.modules.portal.model.MapOptExtendsDefine;
 import com.lqkj.web.gnsc.modules.portal.model.MapOthersPolygonType;
+import com.lqkj.web.gnsc.modules.portal.model.MapRoomType;
 import com.lqkj.web.gnsc.utils.DataImportLog;
 import com.lqkj.web.gnsc.utils.ExcelModel;
 import com.lqkj.web.gnsc.utils.ExcelUtils;
@@ -69,6 +70,17 @@ public class MapOthersPolygonTypeService {
     public MapOthersPolygonType add(MapOthersPolygonType mapOthersPolygonType) {
 
         return othersPolygonTypeDao.save(mapOthersPolygonType);
+    }
+
+
+    public List<MapOthersPolygonType> saveAll(List<MapOthersPolygonType> othersPolygonTypeList) {
+        for(MapOthersPolygonType type : othersPolygonTypeList){
+            if(type.getTypeCode() == null){
+                type.setTypeCode(othersPolygonTypeDao.queryMaxTypeCode());
+            }
+        }
+
+        return  othersPolygonTypeDao.saveAll(othersPolygonTypeList);
     }
 
 

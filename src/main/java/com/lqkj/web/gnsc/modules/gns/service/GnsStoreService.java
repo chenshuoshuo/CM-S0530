@@ -1,10 +1,13 @@
 package com.lqkj.web.gnsc.modules.gns.service;
 
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.lqkj.web.gnsc.modules.gns.dao.GnsStoreDao;
 import com.lqkj.web.gnsc.modules.gns.dao.GnsStoreItemDao;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsStore;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsStoreItem;
+import com.lqkj.web.gnsc.modules.gns.domain.vo.GnsStoreItemVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,21 @@ public class GnsStoreService{
 
         GnsStore store = createOrGetStore(storeName);
         return putStoreItem(schoolId,store, key, value, contentType);
+    }
+
+    /**
+     * 批量插入内容
+     *
+     */
+    public Boolean saveAll(List<GnsStoreItemVO> StoreItemList) {
+        if (StoreItemList != null && StoreItemList.size() > 0) {
+            for (GnsStoreItemVO storeItemVO : StoreItemList) {
+                GnsStore store = createOrGetStore(storeItemVO.getStoreName());
+                putStoreItem(storeItemVO.getSchoolId(),store,storeItemVO.getItemKey(),storeItemVO.getItemValue(),storeItemVO.getContentType());
+            }
+            return true;
+        }
+        return false;
     }
 
     /**

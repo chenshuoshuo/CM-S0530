@@ -16,8 +16,18 @@ public class GnsInteractionStatistic {
     private String statisticName;
     private Integer statisticData;
 
+    public GnsInteractionStatistic() {
+    }
+
+    public GnsInteractionStatistic(Integer schoolId, String statisticName, Integer statisticData) {
+        this.schoolId = schoolId;
+        this.statisticName = statisticName;
+        this.statisticData = statisticData;
+    }
+
     @Id
     @Column(name = "statistic_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getStatisticId() {
         return statisticId;
     }

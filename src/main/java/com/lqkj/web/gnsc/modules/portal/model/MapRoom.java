@@ -52,9 +52,37 @@ public class MapRoom {
     private List<MapRoomImg> mapRoomImgList;
     private List<MapRoomExtends> mapRoomExtendsList;
 
+    public MapRoom(){}
+
+
+    /**
+     * 构造函数
+     */
+
+    public MapRoom(Integer roomCode, Integer typeCode, String roomName, String enName, String alias, String hourseNumber, Integer campusCode, Long mapCode, Long buildingMapCode, String buildingName, Integer leaf, String brief, Boolean synStatus, Boolean delete, Geometry lngLat, Integer orderId, String memo, Integer versionCode) {
+        this.roomCode = roomCode;
+        this.typeCode = typeCode;
+        this.roomName = roomName;
+        this.enName = enName;
+        this.alias = alias;
+        this.hourseNumber = hourseNumber;
+        this.campusCode = campusCode;
+        this.mapCode = mapCode;
+        this.buildingMapCode = buildingMapCode;
+        this.buildingName = buildingName;
+        this.leaf = leaf;
+        this.brief = brief;
+        this.synStatus = synStatus;
+        this.delete = delete;
+        this.lngLat = lngLat;
+        this.orderId = orderId;
+        this.memo = memo;
+        this.versionCode = versionCode;
+    }
 
     @Id
     @Column(name = "room_code", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getRoomCode() {
         return roomCode;
     }

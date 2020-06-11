@@ -227,7 +227,7 @@ public class HttpClientUtil {
      * @date 2018/11/8 9:53
      * @throws
      */
-    public static String sendGet(String url,Map<String,Object> params,String encoding){
+    public static String sendGet(String url,Map<String,String> headers,Map<String,Object> params,String encoding){
 
         // 请求结果
         String resultJson = null;
@@ -247,6 +247,16 @@ public class HttpClientUtil {
             URI uri = builder.build();
             // 设置请求地址
             httpGet.setURI(uri);
+            // 设置请求头
+            if (headers != null) {
+                Header[] allHeader = new BasicHeader[headers.size()];
+                int i = 0;
+                for (Map.Entry<String, String> entry: headers.entrySet()){
+                    allHeader[i] = new BasicHeader(entry.getKey(), entry.getValue());
+                    i++;
+                }
+                httpGet.setHeaders(allHeader);
+            }
             // 发送请求，返回响应对象
             CloseableHttpResponse response = client.execute(httpGet);
             // 获取响应状态
@@ -272,8 +282,12 @@ public class HttpClientUtil {
      * @date 2018/11/8 9:53
      * @throws
      */
-    public static String sendGet(String url,Map<String,Object> params){
-        return sendGet(url,params,ENCODING);
+    public static String sendGet(String url,Map<String,Object> params,String mapToken){
+        // 设置默认请求头
+        Map<String, String> headers = new HashMap<>();
+        headers.put("content-type", "application/json");
+        headers.put("authorization", "Basic " + mapToken);
+        return sendGet(url,headers,params,ENCODING);
     }
     /**
      * @Title: sendGet
@@ -284,8 +298,8 @@ public class HttpClientUtil {
      * @date 2018/11/8 9:53
      * @throws
      */
-    public static String sendGet(String url){
-        return sendGet(url,null,ENCODING);
+    public static String sendGet(String url,Map<String,Object> params){
+        return sendGet(url,null,params,ENCODING);
     }
 
 }

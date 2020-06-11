@@ -30,6 +30,24 @@ public class MapRoomType extends BaseRowModel {
     @ExcelProperty(value = {"分类备注"}, index = 6)
     private String memo;
 
+    public MapRoomType() {
+    }
+
+    /**
+     * 构造函数
+     */
+    public MapRoomType(Integer typeCode, Integer parentCode, String typeName, Boolean click,
+                       Boolean search, String description, Integer orderId, String memo) {
+        this.typeCode = typeCode;
+        this.parentCode = parentCode;
+        this.typeName = typeName;
+        this.click = click;
+        this.search = search;
+        this.description = description;
+        this.orderId = orderId;
+        this.memo = memo;
+    }
+
     @Id
     @Column(name = "type_code", nullable = false)
     public Integer getTypeCode() {

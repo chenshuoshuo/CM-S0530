@@ -78,7 +78,14 @@ public class MapOthersPolygonService extends BaseService {
             return null;
         }
     }
+    public void updateSynStatusAfterSyn(Integer zoneId) {
+        mapOthersPolygonDao.updateSynStatusAfterSyn(zoneId);
+    }
 
+
+    public void deleteAfterSyn(Long[] mapCodes,Integer zoneId) {
+        mapOthersPolygonDao.deleteAfterSyn(mapCodes, zoneId);
+    }
 
     public List<MapOthersPolygon> listQuery(Integer campusCode, Integer typeCode, String polygonName) {
         Sort sort = new Sort(Sort.Direction.ASC, "orderId");
@@ -87,6 +94,15 @@ public class MapOthersPolygonService extends BaseService {
 
     public MapOthersPolygon add(MapOthersPolygon mapOthersPolygon) {
         return mapOthersPolygonDao.save(mapOthersPolygon);
+    }
+
+    public List<MapOthersPolygon> saveAll(List<MapOthersPolygon> mapOthersPolygonList) {
+        return mapOthersPolygonDao.saveAll(
+                mapOthersPolygonList);
+    }
+
+    public List<MapOthersPolygon> queryChangeList(Integer zoneId) {
+        return mapOthersPolygonDao.queryChangeList(zoneId);
     }
 
     public MapOthersPolygonVO get(Integer polygonCode) {

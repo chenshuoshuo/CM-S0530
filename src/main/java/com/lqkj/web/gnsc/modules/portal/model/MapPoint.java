@@ -55,6 +55,7 @@ public class MapPoint {
 
     @Id
     @Column(name = "point_code", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getPointCode() {
         return pointCode;
     }

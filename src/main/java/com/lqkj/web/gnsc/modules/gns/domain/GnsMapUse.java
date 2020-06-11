@@ -1,6 +1,7 @@
 package com.lqkj.web.gnsc.modules.gns.domain;
 
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -16,10 +17,22 @@ import java.util.UUID;
 @Table(name = "gns_map_use", schema = "gns")
 public class GnsMapUse {
     private String recordId;
+    private Integer campusCode;
     private String gnsUserId;
     private Integer recordType;
     private String mapElementName;
     private Timestamp createTime;
+
+    public GnsMapUse() {
+    }
+
+    public GnsMapUse(String recordId,Integer campusCode,String gnsUserId, Integer recordType, String mapElementName) {
+        this.recordId = recordId;
+        this.campusCode = campusCode;
+        this.gnsUserId = gnsUserId;
+        this.recordType = recordType;
+        this.mapElementName = mapElementName;
+    }
 
     @Id
     @Column(name = "record_id", nullable = false)
@@ -29,6 +42,16 @@ public class GnsMapUse {
 
     public void setRecordId(String recordId) {
         this.recordId = recordId;
+    }
+
+    @Basic
+    @Column(name = "campus_code", nullable = true)
+    public Integer getCampusCode() {
+        return campusCode;
+    }
+
+    public void setCampusCode(Integer campusCode) {
+        this.campusCode = campusCode;
     }
 
     @Basic
@@ -63,6 +86,7 @@ public class GnsMapUse {
 
     @Basic
     @Column(name = "create_time", nullable = true)
+    @UpdateTimestamp
     public Timestamp getCreateTime() {
         return createTime;
     }

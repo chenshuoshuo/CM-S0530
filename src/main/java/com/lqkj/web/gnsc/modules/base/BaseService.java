@@ -245,7 +245,7 @@ public class BaseService {
             params.put("lat",lat);
             params.put("lon",lng);
             String resultJsonString = HttpClientUtil.sendGet(serverApiUrl.getItemValue() + "/map/matrix/v2/projection/vector",
-                   params);
+                   params,mapToken.getItemValue());
 
             if(StringUtils.isNotBlank(resultJsonString)){
                 return resultJsonString;
@@ -259,7 +259,225 @@ public class BaseService {
 
     }
 
+    /**
+     * 获取cmgis公共分类信息
+     * @return
+     */
+    protected String queryPublicCategory(String name,Integer page,Integer page_size){
+        GnsStoreItem serverApiUrl = storeItemDao.findMapConfig("otherConfigurations", "cmgisApiUrl");
+        GnsStoreItem mapToken = storeItemDao.findMapConfig("otherConfigurations", "mapToken");
 
+        try {
+            String resultJsonString = null;
+            if(StringUtils.isNotBlank(name)){
+                resultJsonString = HttpClientUtil.sendGet(serverApiUrl.getItemValue() + "/map/v2/present/?name="+ name +"&page=" + page +"&page_size=" + page_size ,
+                        null,mapToken.getItemValue());
+            }else {
+                resultJsonString = HttpClientUtil.sendGet(serverApiUrl.getItemValue() + "/map/v2/present/?page=" + page +"&page_size=" + page_size ,
+                        null,mapToken.getItemValue());
+            }
+
+            if(StringUtils.isNotBlank(resultJsonString)){
+                return resultJsonString;
+            }else {
+                return null;
+            }
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return null;
+        }
+
+    }
+
+    /**
+     * 获取校区
+     * @return
+     */
+    protected String queryMapZone(Boolean onlyRaster,Boolean onlyVector,Integer page,Integer pageSize){
+        GnsStoreItem serverApiUrl = storeItemDao.findMapConfig("otherConfigurations", "cmgisApiUrl");
+        GnsStoreItem mapToken = storeItemDao.findMapConfig("otherConfigurations", "mapToken");
+
+        try {
+            Map<String,Object> params = new HashMap<>();
+            params.put("only_raster",onlyRaster);
+            params.put("only_vector",onlyVector);
+            params.put("page",page);
+            params.put("pageSize",pageSize);
+            String resultJsonString = HttpClientUtil.sendGet(serverApiUrl.getItemValue() + "/map/v2/zone/page",
+                    params,mapToken.getItemValue());
+
+            if(StringUtils.isNotBlank(resultJsonString)){
+                return resultJsonString;
+            }else {
+                return null;
+            }
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return null;
+        }
+
+    }
+
+    /**
+     * 根据标签搜索
+     * @return
+     */
+    protected String searchWithTag(Integer page,Integer pageSize,Integer zoneId,String tagName,String text,String textMatch,String type){
+        GnsStoreItem serverApiUrl = storeItemDao.findMapConfig("otherConfigurations", "cmgisApiUrl");
+        GnsStoreItem mapToken = storeItemDao.findMapConfig("otherConfigurations", "mapToken");
+
+        try {
+            Map<String,Object> params = new HashMap<>();
+            params.put("zoneId",zoneId);
+            params.put("tagName",tagName);
+            params.put("page",page);
+            params.put("pageSize",pageSize);
+            if(text != null){
+                params.put("text",text);
+            }
+            if(textMatch != null){
+                params.put("textMatch",textMatch);
+            }
+            if(type != null){
+                params.put("type",type);
+            }
+            String resultJsonString = HttpClientUtil.sendGet(serverApiUrl.getItemValue() + "/map/search/v3/tag",
+                    params,mapToken.getItemValue());
+
+            if(StringUtils.isNotBlank(resultJsonString)){
+                return resultJsonString;
+            }else {
+                return null;
+            }
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return null;
+        }
+
+    }
+
+    /**
+     * 根据面/线ID数组
+     * 获取原始数据
+     */
+    protected String queryWays(Map<String, ?> formParams){
+        GnsStoreItem serverApiUrl = storeItemDao.findMapConfig("otherConfigurations", "cmgisApiUrl");
+        GnsStoreItem mapToken = storeItemDao.findMapConfig("otherConfigurations", "mapToken");
+
+        try {
+
+            String resultJsonString = HttpClientUtil.sendPost(serverApiUrl.getItemValue() + "/osm/api/0.6/ways",
+                    JSON.toJSONString(formParams),mapToken.getItemValue());
+
+            if(StringUtils.isNotBlank(resultJsonString)){
+                return resultJsonString;
+            }else {
+                return null;
+            }
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return null;
+        }
+
+    }
+
+    /**
+     * 根据点ID数组
+     * 获取原始数据
+     * @param formParams 点ID数组
+     */
+    protected String queryNodes(Map<String, ?> formParams){
+        GnsStoreItem serverApiUrl = storeItemDao.findMapConfig("otherConfigurations", "cmgisApiUrl");
+        GnsStoreItem mapToken = storeItemDao.findMapConfig("otherConfigurations", "mapToken");
+
+        try {
+
+            String resultJsonString = HttpClientUtil.sendPost(serverApiUrl.getItemValue() + "/osm/api/0.6/nodes",
+                    JSON.toJSONString(formParams),mapToken.getItemValue());
+
+            if(StringUtils.isNotBlank(resultJsonString)){
+                return resultJsonString;
+            }else {
+                return null;
+            }
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return null;
+        }
+
+    }
+
+    /**
+     * 创建变更集
+     */
+    protected String createChangeSet(String changeSets){
+        GnsStoreItem serverApiUrl = storeItemDao.findMapConfig("otherConfigurations", "cmgisApiUrl");
+        GnsStoreItem mapToken = storeItemDao.findMapConfig("otherConfigurations", "mapToken");
+
+        try {
+
+            String resultJsonString = HttpClientUtil.sendPut(serverApiUrl.getItemValue() + "/osm/api/0.6/changeset/create",changeSets,
+                    mapToken.getItemValue());
+
+            if(StringUtils.isNotBlank(resultJsonString)){
+                return resultJsonString;
+            }else {
+                return null;
+            }
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return null;
+        }
+
+    }
+
+    /**
+     * 差分上传
+     */
+    protected String updateChangeSet(Integer changeSetId,String change){
+        GnsStoreItem serverApiUrl = storeItemDao.findMapConfig("otherConfigurations", "cmgisApiUrl");
+        GnsStoreItem mapToken = storeItemDao.findMapConfig("otherConfigurations", "mapToken");
+
+        try {
+
+            String resultJsonString = HttpClientUtil.sendPost(serverApiUrl.getItemValue() + "/osm/api/0.6/changeset/"+ changeSetId +"/upload",
+                    change,mapToken.getItemValue());
+
+            if(StringUtils.isNotBlank(resultJsonString)){
+                return resultJsonString;
+            }else {
+                return null;
+            }
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return null;
+        }
+
+    }
+
+    /**
+     * 关闭变更集
+     */
+    protected String closeChangeSet(Integer changeSetId){
+        GnsStoreItem serverApiUrl = storeItemDao.findMapConfig("otherConfigurations", "cmgisApiUrl");
+        GnsStoreItem mapToken = storeItemDao.findMapConfig("otherConfigurations", "mapToken");
+
+        try {
+
+            String resultJsonString = HttpClientUtil.sendPut(serverApiUrl.getItemValue() + "/osm/api/0.6/changeset/"+ changeSetId +"/close",null,
+                    mapToken.getItemValue());
+
+            if(StringUtils.isNotBlank(resultJsonString)){
+                return resultJsonString;
+            }else {
+                return null;
+            }
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return null;
+        }
+
+    }
 
     protected List<MapIndexTemplate> loadPushMapIndexTemplateFromBuilding(List<MapBuildingVO> buildingVOList){
         List<MapIndexTemplate> templateList = new ArrayList<>();

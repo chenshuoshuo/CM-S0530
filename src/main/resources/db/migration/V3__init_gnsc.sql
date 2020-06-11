@@ -809,6 +809,7 @@ comment on column gns.gns_manage_user_role.user_id is
 /*==============================================================*/
 CREATE TABLE IF NOT EXISTS gns.gns_map_use (
    record_id            VARCHAR(64)                  not null,
+   campus_code          INT4                null,
    gns_user_id          VARCHAR(64)                  null,
    record_type          INT4                 null,
    map_element_name     VARCHAR(255)         null,
@@ -822,11 +823,14 @@ comment on table gns.gns_map_use is
 comment on column gns.gns_map_use.record_id is
 '记录ID：record_id';
 
+comment on column gns.gns_map_use.campus_code is
+'区域组ID：campus_code';
+
 comment on column gns.gns_map_use.gns_user_id is
 '用户ID：user_id';
 
 comment on column gns.gns_map_use.record_type is
-'使用类型：record_type，1点击，2导航起点，3导航终点，';
+'使用类型：record_type，1点击，2搜索，3导航起点，4导航终点，5生活服务分类';
 
 comment on column gns.gns_map_use.map_element_name is
 '地图元素名称：map_element_name';

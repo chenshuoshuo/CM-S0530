@@ -24,12 +24,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 @Service
+@Transactional
 public class MapRoomService extends BaseService {
     @Autowired
     MapRoomDao mapRoomDao;
@@ -81,6 +83,11 @@ public class MapRoomService extends BaseService {
         return mapRoomDao.save(mapRoomVO);
     }
 
+    public void saveAll(List<MapRoom> roomList) {
+
+        mapRoomDao.saveAll(roomList);
+    }
+
     public MapRoomVO get(Integer roomCode) {
         try {
             MapRoomVO mapRoomVO = objectMapper.readValue(JSON.toJSONString(mapRoomDao.findById(roomCode).get()), MapRoomVO.class);
@@ -127,6 +134,19 @@ public class MapRoomService extends BaseService {
 //            return MessageBean.construct(mapRoom,"推送cmgis失败");
 //        }
         return MessageBean.construct(mapRoom,"更新成功");
+    }
+
+    public void updateSynStatusAfterSyn(Integer zoneId) {
+        mapRoomDao.updateSynStatusAfterSyn(zoneId);
+    }
+
+
+    public void deleteAfterSyn(Long[] mapCodes,Integer zoneId) {
+        mapRoomDao.deleteAfterSyn(mapCodes, zoneId);
+    }
+
+    public List<MapRoom> queryChangeList(Integer zoneId) {
+        return mapRoomDao.queryChangeList(zoneId);
     }
 
     public Integer delete(Integer roomCode) {

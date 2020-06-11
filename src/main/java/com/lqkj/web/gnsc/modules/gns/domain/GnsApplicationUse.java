@@ -1,5 +1,7 @@
 package com.lqkj.web.gnsc.modules.gns.domain;
 
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
@@ -16,6 +18,15 @@ public class GnsApplicationUse {
     private Integer applicationId;
     private String userId;
     private Timestamp createTime;
+
+    public GnsApplicationUse() {
+    }
+
+    public GnsApplicationUse(String recordId, Integer applicationId, String userId) {
+        this.recordId = recordId;
+        this.applicationId = applicationId;
+        this.userId = userId;
+    }
 
     @Id
     @Column(name = "record_id", nullable = false)
@@ -49,6 +60,7 @@ public class GnsApplicationUse {
 
     @Basic
     @Column(name = "create_time", nullable = true)
+    @UpdateTimestamp
     public Timestamp getCreateTime() {
         return createTime;
     }

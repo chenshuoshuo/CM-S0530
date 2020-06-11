@@ -40,6 +40,17 @@ public class GnsStoreItemService {
     }
 
     /**
+     * 根据名字和key获取
+     * @param storeName
+     * @param key
+     * @return
+     */
+    public GnsStoreItem findMapConfig(String storeName, String key) {
+
+        return storeItemDao.findMapConfig(storeName,key);
+    }
+
+    /**
      * 根据学校ID和key获取
      */
     public Object findByItemKey(String itemKey,Integer schoolId){

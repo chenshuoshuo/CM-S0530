@@ -27,6 +27,7 @@ public class MapBuildingImg {
 
     @Id
     @Column(name = "img_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getImgId() {
         return imgId;
     }

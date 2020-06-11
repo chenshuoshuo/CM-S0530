@@ -54,8 +54,33 @@ public class MapBuilding {
     private List<MapBuildingImg> mapBuildingImgList;
     private List<MapBuildingExtends> mapBuildingExtendsList;
 
+    public MapBuilding(){}
+
+
+    /**
+     * 构造函数
+     */
+    public MapBuilding(Integer buildingCode, Integer typeCode, String buildingName, Integer campusCode, Long mapCode, String enName, String alias, String brief, Boolean synStatus, Boolean delete, Integer versionCode, Geometry lngLat, Geometry rasterLngLat, Integer orderId, String memo) {
+        this.buildingCode = buildingCode;
+        this.typeCode = typeCode;
+        this.buildingName = buildingName;
+        this.campusCode = campusCode;
+        this.mapCode = mapCode;
+        this.enName = enName;
+        this.alias = alias;
+        this.brief = brief;
+        this.synStatus = synStatus;
+        this.delete = delete;
+        this.versionCode = versionCode;
+        this.lngLat = lngLat;
+        this.rasterLngLat = rasterLngLat;
+        this.orderId = orderId;
+        this.memo = memo;
+    }
+
     @Id
     @Column(name = "building_code", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getBuildingCode() {
         return buildingCode;
     }

@@ -39,8 +39,32 @@ public class MapOthersPolygon {
     private List<MapOthersPolygonImg> mapOthersPolygonImgList;
     private List<MapOthersPolygonExtends> mapOthersPolygonExtendsList;
 
+    public MapOthersPolygon(){}
+
+    /**
+     * 构造函数
+     */
+    public MapOthersPolygon(Integer polygonCode, Integer typeCode, String polygonName, Integer campusCode,
+                            Long mapCode, Integer leaf, String enName, String alias,String brief,
+                            Boolean synStatus, Boolean delete, Integer versionCode, Integer orderId, String memo) {
+        this.polygonCode = polygonCode;
+        this.typeCode = typeCode;
+        this.polygonName = polygonName;
+        this.campusCode = campusCode;
+        this.mapCode = mapCode;
+        this.leaf = leaf;
+        this.enName = enName;
+        this.alias = alias;
+        this.brief = brief;
+        this.synStatus = synStatus;
+        this.delete = delete;
+        this.versionCode = versionCode;
+        this.orderId = orderId;
+        this.memo = memo;
+    }
     @Id
     @Column(name = "polygon_code", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getPolygonCode() {
         return polygonCode;
     }
