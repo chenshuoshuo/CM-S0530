@@ -50,12 +50,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
     /**
      * 静态资源配置
      */
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/upload/**")
-                .addResourceLocations("file:./upload/")
-                .setCacheControl(CacheControl.maxAge(0, TimeUnit.SECONDS));
-    }
+//    @Override
+//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//        registry.addResourceHandler("/upload/**")
+//                .addResourceLocations("file:./upload/")
+//                .setCacheControl(CacheControl.maxAge(0, TimeUnit.SECONDS));
+//    }
 
     /**
      * 跨域配置

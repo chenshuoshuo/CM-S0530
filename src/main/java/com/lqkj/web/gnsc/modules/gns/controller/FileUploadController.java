@@ -63,25 +63,25 @@ public class FileUploadController {
         return uploadService.uploadBase64ImgFile(base64ImgVo.getBase64Img().split(",")[1],base64ImgVo.getFileName(),base64ImgVo.getFolder());
     }
 
-    /**
-     * 文件同步
-     * 同步cmips  upload  下文件
-     * @return
-     */
-    @ApiOperation("文件同步")
-    @GetMapping(value = "/synFile")
-    public MessageBean synFile(@RequestParam(name = "path")String path){
-        return uploadService.synFile(path);
-    }
-
-    /**
-     * 压缩upload 下所有文件
-     * 同步cmips  upload  下文件
-     * @return
-     */
-    @ApiOperation("压缩文件")
-    @GetMapping(value = "/fileToZip")
-    public MessageBean fileToZip(){
-        return MessageBean.ok(uploadService.fileToZip("upload"));
-    }
+//    /**
+//     * 文件同步
+//     * 同步cmips  upload  下文件
+//     * @return
+//     */
+//    @ApiOperation("文件同步")
+//    @GetMapping(value = "/synFile")
+//    public MessageBean synFile(@RequestParam(name = "path")String path){
+//        return uploadService.synFile(path);
+//    }
+//
+//    /**
+//     * 压缩upload 下所有文件
+//     * 同步cmips  upload  下文件
+//     * @return
+//     */
+//    @ApiOperation("压缩文件")
+//    @GetMapping(value = "/fileToZip")
+//    public MessageBean fileToZip(){
+//        return MessageBean.ok(uploadService.fileToZip("upload"));
+//    }
 }

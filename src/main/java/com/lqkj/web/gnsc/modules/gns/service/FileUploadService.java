@@ -57,7 +57,7 @@ public class FileUploadService {
             String property = System.getProperty("user.dir");
             String resultUrl = unPackFileZip(file,folder);
             long time = new Date().getTime();
-            return MessageBean.ok(this.changePath(property +"/"+ resultUrl, time));
+            return MessageBean.ok(this.changePath(uploadPath +"/"+ resultUrl, time));
         }else {
             return MessageBean.error("格式错误");
         }
@@ -93,11 +93,11 @@ public class FileUploadService {
         }
         try{
             String newFileName = UUID.randomUUID() + fileExtension;
-            File uploadFolder = new File(uploadPath + "/" + folder + "/");
+            File uploadFolder = new File(uploadPath + "/upload/" + folder + "/");
             if(!uploadFolder.exists()) {
                 uploadFolder.mkdirs();
             }
-            String imgUrl = uploadPath + "/" + folder + "/" + newFileName;
+            String imgUrl = uploadPath + "/upload/" + folder + "/" + newFileName;
             FileUtil.decoderBase64File(base64File,imgUrl);
             File uploadFile = new File(imgUrl);
             if(folder.equals("gns")){
@@ -139,7 +139,7 @@ public class FileUploadService {
         try {
             String fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
             String newFileName = UUID.randomUUID() + fileExtension;
-            File uploadFolder = new File(uploadPath + "/" + folder + "/");
+            File uploadFolder = new File(uploadPath + "/upload/" + folder + "/");
             if(!uploadFolder.exists()) {
                 uploadFolder.mkdirs();
             }
@@ -161,7 +161,7 @@ public class FileUploadService {
 
         //解压路径
         try{
-            File uploadFolder = new File(uploadPath + "/" + folder + "/");
+            File uploadFolder = new File(uploadPath + "/upload/" + folder + "/");
             if (!uploadFolder.exists()) {
                 uploadFolder.mkdirs();
             }
@@ -226,7 +226,8 @@ public class FileUploadService {
         String childPath = new File(parentPath).getParent();
         //将原文件夹更改为A，其中路径是必要的。注意
         File newFile = new File(childPath);
-        newFile.renameTo(new File(newFile.getParent()+"/"+time));
+        Boolean resultFile = newFile.renameTo(new File(newFile.getParent()+"/"+time));
+        logger.info(newFile.getAbsolutePath());
         return "/upload/gns/"+time+"/html/index.html";
     }
 
