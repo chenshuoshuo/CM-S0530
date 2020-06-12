@@ -76,11 +76,11 @@ BEGIN
 	for _landmark in select p.point_code::varchar landmark_id,p.point_name navication_name,p.lng_lat navigation_location,
 									st_distance(st_point(_lng,_lat)::geography, p.lng_lat::geography) distance,false map_type
 									from portal.map_point p left join gns.gns_campus_info c on p.campus_code = c.vector_zoom_code
-									where p.campus_code = _vector_zoom_code and st_distance(st_point(_lng,_lat)::geography, p.lng_lat::geography) <= 400 and p.type_code in
+									where p.campus_code = _vector_zoom_code and st_distance(st_point(_lng,_lat)::geography, p.lng_lat::geography) <= 10 and p.type_code in
 									(select type_code from portal.map_point_type where parent_code in(select point_type_code from gns.gns_display_point_type))
 									UNION (select map_code::varchar landmark_id,building_name navication_name,lng_lat navigation_location, st_distance(st_point(_lng,_lat)::geography,
 									lng_lat::geography) distance,true map_type from portal.map_building mb where campus_code = _vector_zoom_code
-									and st_distance(st_point(_lng,_lat)::geography, lng_lat::geography) <= 400) order by distance asc LOOP
+									and st_distance(st_point(_lng,_lat)::geography, lng_lat::geography) <= 10) order by distance asc LOOP
 
 				raise notice '_landmark_id:%',_landmark.landmark_id;
 			--判断是否需要推送
