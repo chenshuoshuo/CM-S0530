@@ -84,7 +84,7 @@ public class HttpClientUtil {
         // 设置默认请求头
         Map<String, String> headers = new HashMap<>();
         headers.put("content-type", "application/json");
-        headers.put("authorization","Basic Q21HaXNScGM6Q01naXNUISQmKCo=");
+        headers.put("authorization","Basic " + mapToken);
         return sendPost(url, headers, data, ENCODING);
     }
 

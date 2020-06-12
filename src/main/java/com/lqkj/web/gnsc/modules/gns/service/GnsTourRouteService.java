@@ -223,7 +223,7 @@ public class GnsTourRouteService extends BaseService {
                 JSONArray dataArray = responseJson.getJSONArray("data");
                 if(dataArray.size() > 0){
                     //设置路线
-                    tourRoute.setNavigation_route(dataArray);
+                    tourRoute.setNavigation_route(objectMapper.readTree(JSON.toJSONString(dataArray)));
                     //获取里程
                     for(int i = 0; i < dataArray.size(); i++){
                         JSONArray navigationArray = dataArray.getJSONArray(i);

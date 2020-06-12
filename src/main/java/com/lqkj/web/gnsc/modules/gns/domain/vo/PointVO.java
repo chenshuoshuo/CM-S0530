@@ -9,17 +9,17 @@ import org.apache.commons.lang.StringUtils;
  * @Version 2.2.2.0
  **/
 public class PointVO {
-    private String[] lngLat;
+    private String[] latLng;
     private String priorityType;
     private String roadType ;
     private Integer wayId;
 
-    public String[] getLngLat() {
-        return lngLat;
+    public String[] getLatLng() {
+        return latLng;
     }
 
-    public void setLngLat(String[] lngLat) {
-        this.lngLat = lngLat;
+    public void setLatLng(String[] latLng) {
+        this.latLng = latLng;
     }
 
     public String getPriorityType() {

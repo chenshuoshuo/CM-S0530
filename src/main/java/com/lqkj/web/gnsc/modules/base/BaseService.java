@@ -218,7 +218,7 @@ public class BaseService {
         GnsStoreItem mapToken = storeItemDao.findMapConfig("otherConfigurations", "mapToken");
 
         try {
-            String resultJsonString = HttpClientUtil.sendPut(serverApiUrl.getItemValue() + "map/route/v3/multiPoint/split/find/" + campusCode,
+            String resultJsonString = HttpClientUtil.sendPost(serverApiUrl.getItemValue() + "map/route/v3/multiPoint/split/find/" + campusCode,
                     JSON.toJSONString(pointList),mapToken.getItemValue());
 
             if(StringUtils.isNotBlank(resultJsonString)){
