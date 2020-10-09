@@ -128,7 +128,7 @@ public class ReceptionPlaceService {
             }
 
             if(place.getLngLatString() != null){
-                place.setLngLat(GeoJSON.gjson.read(place.getLngLatString()));
+                place.setLngLat(null);
             }
 
             if (errMsg.length() > 0) {

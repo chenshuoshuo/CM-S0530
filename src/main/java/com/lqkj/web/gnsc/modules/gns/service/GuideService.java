@@ -208,11 +208,11 @@ public class GuideService {
                     guide.setContent(excelModel.getColumn4());
 
                     if (excelModel.getColumn5() != null) {
-                        guide.setLngLat(GeoJSON.gjson.read(excelModel.getColumn5()));
+                        guide.setLngLat(null);
                     }
 
                     if (excelModel.getColumn6() != null) {
-                        guide.setRasterLngLat(GeoJSON.gjson.read(excelModel.getColumn6()));
+                        guide.setRasterLngLat(null);
                     }
 
                     if ( StringUtils.isNumeric(excelModel.getColumn7())) {

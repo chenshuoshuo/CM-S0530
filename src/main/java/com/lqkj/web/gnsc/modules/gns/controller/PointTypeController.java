@@ -9,13 +9,11 @@ import com.lqkj.web.gnsc.message.MessageBean;
 import com.lqkj.web.gnsc.message.MessageListBean;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsDisplayPointType;
 import com.lqkj.web.gnsc.modules.gns.service.PointTypeService;
-import com.sun.corba.se.impl.protocol.giopmsgheaders.MessageBase;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import sun.plugin2.message.Message;
 
 import java.util.List;
 

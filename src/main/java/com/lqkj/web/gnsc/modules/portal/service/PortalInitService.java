@@ -477,10 +477,10 @@ public class PortalInitService extends BaseService {
                             Geometry rasterLngLat = null;
 
                             if(transformLngLatToGeomString(lngLatString) != null){
-                                lngLat =  GeoJSON.gjson.read(transformLngLatToGeomString(lngLatString));
+                                lngLat =  null;
                             }
                             if(transformLngLatToGeomString(rasterLngLatString) != null){
-                                rasterLngLat = GeoJSON.gjson.read(transformLngLatToGeomString(rasterLngLatString));
+                                rasterLngLat = null;
                             }
 
                             if(!buildingMap.containsKey(Long.parseLong(dataId))){
@@ -519,7 +519,7 @@ public class PortalInitService extends BaseService {
                             Geometry lngLat = null;
                             try{
                                 if(geomString != null){
-                                    lngLat = GeoJSON.gjson.read(geomString);
+                                    lngLat = null;
                                 }
                             }catch (Exception e){
                                 mapCodeList.add(dataId);

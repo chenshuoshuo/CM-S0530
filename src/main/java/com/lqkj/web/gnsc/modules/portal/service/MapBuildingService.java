@@ -62,26 +62,21 @@ public class MapBuildingService extends BaseService {
         PageRequest pageRequest =  PageRequest.of(page, pageSize, new Sort(Sort.Direction.ASC, "orderId"));
         Page<MapBuilding> pageInfo = mapBuildingDao.findAll(loadExample(campusCode, typeCode, buildingName), pageRequest);
 
-        try {
-            for(MapBuilding building : pageInfo.getContent()){
+        for(MapBuilding building : pageInfo.getContent()){
 
-                building.setCampusName(campusDao.findByVectorZoomCode(building.getCampusCode()).getCampusName());
-                building.setMapBuildingImgList(buildingImgService.queryListWithBuildingCode(building.getBuildingCode()));
-                building.setMapBuildingType(buildingTypeService.queryById(building.getTypeCode()));
+            building.setCampusName(campusDao.findByVectorZoomCode(building.getCampusCode()).getCampusName());
+            building.setMapBuildingImgList(buildingImgService.queryListWithBuildingCode(building.getBuildingCode()));
+            building.setMapBuildingType(buildingTypeService.queryById(building.getTypeCode()));
 
-                Long[] id = new Long[]{building.getMapCode()};
-                JSONArray jsonArray = JSON.parseObject(queryWayGeoJson(id))
-                        .getJSONArray("features");
-                if(jsonArray.size() > 0){
-                    Geometry geometry = GeoJSON.gjson.read(JSON.toJSONString(jsonArray.getJSONObject(0)));
-                    building.setCenter(geometry.getCentroid().toString());
-                }
+            Long[] id = new Long[]{building.getMapCode()};
+            JSONArray jsonArray = JSON.parseObject(queryWayGeoJson(id))
+                    .getJSONArray("features");
+            if(jsonArray.size() > 0){
+                //Geometry geometry = GeoJSON.gjson.read(JSON.toJSONString(jsonArray.getJSONObject(0)));
+                building.setCenter(null);
             }
-            return pageInfo;
-        } catch (IOException e) {
-            logger.error(e.getMessage(),e);
-            return null;
         }
+        return pageInfo;
     }
 
 

@@ -78,7 +78,7 @@ public class SchoolCampusService {
                             JSONObject jsonObject = jsonZoneObject.getJSONObject("mapZoneByZoneId");
                             String polygonBBox = JSON.toJSONString(jsonObject.getJSONObject("polygonBBox"));
                             if(StringUtils.isNotBlank(polygonBBox)){
-                                schoolCampus.setElectronicFence(GeoJSON.gjson.read(polygonBBox));
+                                schoolCampus.setElectronicFence(null);
                             }
                             if (jsonObject.get("is2D").equals(true)) {
                                 schoolCampus.setVectorZoomCode(jsonObject.getInteger("id"));

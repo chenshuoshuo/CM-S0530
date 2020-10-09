@@ -4,7 +4,6 @@ import com.lqkj.web.gnsc.modules.gns.dao.GuideDao;
 import com.lqkj.web.gnsc.modules.gns.dao.StudentTypeDao;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsGuide;
 import com.lqkj.web.gnsc.modules.gns.domain.GnsStudentType;
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;

@@ -15,8 +15,6 @@ import com.lqkj.web.gnsc.modules.gns.domain.vo.HotPointVO;
 import com.lqkj.web.gnsc.modules.portal.dao.*;
 import com.lqkj.web.gnsc.modules.portal.model.*;
 import com.lqkj.web.gnsc.modules.portal.service.*;
-import com.lqkj.web.gnsc.utils.DisableSSLCertificateCheckUtil;
-import com.sun.org.apache.regexp.internal.RE;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;

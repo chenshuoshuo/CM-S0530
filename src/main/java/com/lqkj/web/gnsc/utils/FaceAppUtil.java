@@ -15,8 +15,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import org.apache.commons.codec.binary.Base64;
 
 import java.io.*;
 import java.util.*;
@@ -111,9 +110,9 @@ public class FaceAppUtil {
             e.printStackTrace();
         }
         // 对字节数组Base64编码
-        BASE64Encoder encoder = new BASE64Encoder();
+
         // 返回Base64编码过的字节数组字符串
-        return encoder.encode(Objects.requireNonNull(data));
+        return Base64.encodeBase64String(Objects.requireNonNull(data));
     }
 
     /**
@@ -130,12 +129,12 @@ public class FaceAppUtil {
     public static boolean generateImage(String imgData, String imgFilePath) throws IOException { // 对字节数组字符串进行Base64解码并生成图片
         if (imgData == null) // 图像数据为空
             return false;
-        BASE64Decoder decoder = new BASE64Decoder();
+        Base64 decoder = new Base64();
         OutputStream out = null;
         try {
             out = new FileOutputStream(imgFilePath);
             // Base64解码
-            byte[] b = decoder.decodeBuffer(imgData);
+            byte[] b = decoder.decodeBase64(imgData);
             for (int i = 0; i < b.length; ++i) {
                 if (b[i] < 0) {// 调整异常数据
                     b[i] += 256;

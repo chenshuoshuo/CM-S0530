@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.vividsolutions.jts.geom.Geometry;
+import org.opengis.geometry.BoundingBox;
 
 import java.io.IOException;
 
@@ -19,7 +20,7 @@ public class JacksonGeometrySerializer extends JsonSerializer<Geometry> {
     public void serialize(Geometry value, JsonGenerator gen, SerializerProvider provider)
             throws IOException {
 
-        String geojson = GeoJSON.gjson.toString(value);
+        String geojson = GeoJSON.gjson.toString((BoundingBox) value);
 
         gen.writeRawValue(geojson);
     }

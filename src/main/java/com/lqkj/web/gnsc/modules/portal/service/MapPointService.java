@@ -78,8 +78,8 @@ public class MapPointService extends BaseService {
         try {
             // 添加点标注信息
             MapPointVO newMapPointVO = objectMapper.readValue(JSON.toJSONString(mapPointDao.save(mapPoint)), MapPointVO.class);
-            newMapPointVO.setLngLatString(GeoJSON.gjson.toString(mapPoint.getLngLat()));
-            newMapPointVO.setRasterLngLatString(GeoJSON.gjson.toString(mapPoint.getRasterLngLat()));
+            newMapPointVO.setLngLatString(null);
+            newMapPointVO.setRasterLngLatString(null);
 
             // 添加图片
             List<MapPointImg> mapPointImgList = mapPoint.getMapPointImgList();
@@ -205,19 +205,14 @@ public class MapPointService extends BaseService {
     public Integer refreshRasterGeom() {
         List<MapPoint> mapPointList = this.queryList(null,null,null,null);
         Integer updateCount = 0;
-        try {
-            for(MapPoint mapPoint : mapPointList){
-                if(mapPoint.getLngLat() != null){
-                    mapPoint.setRasterLngLat(GeoJSON.gjson.read(transferVectorToRaster(JSONObject.parseObject(JSON.toJSONString(mapPoint.getLngLat())))));
-                    mapPointDao.save(mapPoint);
-                    updateCount += 1;
-                }
+        for(MapPoint mapPoint : mapPointList){
+            if(mapPoint.getLngLat() != null){
+                mapPoint.setRasterLngLat(null);
+                mapPointDao.save(mapPoint);
+                updateCount += 1;
             }
-            return updateCount;
-        }catch (IOException e){
-            logger.error(e.getMessage(),e);
-            return null;
         }
+        return updateCount;
 
     }
 
@@ -359,7 +354,7 @@ public class MapPointService extends BaseService {
         }
         mapPoint.setCampusCode(mapPointVO.getCampusCode());
         mapPoint.setLeaf(mapPointVO.getLeaf());
-        mapPoint.setLngLat(GeoJSON.gjson.read(mapPointVO.getLngLatString()));
+        mapPoint.setLngLat(null);
         mapPoint.setLocation(mapPointVO.getLocation());
         mapPoint.setMemo(mapPointVO.getMemo());
         mapPoint.setOrderId(mapPointVO.getOrderId());
@@ -367,7 +362,7 @@ public class MapPointService extends BaseService {
         mapPoint.setPointName(mapPointVO.getPointName());
         mapPoint.setTypeCode(mapPointVO.getTypeCode());
         mapPoint.setBrief(mapPointVO.getBrief());
-        mapPoint.setRasterLngLat(GeoJSON.gjson.read(mapPointVO.getRasterLngLatString()));
+        mapPoint.setRasterLngLat(null);
         mapPoint.setMapCode(mapPointVO.getMapCode());
         mapPoint.setVersionCode(mapPointVO.getVersionCode());
         mapPoint.setSynStatus(false);

@@ -1,6 +1,6 @@
 package com.lqkj.web.gnsc.utils;
 
-import sun.misc.BASE64Decoder;
+import org.apache.commons.codec.binary.Base64;
 
 import java.io.*;
 
@@ -74,7 +74,7 @@ public class FileUtil {
 
     public static void decoderBase64File(String base64Code, String targetPath)
             throws Exception {
-        byte[] buffer = new BASE64Decoder().decodeBuffer(base64Code);
+        byte[] buffer = new Base64().decodeBase64(base64Code);
         FileOutputStream out = new FileOutputStream(targetPath);
         out.write(buffer);
         out.close();

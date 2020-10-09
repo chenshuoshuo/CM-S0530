@@ -28,7 +28,7 @@ public class GeoJSON {
 
     public static void write(Object obj, Object output) throws IOException {
         if (obj instanceof Geometry) {
-            gjson.write((Geometry) obj, output);
+            gjson.write(null, output);
         } else if (obj instanceof Feature
                 || obj instanceof FeatureCollection
                 || obj instanceof CoordinateReferenceSystem) {
